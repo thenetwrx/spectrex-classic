@@ -1,0 +1,31 @@
+{
+  "name": "nuxt-app",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "generate-types": "supabase gen types typescript --project-id qpvredklgeepeyxvjgch > database.types.ts"
+  },
+  "dependencies": {
+    "@discordjs/rest": "^2.2.0",
+    "@formkit/auto-animate": "^0.8.1",
+    "clipboard": "^2.0.11",
+    "discord.js": "^14.14.1",
+    "nuxt": "^3.10.3",
+    "supabase": "^1.150.0",
+    "vue": "^3.4.21",
+    "vue-router": "^4.3.0"
+  },
+  "devDependencies": {
+    "@nuxt/image": "^1.4.0",
+    "@nuxtjs/color-mode": "^3.3.2",
+    "@nuxtjs/supabase": "^1.1.7",
+    "@nuxtjs/tailwindcss": "^6.11.4",
+    "daisyui": "^4.7.3",
+    "tailwindcss-animated": "^1.0.1"
+  }
+}

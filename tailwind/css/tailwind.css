@@ -1,0 +1,4 @@
+/* Inside your <style> tag within the component or in a global Tailwind stylesheet if you have one */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
