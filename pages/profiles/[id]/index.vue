@@ -113,7 +113,11 @@ const copy_current_url = async () => {
 
 const syncProfile = async () => {
   syncing.value = true;
-  await fetch("/api/v1/profiles/sync/" + user_id);
+  const response = await fetch("/api/v1/profiles/sync/" + user_id);
+  if (response.status === 401) {
+    await client.auth.signOut();
+    router.push("/login");
+  }
   refreshNuxtData("profile");
   syncing.value = false;
 };

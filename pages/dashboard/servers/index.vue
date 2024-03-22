@@ -139,6 +139,7 @@
 definePageMeta({
   middleware: ["check-session"],
 });
+const router = useRouter();
 import { type Database } from "~/database.types";
 const user = useSupabaseUser();
 const client = useSupabaseClient<Database>();
@@ -168,7 +169,11 @@ const { data: servers } = await useAsyncData(
 
 const syncDiscordServers = async () => {
   syncing.value = true;
-  await fetch("/api/v1/servers/sync");
+  const response = await fetch("/api/v1/servers/sync");
+  if (response.status === 401) {
+    await client.auth.signOut();
+    router.push("/login");
+  }
   refreshNuxtData("servers");
   syncing.value = false;
 };

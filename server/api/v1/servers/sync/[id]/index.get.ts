@@ -11,7 +11,7 @@ export default defineEventHandler(async (event) => {
   const user = await serverSupabaseUser(event);
   if (!user) {
     setResponseStatus(event, 401);
-    return { message: "You are not logged in" };
+    return { message: "Unauthorized" };
   }
 
   // 2. Get access token from Supabase session
@@ -83,21 +83,18 @@ export default defineEventHandler(async (event) => {
             };
           }
         } else {
-          const { error: error1 } = await client
-            .from("servers")
-            .insert({
-              server_id: raw_guilds[i].id,
-              approximate_member_count: raw_guilds[i].approximate_member_count,
-              approximate_presence_count:
-                raw_guilds[i].approximate_presence_count,
-              created_at: Date.now(),
-              bumped_at: Date.now(),
-              owner_provider_id: user.user_metadata.provider_id,
-              owner_id: user.id,
-              server_name: raw_guilds[i].name,
-              icon: raw_guilds[i].icon,
-            })
-            .select();
+          const { error: error1 } = await client.from("servers").insert({
+            server_id: raw_guilds[i].id,
+            approximate_member_count: raw_guilds[i].approximate_member_count,
+            approximate_presence_count:
+              raw_guilds[i].approximate_presence_count,
+            created_at: Date.now(),
+            bumped_at: Date.now(),
+            owner_provider_id: user.user_metadata.provider_id,
+            owner_id: user.id,
+            server_name: raw_guilds[i].name,
+            icon: raw_guilds[i].icon,
+          });
 
           if (error1) {
             setResponseStatus(event, 500);

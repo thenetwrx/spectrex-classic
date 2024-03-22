@@ -48,13 +48,7 @@
             @click.stop="bump_server"
           >
             <span v-if="server_metadata.on_cooldown">
-              {{
-                formatRemainingTime(
-                  server.data[0].bumped_at,
-                  profile?.data?.length &&
-                    profile?.data[0]?.premium_since !== null
-                )
-              }}
+              {{ formatRemainingTime(server.data[0].bumped_at) }}
             </span>
             <span v-if="!server_metadata.on_cooldown">Bump </span>
             <i class="fa-solid fa-up-from-line"></i>
@@ -236,7 +230,11 @@ const refreshServerMetadata = () => {
 
 const syncDiscordServers = async () => {
   syncing.value = true;
-  await fetch("/api/v1/servers/sync/" + server_id);
+  const response = await fetch("/api/v1/servers/sync/" + server_id);
+  if (response.status === 401) {
+    await client.auth.signOut();
+    router.push("/login");
+  }
   refreshNuxtData("servers");
   syncing.value = false;
 };
@@ -244,15 +242,25 @@ const syncDiscordServers = async () => {
 const bump_server = async () => {
   if (server.value?.data?.length) {
     server_metadata.value.bumping = true;
-    await fetch("/api/v1/servers/bump/" + server.value.data[0].server_id);
+    const response = await fetch(
+      "/api/v1/servers/bump/" + server.value.data[0].server_id
+    );
+    if (response.status === 401) {
+      await client.auth.signOut();
+      router.push("/login");
+    }
     server_metadata.value.bumping = false;
 
     await syncDiscordServers();
   }
 };
 
-function formatRemainingTime(bumped_at: number, is_premium: boolean) {
-  const cooldownDuration = is_premium ? 3600000 : 7200000;
+function formatRemainingTime(bumped_at: number) {
+  const premium =
+    profile.value?.data?.length &&
+    profile.value?.data[0]?.premium_since !== null;
+
+  const cooldownDuration = premium ? 3600000 : 7200000;
   const targetTime = new Date(bumped_at + cooldownDuration);
   const timeDifference = targetTime.getTime() - Date.now();
 

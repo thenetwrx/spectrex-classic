@@ -7,26 +7,37 @@ import { type Database } from "~/database.types";
 export default defineEventHandler(async (event) => {
   // Parameters
   const params = getRouterParams(event);
-  const user_id = params.id;
+  const server_id = params.id;
 
   // 1. Grab body
   const body = await readBody(event);
 
   // 2. Check variables on server side to prevent abuse
+  if (typeof body.issue_type !== "number") {
+    setResponseStatus(event, 500);
+    return { message: "Issue type must be selected" };
+  }
   if (!body.description?.length) {
     setResponseStatus(event, 500);
     return { message: "Description must not be empty" };
   }
 
-  if (body.description.length <= 6) {
+  if (body.issue_type === 0 || body.issue_type === 1) {
+  } else {
+    setResponseStatus(event, 500);
+    return { message: "Invalid issue type selection" };
+  }
+
+  if (body.description.length <= 16) {
     setResponseStatus(event, 500);
     return {
-      message: "Description does not have enough characters (minimum of 6)",
+      message: "Description does not have enough characters (minimum of 16)",
     };
   }
-  if (body.description.length >= 256) {
+
+  if (body.description.length >= 128) {
     setResponseStatus(event, 500);
-    return { message: "Description has too many characters (max of 256)" };
+    return { message: "Description has too many characters (max of 128)" };
   }
 
   // 3. Check logged in status to prevent spam
@@ -36,7 +47,7 @@ export default defineEventHandler(async (event) => {
     return { message: "Unauthorized" };
   }
 
-  // 4. Fetch user and then update if applicable
+  // 4. Fetch guild and user and then update if applicable
   try {
     const client = await serverSupabaseClient<Database>(event);
 
@@ -57,21 +68,38 @@ export default defineEventHandler(async (event) => {
       return { message: "Your profile was not found" };
     }
 
-    const { error: error1 } = await client
-      .from("profiles")
-      .update({
-        description: body.description,
-      })
-      .eq("provider_id", user_id)
-      .select();
+    const { data, error } = await client
+      .from("servers")
+      .select("owner_provider_id, owner_id")
+      .eq("server_id", server_id);
+
+    if (error) {
+      setResponseStatus(event, 500);
+      return { message: "A database error occurred when fetching the server" };
+    }
+
+    if (!data.length) {
+      setResponseStatus(event, 500);
+      return { message: "Server was not found" };
+    }
+
+    const { error: error1 } = await client.from("server_reports").insert({
+      type: body.issue_type,
+      from_id: user.id,
+      from_provider_id: user.user_metadata.provider_id,
+      server_id: server_id,
+      description: body.description,
+      server_owner_id: data[0].owner_id,
+      server_owner_provider_id: data[0].owner_provider_id,
+    });
 
     if (error1) {
       setResponseStatus(event, 500);
-      return { message: "A database error occurred when editing the profile" };
+      return { message: "A database error occurred when reporting the server" };
     }
 
     setResponseStatus(event, 200);
-    return { message: "Edited" };
+    return { message: "Report recorded" };
   } catch (err) {
     console.log(err);
 

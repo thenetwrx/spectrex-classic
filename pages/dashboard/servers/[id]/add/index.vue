@@ -54,9 +54,9 @@
           </div>
         </div>
         <div
-          class="bg-base-300 h-fit text-start p-4 rounded-b-md flex flex-col"
+          class="bg-base-300 h-fit text-start p-4 rounded-b-md flex flex-col gap-4"
         >
-          <div class="pb-4">
+          <div>
             <p class="text-2xl pb-2">
               Language<span class="text-error">*</span>
             </p>
@@ -71,12 +71,13 @@
               <option value="ru">русский</option>
             </select>
           </div>
-          <div class="pb-4">
+          <div>
             <p class="text-2xl pb-2">Tags</p>
 
             <!-- Display added tags -->
             <div
               class="flex flex-wrap gap-2 w-fit max-sm:max-w-fit overflow-x-auto mb-2"
+              v-if="tags.length"
             >
               <span
                 v-for="(tag, index) in tags"
@@ -99,7 +100,7 @@
               v-model="newTag"
             />
           </div>
-          <div class="pb-4">
+          <div>
             <p class="text-2xl pb-2">
               Description<span class="text-error">*</span>
             </p>
@@ -111,7 +112,7 @@
               class="textarea textarea-bordered rounded-none w-full"
             ></textarea>
           </div>
-          <div class="pb-4">
+          <div>
             <p class="text-2xl pb-2">
               Invite Link<span class="text-error">*</span>
               <a class="text-sm opacity-75 ml-2"
@@ -127,7 +128,7 @@
             />
           </div>
 
-          <div class="pb-4">
+          <div>
             <p class="text-2xl pb-2">
               Primarily NSFW<span class="text-error">*</span>
             </p>
@@ -163,7 +164,7 @@
             @click="apply"
             class="btn btn-primary ml-auto mr-auto md:min-w-48 max-md:w-full"
           >
-            <i class="fa-solid fa-paper-plane-top"></i> Apply
+            <i class="fa-solid fa-inbox-out"></i> Submit
           </button>
         </div>
       </div>
@@ -172,6 +173,9 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({
+  middleware: ["check-session"],
+});
 import { type Database } from "~/database.types";
 const route = useRoute();
 const router = useRouter();
@@ -197,29 +201,25 @@ const apply = async () => {
       description: description.value,
     }),
   });
-  const json = await response.json();
+  if (response.status === 401) {
+    await client.auth.signOut();
+    router.push("/login");
+  }
 
+  const json = await response.json();
   if (response.status !== 200) return alert(json.message);
   else router.push("/dashboard/servers");
 };
 
-const { data: server } =
-  (await useAsyncData(
-    "servers",
-    async () =>
-      await client
-        .from("servers")
-        .select("*")
-        .eq("owner_provider_id", user.value?.user_metadata.provider_id || 0)
-        .eq("server_id", server_id)
-  )) || [];
-
-const refreshDatabaseServer = async () => {
-  refreshing_server.value = true;
-  await fetch("/api/v1/servers/sync/" + server_id);
-  refreshNuxtData("servers");
-  refreshing_server.value = false;
-};
+const { data: server } = await useAsyncData(
+  "servers",
+  async () =>
+    await client
+      .from("servers")
+      .select("*")
+      .eq("owner_provider_id", user.value?.user_metadata.provider_id || 0)
+      .eq("server_id", server_id)
+);
 
 // Define a ref to store tags
 const tags = ref<Array<string>>([]);

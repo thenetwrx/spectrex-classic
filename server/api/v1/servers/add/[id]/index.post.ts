@@ -74,8 +74,8 @@ export default defineEventHandler(async (event) => {
   // 3. Check logged in status to prevent spam
   const user = await serverSupabaseUser(event);
   if (!user) {
-    setResponseStatus(event, 403);
-    return { message: "You are not logged in" };
+    setResponseStatus(event, 401);
+    return { message: "Unauthorized" };
   }
 
   // 4. Fetch guild and user and then update
@@ -121,6 +121,7 @@ export default defineEventHandler(async (event) => {
       .from("servers")
       .update({
         approved_at: Date.now(),
+        public: true,
         bumped_at: Date.now(),
         language: body.language,
         invite_link: body.invite_link,

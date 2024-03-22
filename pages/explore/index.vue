@@ -20,9 +20,16 @@
           Showing ({{ servers?.data?.length || 0 }} / {{ max_per_page }})
           results
         </p>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div v-if="!servers?.data?.length">
+          <div class="w-full text-center my-32">
+            <i class="fa-solid fa-2xl fa-spinner-third fa-spin"></i>
+          </div>
+        </div>
+        <div
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+          v-else
+        >
           <div
-            v-if="servers?.data?.length"
             v-for="server in servers?.data
               ?.filter((_server) => _server.approved_at !== null)
               .sort((a, b) => b.bumped_at - a.bumped_at)"
@@ -103,20 +110,30 @@
       </div>
     </div>
     <div class="flex flex-row items-center place-self-center mt-8">
-      <button class="btn btn-primary btn-sm" @click="go_to_page(page - 1)">
-        Previous
+      <button
+        class="btn btn-primary btn-sm"
+        :class="page === 0 ? 'btn-disabled' : ''"
+        @click="go_to_page(page - 1)"
+      >
+        <i class="fa-solid fa-arrow-left"></i>
       </button>
-      <span class="mx-2">{{ page + 1 }} / {{ max_pages }}</span>
-      <button class="btn btn-primary btn-sm" @click="go_to_page(page + 1)">
-        Next
+      <span class="mx-2 bg-base-200 px-2 py-1 rounded-md"
+        >{{ page + 1 }} / {{ max_pages }}</span
+      >
+      <button
+        class="btn btn-primary btn-sm"
+        :class="page === max_pages ? 'btn-disabled' : ''"
+        @click="go_to_page(page + 1)"
+      >
+        <i class="fa-solid fa-arrow-right"></i>
       </button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-const user = useSupabaseUser();
-const client = useSupabaseClient();
+import { type Database } from "~/database.types";
+const client = useSupabaseClient<Database>();
 const popular_tags = ref<Array<string>>([
   "community",
   "gaming",
@@ -145,6 +162,7 @@ const { data: servers } = await useAsyncData(
       .from("servers")
       .select("*")
       .not("approved_at", "is", null)
+      .not("public", "is", false)
       .order("bumped_at")
       .limit(max_per_page.value)
       .range(

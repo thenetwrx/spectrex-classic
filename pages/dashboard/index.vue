@@ -32,29 +32,25 @@
     <div class="flex flex-row max-md:flex-col gap-2 w-full">
       <div
         @click="$router.push('/profiles/' + user?.user_metadata.provider_id)"
-        class="bg-base-200 max-md:w-full md:w-1/2 h-48 rounded-md flex flex-col p-2 hover:bg-base-300 transition-colors duration-200 cursor-pointer"
+        class="bg-base-200 max-md:w-full md:w-1/2 h-20 rounded-md flex flex-row gap-3 p-4 hover:bg-base-300 transition-colors duration-200 cursor-pointer"
       >
-        <div
-          class="flex flex-row w-full bg-base-100 p-3 items-center rounded-md"
-        >
+        <div class="p-4 rounded-lg w-full flex flex-row gap-4 items-center">
+          <i class="fa-solid fa-address-card fa-2xl"></i>
           <p class="text-2xl">My Profile</p>
-          <i class="fa-solid fa-user fa-md ml-auto"></i>
         </div>
-        <div class="p-2 mt-auto ml-auto">
+        <div class="p-2 mb-auto mt-auto ml-auto">
           <i class="fa-solid fa-arrow-up-right-from-square"></i>
         </div>
       </div>
       <div
         @click="$router.push('/dashboard/servers')"
-        class="bg-base-200 max-md:w-full md:w-1/2 h-48 rounded-md flex flex-col p-2 hover:bg-base-300 transition-colors duration-200 cursor-pointer"
+        class="bg-base-200 max-md:w-full md:w-1/2 h-20 rounded-md flex flex-row gap-3 p-4 hover:bg-base-300 transition-colors duration-200 cursor-pointer"
       >
-        <div
-          class="flex flex-row w-full bg-base-100 p-3 items-center rounded-md"
-        >
-          <p class="text-2xl">Manage Servers</p>
-          <i class="fa-solid fa-server fa-md ml-auto"></i>
+        <div class="p-4 rounded-lg w-full flex flex-row gap-4 items-center">
+          <i class="fa-solid fa-server fa-2xl"></i>
+          <p class="text-2xl">Servers</p>
         </div>
-        <div class="p-2 mt-auto ml-auto">
+        <div class="p-2 mb-auto mt-auto ml-auto">
           <i class="fa-solid fa-arrow-up-right-from-square"></i>
         </div>
       </div>
@@ -63,6 +59,9 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({
+  middleware: ["check-session"],
+});
 import { type Database } from "~/database.types";
 const user = useSupabaseUser();
 const client = useSupabaseClient<Database>();

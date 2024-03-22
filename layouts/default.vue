@@ -106,15 +106,18 @@ a:hover {
           >
             <span>Add server</span>
           </NuxtLink>
+          <NuxtLink href="/premium" class="p-2 bg-base-300 rounded-md">
+            <span>Premium</span>
+          </NuxtLink>
         </div>
         <div class="flex flex-col items-start gap-2 p-4 w-full">
           <div class="join flex flex-row w-full items-center gap-1" v-if="user">
             <NuxtLink
-              href="/dashboard"
+              href="/dashboard/servers"
               data-theme="dark"
               class="btn btn-secondary btn-sm flex-grow join-item"
             >
-              <span><i class="fa-solid fa-grid-horizontal"></i> Dashboard</span>
+              <span>Dashboard</span>
             </NuxtLink>
             <button
               @click="logout"
@@ -159,6 +162,7 @@ a:hover {
 
           <NuxtLink href="/explore"><span>Explore</span></NuxtLink>
           <NuxtLink href="/dashboard/servers"><span>Add server</span></NuxtLink>
+          <NuxtLink href="/premium"><span>Premium</span></NuxtLink>
         </div>
         <div class="flex items-center gap-1">
           <div class="dropdown dropdown-end" v-if="user">
@@ -172,12 +176,6 @@ a:hover {
               tabindex="0"
               class="dropdown-content menu p-2 shadow bg-base-200 rounded-md w-52 mt-4"
             >
-              <li><NuxtLink href="/dashboard">Dashboard</NuxtLink></li>
-              <li>
-                <NuxtLink :href="'/profiles/' + user.user_metadata.provider_id"
-                  >My Profile</NuxtLink
-                >
-              </li>
               <li>
                 <NuxtLink href="/dashboard/servers">Manage Servers</NuxtLink>
               </li>

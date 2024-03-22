@@ -14,6 +14,10 @@ export default defineEventHandler(async (event) => {
   console.log(body.language.length);
 
   // 2. Check variables on server side to prevent abuse
+  if (typeof body.public !== "boolean") {
+    setResponseStatus(event, 500);
+    return { message: "A public selection must be made" };
+  }
   if (!body.language?.length) {
     setResponseStatus(event, 500);
     return { message: "Language must be selected" };
@@ -36,7 +40,7 @@ export default defineEventHandler(async (event) => {
     setResponseStatus(event, 500);
     return { message: "Invite link must not be empty" };
   }
-  if (body.nsfw?.length === null) {
+  if (typeof body.nsfw !== "boolean") {
     setResponseStatus(event, 500);
     return { message: "An NSFW selection must be made" };
   }
@@ -75,7 +79,7 @@ export default defineEventHandler(async (event) => {
   const user = await serverSupabaseUser(event);
   if (!user) {
     setResponseStatus(event, 401);
-    return { message: "You are not logged in" };
+    return { message: "Unauthorized" };
   }
 
   // 4. Fetch guild and user and then update if applicable
@@ -118,6 +122,7 @@ export default defineEventHandler(async (event) => {
     const { error: error1 } = await client
       .from("servers")
       .update({
+        public: body.public,
         language: body.language,
         invite_link: body.invite_link,
         tags: body.tags,

@@ -51,17 +51,46 @@
                 </div>
               </div>
             </div>
-            <button
-              class="btn btn-ghost ml-auto"
-              onclick="my_modal_1.showModal()"
-            >
-              <i class="fa-solid fa-trash"></i> Delete
-            </button>
           </div>
         </div>
         <div
           class="bg-base-300 h-fit text-start p-4 rounded-b-md flex flex-col"
         >
+          <div class="pb-4">
+            <p class="text-2xl pb-2">
+              Public<span class="text-error">*</span
+              ><a class="text-sm opacity-75 ml-2"
+                >(whether or not this server will be publicly listed)</a
+              >
+            </p>
+
+            <div class="flex flex-col">
+              <div class="form-control items-start">
+                <label class="label cursor-pointer gap-2">
+                  <input
+                    type="radio"
+                    name="radio-is_public"
+                    class="radio"
+                    v-model="is_public"
+                    :value="true"
+                  />
+                  <span class="label-text">Yes</span>
+                </label>
+              </div>
+              <div class="form-control items-start">
+                <label class="label cursor-pointer gap-2">
+                  <input
+                    type="radio"
+                    name="radio-is_public"
+                    class="radio"
+                    v-model="is_public"
+                    :value="false"
+                  />
+                  <span class="label-text">No</span>
+                </label>
+              </div>
+            </div>
+          </div>
           <div class="pb-4">
             <p class="text-2xl pb-2">
               Language<span class="text-error">*</span>
@@ -175,29 +204,12 @@
       </div>
     </template>
   </div>
-  <dialog class="modal" id="my_modal_1">
-    <div class="modal-box flex flex-col">
-      <div class="flex flex-row gap-1 items-center w-full pb-4">
-        <h3 class="text-lg font-bold">Delete server</h3>
-        <button
-          class="btn btn-ghost btn-sm ml-auto"
-          onclick="my_modal_1.close()"
-        >
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-      </div>
-      <p class="opacity-75">
-        Warning: This will not delete your server from our records, it will only
-        remove it from the list of indexable servers publicly!
-      </p>
-      <div class="flex flex-row gap-1 ml-auto mt-3">
-        <button class="btn btn-error" @click="_delete">I Understand</button>
-      </div>
-    </div>
-  </dialog>
 </template>
 
 <script setup lang="ts">
+definePageMeta({
+  middleware: ["check-session"],
+});
 import { type Database } from "~/database.types";
 const route = useRoute();
 const router = useRouter();
@@ -205,18 +217,12 @@ const user = useSupabaseUser();
 const client = useSupabaseClient<Database>();
 const server_id = route.params.id;
 
+const is_public = ref<boolean>();
 const language = ref<string>("");
 const description = ref<string>("");
 const invite_link = ref<string>("");
 const nsfw = ref<boolean>();
 
-const _delete = async () => {
-  const response = await fetch("/api/v1/servers/delete/" + server_id);
-  const json = await response.json();
-
-  if (response.status !== 200) return alert(json.message);
-  else router.push("/dashboard/servers");
-};
 const edit = async () => {
   const response = await fetch(`/api/v1/servers/edit/${server_id}`, {
     method: "POST",
@@ -227,10 +233,15 @@ const edit = async () => {
       nsfw: nsfw.value,
       tags: tags.value,
       description: description.value,
+      public: is_public.value,
     }),
   });
-  const json = await response.json();
+  if (response.status === 401) {
+    await client.auth.signOut();
+    router.push("/login");
+  }
 
+  const json = await response.json();
   if (response.status !== 200) return alert(json.message);
   else router.push("/servers/" + server_id);
 };
@@ -247,6 +258,7 @@ const { data: server } = await useAsyncData(
 
 onMounted(() => {
   if (server.value?.data?.length) {
+    is_public.value = server.value.data[0].public;
     language.value = server.value.data[0].language || "";
     invite_link.value = server.value.data[0].invite_link || "";
     description.value = server.value.data[0].description || "";

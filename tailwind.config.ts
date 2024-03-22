@@ -19,7 +19,7 @@ export default {
         light: {
           ...require("daisyui/src/theming/themes")["light"],
           "base-content": "#000",
-          primary: "#00DC82",
+          primary: "#1076eb",
           "primary-content": "#fff",
           secondary: "#000",
           "secondary-content": "#fff",
@@ -29,7 +29,7 @@ export default {
         dark: {
           ...require("daisyui/src/theming/themes")["dark"],
           "base-content": "#fff",
-          primary: "#00DC82",
+          primary: "#1076eb",
           "primary-content": "#fff",
           secondary: "#fff",
           "secondary-content": "#000",

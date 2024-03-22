@@ -23,35 +23,35 @@
               class="block max-w-fit px-2 py-1 bg-primary border-none bg-opacity-50 rounded-sm gap-2 hover:bg-opacity-65 hover:cursor-pointer transition-colors duration-200 ease-in-out text-black dark:text-white"
             >
               <span class="text-black dark:text-primary">#</span>
-              Community
+              community
             </NuxtLink>
             <NuxtLink
               href="/tag?q=memes"
               class="block max-w-fit px-2 py-1 bg-primary border-none bg-opacity-50 rounded-sm gap-2 hover:bg-opacity-65 hover:cursor-pointer transition-colors duration-200 ease-in-out text-black dark:text-white"
             >
               <span class="text-black dark:text-primary">#</span>
-              Memes
+              memes
             </NuxtLink>
             <NuxtLink
               href="/tag?q=gaming"
               class="block max-w-fit px-2 py-1 bg-primary border-none bg-opacity-50 rounded-sm gap-2 hover:bg-opacity-65 hover:cursor-pointer transition-colors duration-200 ease-in-out text-black dark:text-white"
             >
               <span class="text-black dark:text-primary">#</span>
-              Gaming
+              gaming
             </NuxtLink>
             <NuxtLink
               href="/tag?q=anime"
               class="block max-w-fit px-2 py-1 bg-primary border-none bg-opacity-50 rounded-sm gap-2 hover:bg-opacity-65 hover:cursor-pointer transition-colors duration-200 ease-in-out text-black dark:text-white"
             >
               <span class="text-black dark:text-primary">#</span>
-              Anime
+              anime
             </NuxtLink>
             <NuxtLink
               href="/tag?q=giveaways"
               class="block max-w-fit px-2 py-1 bg-primary border-none bg-opacity-50 rounded-sm gap-2 hover:bg-opacity-65 hover:cursor-pointer transition-colors duration-200 ease-in-out text-black dark:text-white"
             >
               <span class="text-black dark:text-primary">#</span>
-              Giveaways
+              giveaways
             </NuxtLink>
           </div>
         </div>
@@ -65,7 +65,7 @@
       >
         <div class="text-center">
           <i class="fa-solid fa-hand-paper fa-2x"></i>
-          <h3 class="opacity-75 mt-2">Curated quality, not quantity</h3>
+          <h3 class="opacity-75 mt-2">Curated just for you</h3>
         </div>
         <div class="text-center">
           <i class="fa-solid fa-magnifying-glass fa-2x"></i>
@@ -89,7 +89,7 @@
         New to discord? We can help you get started.
       </p>
       <div
-        class="grid max-sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 grid- gap-6 mt-8 max-w-5xl mx-auto"
+        class="grid max-sm:grid-cols-1 md:grid-cols-2 gap-6 mt-8 max-w-5xl mx-auto"
       >
         <div
           class="card w-full shadow-xl bg-base-200 ml-auto mr-auto pt-2 pb-4"
@@ -111,7 +111,7 @@
           </div>
         </div>
 
-        <div
+        <!-- <div
           class="card w-full shadow-xl bg-base-200 ml-auto mr-auto pt-2 pb-4"
         >
           <figure class="p-2">
@@ -129,7 +129,7 @@
               <p>- Add a short bio (optional)</p>
             </div>
           </div>
-        </div>
+        </div> -->
 
         <div
           class="card w-full shadow-xl bg-base-200 ml-auto mr-auto pt-2 pb-4"

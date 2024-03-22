@@ -18,6 +18,7 @@ export type Database = {
           id: string
           premium_since: number | null
           provider_id: string
+          public: boolean
           updated_at: number | null
         }
         Insert: {
@@ -28,6 +29,7 @@ export type Database = {
           id: string
           premium_since?: number | null
           provider_id: string
+          public?: boolean
           updated_at?: number | null
         }
         Update: {
@@ -38,6 +40,7 @@ export type Database = {
           id?: string
           premium_since?: number | null
           provider_id?: string
+          public?: boolean
           updated_at?: number | null
         }
         Relationships: [
@@ -49,6 +52,42 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      server_reports: {
+        Row: {
+          created_at: string
+          description: string
+          from_id: string
+          from_provider_id: string
+          id: number
+          server_id: string
+          server_owner_id: string
+          server_owner_provider_id: string
+          type: string
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          from_id: string
+          from_provider_id: string
+          id?: number
+          server_id: string
+          server_owner_id: string
+          server_owner_provider_id: string
+          type: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          from_id?: string
+          from_provider_id?: string
+          id?: number
+          server_id?: string
+          server_owner_id?: string
+          server_owner_provider_id?: string
+          type?: string
+        }
+        Relationships: []
       }
       servers: {
         Row: {
@@ -66,6 +105,7 @@ export type Database = {
           nsfw: boolean
           owner_id: string
           owner_provider_id: string
+          public: boolean
           server_id: string
           server_name: string
           tags: string[]
@@ -85,6 +125,7 @@ export type Database = {
           nsfw?: boolean
           owner_id: string
           owner_provider_id: string
+          public?: boolean
           server_id: string
           server_name: string
           tags?: string[]
@@ -104,63 +145,7 @@ export type Database = {
           nsfw?: boolean
           owner_id?: string
           owner_provider_id?: string
-          server_id?: string
-          server_name?: string
-          tags?: string[]
-        }
-        Relationships: []
-      }
-      servers_duplicate: {
-        Row: {
-          approved_at: number | null
-          approximate_member_count: string
-          approximate_presence_count: string
-          banned: boolean
-          bumped_at: number
-          created_at: number
-          description: string | null
-          icon: string | null
-          id: number
-          invite_link: string | null
-          language: string | null
-          nsfw: boolean
-          owner_id: string
-          server_id: string
-          server_name: string
-          tags: string[]
-        }
-        Insert: {
-          approved_at?: number | null
-          approximate_member_count: string
-          approximate_presence_count: string
-          banned?: boolean
-          bumped_at?: number
-          created_at: number
-          description?: string | null
-          icon?: string | null
-          id?: number
-          invite_link?: string | null
-          language?: string | null
-          nsfw?: boolean
-          owner_id: string
-          server_id: string
-          server_name: string
-          tags?: string[]
-        }
-        Update: {
-          approved_at?: number | null
-          approximate_member_count?: string
-          approximate_presence_count?: string
-          banned?: boolean
-          bumped_at?: number
-          created_at?: number
-          description?: string | null
-          icon?: string | null
-          id?: number
-          invite_link?: string | null
-          language?: string | null
-          nsfw?: boolean
-          owner_id?: string
+          public?: boolean
           server_id?: string
           server_name?: string
           tags?: string[]

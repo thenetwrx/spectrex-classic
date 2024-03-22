@@ -66,8 +66,10 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({
+  middleware: ["check-session"],
+});
 import { type Database } from "~/database.types";
-const route = useRoute();
 const router = useRouter();
 const user = useSupabaseUser();
 const client = useSupabaseClient<Database>();
@@ -84,8 +86,12 @@ const edit = async () => {
       }),
     }
   );
-  const json = await response.json();
+  if (response.status === 401) {
+    await client.auth.signOut();
+    router.push("/login");
+  }
 
+  const json = await response.json();
   if (response.status !== 200) return alert(json.message);
   else router.push("/profiles/" + user.value?.user_metadata.provider_id);
 };
