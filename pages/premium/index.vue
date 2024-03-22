@@ -1,6 +1,6 @@
 <template>
   <section class="p-10">
-    <h2 class="text-center text-3xl font-bold">Become a Guildex supporter</h2>
+    <h2 class="text-center text-3xl font-bold">Become a Spectrex supporter</h2>
     <p class="text-center text-lg">And unlock exclusive benefits today!</p>
     <div class="flex flex-col items-center mt-8 max-w-5xl mx-auto">
       <div class="card shadow-xl bg-base-200 ml-auto mr-auto">
@@ -31,7 +31,7 @@
   <dialog class="modal" id="my_modal_1">
     <div class="modal-box">
       <div class="flex flex-row gap-1 items-center w-full pb-4">
-        <h3 class="text-lg font-bold">Support Guildex</h3>
+        <h3 class="text-lg font-bold">Support Spectrex</h3>
 
         <button
           class="btn btn-ghost btn-sm ml-auto"
@@ -41,7 +41,7 @@
         </button>
       </div>
       <p>
-        To become a Guildex supporter, you must send exactly $4.99 USD to
+        To become a Spectrex supporter, you must send exactly $4.99 USD to
         <a class="text-primary" href="https://venmo.com/u/hankhannefey1"
           >this venmo address</a
         >

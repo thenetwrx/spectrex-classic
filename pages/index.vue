@@ -59,7 +59,7 @@
     </section>
 
     <section class="p-10 bg-base-200">
-      <h2 class="text-center text-3xl font-bold">Why choose Guildex?</h2>
+      <h2 class="text-center text-3xl font-bold">Why choose Spectrex?</h2>
       <div
         class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-6 max-w-5xl ml-auto mr-auto"
       >

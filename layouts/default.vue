@@ -38,8 +38,8 @@ useHead({
       href: "https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap",
     },
   ],
-  title: "Guildex",
-  meta: [{ name: "description", content: "Guildex" }],
+  title: "Spectrex",
+  meta: [{ name: "description", content: "Spectrex" }],
 });
 
 const logout = async () => {
@@ -85,16 +85,16 @@ a:hover {
       >
         <div class="flex flex-col gap-2 p-2">
           <!-- Logo and Navigation Links -->
-          <NuxtLink href="/" class="ml-auto mr-auto">
+          <NuxtLink href="/" class="ml-auto mr-auto py-3">
             <NuxtImg
               v-if="$colorMode.preference === 'dark'"
-              src="/images/logo_guildex_white.png"
-              class="h-16 mr-3"
+              src="/images/logo_spectrex_white.png"
+              class="h-8 mr-3"
             ></NuxtImg>
             <NuxtImg
               v-else
-              src="/images/logo_guildex_black.png"
-              class="h-16 mr-3"
+              src="/images/logo_spectrex_black.png"
+              class="h-8 mr-3"
             ></NuxtImg>
           </NuxtLink>
           <NuxtLink href="/explore" class="p-2 bg-base-300 rounded-md">
@@ -150,13 +150,13 @@ a:hover {
           <NuxtLink href="/">
             <NuxtImg
               v-if="$colorMode.preference === 'dark'"
-              src="/images/logo_guildex_white.png"
-              class="h-14 mr-3"
+              src="/images/logo_spectrex_white.png"
+              class="h-8 mr-3"
             />
             <NuxtImg
               v-else
-              src="/images/logo_guildex_black.png"
-              class="h-14 mr-3"
+              src="/images/logo_spectrex_black.png"
+              class="h-8 mr-3"
             />
           </NuxtLink>
 
