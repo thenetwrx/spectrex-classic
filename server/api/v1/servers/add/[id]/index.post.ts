@@ -101,9 +101,9 @@ export default defineEventHandler(async (event) => {
 
     const { data, error } = await client
       .from("servers")
-      .select("bumped_at,owner_id")
+      .select("bumped_at,owner_provider_id")
       .eq("server_id", server_id)
-      .eq("owner_id", user.user_metadata.provider_id);
+      .eq("owner_provider_id", user.user_metadata.provider_id);
 
     if (error) {
       setResponseStatus(event, 500);
@@ -115,43 +115,30 @@ export default defineEventHandler(async (event) => {
       return { message: "Your server was not found" };
     }
 
-    // Compare the timestamps
-    const now = Date.now();
-    const cooldown = profile[0].premium_since !== null ? 3600000 : 7200000;
-    console.log(cooldown);
-    if ((data[0].bumped_at || 0) + cooldown <= now) {
-      const { data, error } = await client
-        .from("servers")
-        .update({
-          approved_at: Date.now(),
-          language: body.language,
-          invite_link: body.invite_link,
-          tags: body.tags,
-          description: body.description,
-          nsfw: body.nsfw,
-        })
-        .eq("server_id", server_id)
-        .eq("owner_id", user.user_metadata.provider_id)
-        .select();
+    // TODO: Fix exploit of free bump status's when user "deletes" a server and re-adds it
 
-      if (error) {
-        setResponseStatus(event, 500);
-        return { message: "A database error occurred when adding the server" };
-      } else {
-        setResponseStatus(event, 200);
-        return { message: "Server added" };
-      }
+    const { error: error1 } = await client
+      .from("servers")
+      .update({
+        approved_at: Date.now(),
+        bumped_at: Date.now(),
+        language: body.language,
+        invite_link: body.invite_link,
+        tags: body.tags,
+        description: body.description,
+        nsfw: body.nsfw,
+      })
+      .eq("server_id", server_id)
+      .eq("owner_provider_id", user.user_metadata.provider_id)
+      .select();
+
+    if (error1) {
+      setResponseStatus(event, 500);
+      return { message: "A database error occurred when adding the server" };
     }
 
-    const timeLeftMilliseconds = now - (data[0].bumped_at || 0) - cooldown;
-    const timeLeftMessage = `Bump is on cooldown ${timeLeftMilliseconds}`;
-
-    setResponseStatus(event, 403);
-
-    return {
-      message: timeLeftMessage,
-      timeLeft: timeLeftMilliseconds,
-    };
+    setResponseStatus(event, 200);
+    return { message: "Server added" };
   } catch (err) {
     console.log(err);
 

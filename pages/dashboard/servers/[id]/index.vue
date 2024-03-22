@@ -4,7 +4,7 @@
       Hm... That server doesn't seem to exist!
     </p>
     <template v-else>
-      <p class="text-4xl">Edit server</p>
+      <p class="text-4xl">Manage server</p>
       <div class="flex flex-col py-4">
         <div class="bg-base-200 w-full h-fit p-4 rounded-t-md">
           <div class="flex flex-row gap-4 items-center">
@@ -51,6 +51,12 @@
                 </div>
               </div>
             </div>
+            <button
+              class="btn btn-ghost ml-auto"
+              onclick="my_modal_1.showModal()"
+            >
+              <i class="fa-solid fa-trash"></i> Delete
+            </button>
           </div>
         </div>
         <div
@@ -169,6 +175,26 @@
       </div>
     </template>
   </div>
+  <dialog class="modal" id="my_modal_1">
+    <div class="modal-box flex flex-col">
+      <div class="flex flex-row gap-1 items-center w-full pb-4">
+        <h3 class="text-lg font-bold">Delete server</h3>
+        <button
+          class="btn btn-ghost btn-sm ml-auto"
+          onclick="my_modal_1.close()"
+        >
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <p class="opacity-75">
+        Warning: This will not delete your server from our records, it will only
+        remove it from the list of indexable servers publicly!
+      </p>
+      <div class="flex flex-row gap-1 ml-auto mt-3">
+        <button class="btn btn-error" @click="_delete">I Understand</button>
+      </div>
+    </div>
+  </dialog>
 </template>
 
 <script setup lang="ts">
@@ -184,6 +210,13 @@ const description = ref<string>("");
 const invite_link = ref<string>("");
 const nsfw = ref<boolean>();
 
+const _delete = async () => {
+  const response = await fetch("/api/v1/servers/delete/" + server_id);
+  const json = await response.json();
+
+  if (response.status !== 200) return alert(json.message);
+  else router.push("/dashboard/servers");
+};
 const edit = async () => {
   const response = await fetch(`/api/v1/servers/edit/${server_id}`, {
     method: "POST",
@@ -208,7 +241,7 @@ const { data: server } = await useAsyncData(
     await client
       .from("servers")
       .select("*")
-      .eq("owner_id", user.value?.user_metadata.provider_id || 0)
+      .eq("owner_provider_id", user.value?.user_metadata.provider_id || 0)
       .eq("server_id", server_id)
 );
 

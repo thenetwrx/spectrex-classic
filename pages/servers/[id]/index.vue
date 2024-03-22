@@ -5,18 +5,26 @@
     </p>
     <template v-else>
       <div class="w-full flex flex-row gap-2 items-center">
-        <div class="ml-auto flex flex-row gap-1">
+        <div
+          class="ml-auto flex flex-wrap gap-1 w-fit max-sm:max-w-fit overflow-x-auto"
+        >
           <NuxtLink
             class="btn btn-ghost btn-sm"
             :href="'/dashboard/servers/' + server.data[0].server_id"
-            v-if="server.data[0].owner_id === user?.user_metadata.provider_id"
+            v-if="
+              server.data[0].owner_provider_id ===
+              user?.user_metadata.provider_id
+            "
           >
-            Edit <i class="fa-solid fa-pen-to-square"></i>
+            Manage <i class="fa-solid fa-gear"></i>
           </NuxtLink>
           <button
             class="btn btn-ghost btn-sm"
             :class="syncing ? 'btn-disabled' : ''"
-            v-if="server.data[0].owner_id === user?.user_metadata.provider_id"
+            v-if="
+              server.data[0].owner_provider_id ===
+              user?.user_metadata.provider_id
+            "
             @click.stop="syncDiscordServers"
           >
             <span v-if="syncing">Syncing...</span>
@@ -33,15 +41,34 @@
                 ? 'btn-disabled'
                 : ''
             "
-            v-if="user"
+            v-if="
+              server.data[0].owner_provider_id ===
+              user?.user_metadata.provider_id
+            "
             @click.stop="bump_server"
           >
             <span v-if="server_metadata.on_cooldown">
-              {{ formatRemainingTime(server.data[0].bumped_at, is_premium) }}
+              {{
+                formatRemainingTime(
+                  server.data[0].bumped_at,
+                  profile?.data?.length &&
+                    profile?.data[0]?.premium_since !== null
+                )
+              }}
             </span>
             <span v-if="!server_metadata.on_cooldown">Bump </span>
             <i class="fa-solid fa-up-from-line"></i>
           </button>
+          <NuxtLink
+            :href="'/servers/' + server.data[0].server_id + '/report'"
+            class="btn btn-ghost btn-sm"
+            v-if="
+              server.data[0].owner_provider_id !==
+              user?.user_metadata.provider_id
+            "
+          >
+            Report <i class="fa-solid fa-flag"></i>
+          </NuxtLink>
           <button class="btn btn-ghost btn-sm" @click="copy_current_url">
             Copy <i class="fa-solid fa-link"></i>
           </button>
@@ -88,14 +115,14 @@
                     {{ server.data[0].approximate_presence_count }} online
                   </p>
                 </div>
-                <div class="flex flex-row gap-1 items-center">
+                <!-- <div class="flex flex-row gap-1 items-center">
                   <div
                     class="border-4 border-[#80848E] h-4 w-4 rounded-full"
                   ></div>
                   <p class="text-zinc-500">
                     {{ server.data[0].approximate_member_count }} members
                   </p>
-                </div>
+                </div> -->
               </div>
             </div>
             <NuxtLink
@@ -156,24 +183,23 @@ const user = useSupabaseUser();
 const client = useSupabaseClient<Database>();
 const server_id = route.params.id;
 
-const is_premium = ref<boolean>(false);
 const syncing = ref<boolean>(false);
 const server_metadata = ref<{
   on_cooldown: boolean;
   bumping: boolean;
 }>({ on_cooldown: false, bumping: false });
 
-await useAsyncData("profile", async () => {
-  const { data: _profile } = await client
-    .from("profiles")
-    .select("*")
-    .eq("id", user?.value?.id || 0);
+const { data: profile } = await useAsyncData("profile", async () => {
+  if (user.value) {
+    const { data: _profile } = await client
+      .from("profiles")
+      .select("*")
+      .eq("id", user.value.id);
 
-  if (_profile?.length) {
-    if (_profile[0].premium_since !== null) is_premium.value = true;
+    return { data: _profile };
   }
 
-  return { data: _profile };
+  return { data: null };
 });
 const { data: server } = await useAsyncData(
   "servers",
@@ -193,7 +219,11 @@ watch(server, () => {
 
 const refreshServerMetadata = () => {
   if (server.value?.data?.length) {
-    const cooldown = is_premium ? 3600000 : 7200000;
+    const premium =
+      profile.value?.data?.length &&
+      profile.value?.data[0]?.premium_since !== null;
+
+    const cooldown = premium ? 3600000 : 7200000;
     const on_cooldown =
       (server.value.data[0].bumped_at || 0) + cooldown <= Date.now()
         ? false

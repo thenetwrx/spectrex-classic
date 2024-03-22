@@ -83,45 +83,38 @@ a:hover {
         v-show="isMobileSidebarOpen"
         class="fixed inset-y-0 left-0 bg-base-200 w-64 z-50 flex flex-col justify-between animate-once animate-duration-300 animate-fade-right animate-ease-in-out"
       >
-        <div class="p-4">
+        <div class="flex flex-col gap-2 p-2">
           <!-- Logo and Navigation Links -->
-          <NuxtLink href="/" class="block mb-2">
+          <NuxtLink href="/" class="ml-auto mr-auto">
             <NuxtImg
               v-if="$colorMode.preference === 'dark'"
-              src="/images/logo_gx_white.png"
-              class="h-14 mr-3"
+              src="/images/logo_guildex_white.png"
+              class="h-16 mr-3"
             ></NuxtImg>
             <NuxtImg
               v-else
-              src="/images/logo_gx_black.png"
-              class="h-14 mr-3"
+              src="/images/logo_guildex_black.png"
+              class="h-16 mr-3"
             ></NuxtImg>
           </NuxtLink>
-          <NuxtLink to="/explore" class="block mb-2">Explore</NuxtLink>
-          <NuxtLink to="/dashboard/servers" class="block mb-2"
-            >Add server</NuxtLink
+          <NuxtLink href="/explore" class="p-2 bg-base-300 rounded-md">
+            <span>Explore</span>
+          </NuxtLink>
+          <NuxtLink
+            href="/dashboard/servers"
+            class="p-2 bg-base-300 rounded-md"
           >
+            <span>Add server</span>
+          </NuxtLink>
         </div>
         <div class="flex flex-col items-start gap-2 p-4 w-full">
-          <button
-            class="text-xl btn btn-ghost btn-sm"
-            @click="
-              setColorTheme($colorMode.preference === 'dark' ? 'light' : 'dark')
-            "
-          >
-            <i
-              class="fa-solid fa-moon"
-              v-if="$colorMode.preference === 'dark'"
-            ></i>
-            <i class="fa-solid fa-sun" v-else></i>
-          </button>
           <div class="join flex flex-row w-full items-center gap-1" v-if="user">
             <NuxtLink
               href="/dashboard"
               data-theme="dark"
               class="btn btn-secondary btn-sm flex-grow join-item"
             >
-              <span>Dashboard</span>
+              <span><i class="fa-solid fa-grid-horizontal"></i> Dashboard</span>
             </NuxtLink>
             <button
               @click="logout"
@@ -134,7 +127,7 @@ a:hover {
           <NuxtLink
             v-else
             href="/login"
-            class="btn btn-sm btn-secondary"
+            class="btn btn-sm btn-secondary w-full"
             data-theme="dark"
           >
             <i class="fa-brands fa-discord"></i> Login
@@ -154,10 +147,14 @@ a:hover {
           <NuxtLink href="/">
             <NuxtImg
               v-if="$colorMode.preference === 'dark'"
-              src="/images/logo_gx_white.png"
+              src="/images/logo_guildex_white.png"
               class="h-14 mr-3"
             />
-            <NuxtImg v-else src="/images/logo_gx_black.png" class="h-14 mr-3" />
+            <NuxtImg
+              v-else
+              src="/images/logo_guildex_black.png"
+              class="h-14 mr-3"
+            />
           </NuxtLink>
 
           <NuxtLink href="/explore"><span>Explore</span></NuxtLink>

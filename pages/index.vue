@@ -1,5 +1,5 @@
 <template>
-  <div class="">
+  <div>
     <section class="hero">
       <div class="hero-content flex-col lg:flex-row-reverse p-10 mt-8">
         <div>

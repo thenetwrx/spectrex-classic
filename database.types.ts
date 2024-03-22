@@ -65,6 +65,7 @@ export type Database = {
           language: string | null
           nsfw: boolean
           owner_id: string
+          owner_provider_id: string
           server_id: string
           server_name: string
           tags: string[]
@@ -74,7 +75,7 @@ export type Database = {
           approximate_member_count: string
           approximate_presence_count: string
           banned?: boolean
-          bumped_at?: number
+          bumped_at: number
           created_at: number
           description?: string | null
           icon?: string | null
@@ -83,6 +84,7 @@ export type Database = {
           language?: string | null
           nsfw?: boolean
           owner_id: string
+          owner_provider_id: string
           server_id: string
           server_name: string
           tags?: string[]
@@ -101,6 +103,7 @@ export type Database = {
           language?: string | null
           nsfw?: boolean
           owner_id?: string
+          owner_provider_id?: string
           server_id?: string
           server_name?: string
           tags?: string[]

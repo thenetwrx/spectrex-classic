@@ -163,7 +163,7 @@ const { data: servers } = await useAsyncData(
     await client
       .from("servers")
       .select("*")
-      .eq("owner_id", user.value?.user_metadata.provider_id || 0)
+      .eq("owner_provider_id", user.value?.user_metadata.provider_id || 0)
 );
 
 const syncDiscordServers = async () => {

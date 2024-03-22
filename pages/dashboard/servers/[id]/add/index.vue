@@ -210,7 +210,7 @@ const { data: server } =
       await client
         .from("servers")
         .select("*")
-        .eq("owner_id", user.value?.user_metadata.provider_id || 0)
+        .eq("owner_provider_id", user.value?.user_metadata.provider_id || 0)
         .eq("server_id", server_id)
   )) || [];
 

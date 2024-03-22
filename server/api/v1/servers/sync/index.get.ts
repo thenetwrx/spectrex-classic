@@ -66,7 +66,7 @@ export default defineEventHandler(async (event) => {
               approximate_member_count: raw_guilds[i].approximate_member_count,
               approximate_presence_count:
                 raw_guilds[i].approximate_presence_count,
-              owner_id: user.user_metadata.provider_id,
+              owner_provider_id: user.user_metadata.provider_id,
               server_name: raw_guilds[i].name,
               icon: raw_guilds[i].icon,
             })
@@ -88,7 +88,9 @@ export default defineEventHandler(async (event) => {
               approximate_presence_count:
                 raw_guilds[i].approximate_presence_count,
               created_at: Date.now(),
-              owner_id: user.user_metadata.provider_id,
+              bumped_at: Date.now(),
+              owner_provider_id: user.user_metadata.provider_id,
+              owner_id: user.id,
               server_name: raw_guilds[i].name,
               icon: raw_guilds[i].icon,
             })

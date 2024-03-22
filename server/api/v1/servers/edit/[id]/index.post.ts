@@ -101,9 +101,9 @@ export default defineEventHandler(async (event) => {
 
     const { data, error } = await client
       .from("servers")
-      .select("owner_id")
+      .select("owner_provider_id")
       .eq("server_id", server_id)
-      .eq("owner_id", user.user_metadata.provider_id);
+      .eq("owner_provider_id", user.user_metadata.provider_id);
 
     if (error) {
       setResponseStatus(event, 500);
@@ -125,7 +125,7 @@ export default defineEventHandler(async (event) => {
         nsfw: body.nsfw,
       })
       .eq("server_id", server_id)
-      .eq("owner_id", user.user_metadata.provider_id)
+      .eq("owner_provider_id", user.user_metadata.provider_id)
       .select();
 
     if (error1) {
