@@ -11,7 +11,7 @@ export default defineNuxtConfig({
   ],
   supabase: {
     cookieOptions: {
-      secure: true,
+      secure: false,
     },
     clientOptions: {
       auth: {
