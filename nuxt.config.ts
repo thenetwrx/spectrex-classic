@@ -12,7 +12,7 @@ export default defineNuxtConfig({
   supabase: {
     cookieOptions: {
       maxAge: 60 * 60 * 8,
-      sameSite: "lax",
+      sameSite: "strict",
       secure: true,
     },
     clientOptions: {
