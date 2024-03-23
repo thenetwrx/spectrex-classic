@@ -1,6 +1,5 @@
 <script setup lang="ts">
-const router = useRouter();
-router.push("https://discord.gg/AaCWc6h9T4");
+navigateTo("https://discord.gg/AaCWc6h9T4", { external: true });
 </script>
 
 <template>
