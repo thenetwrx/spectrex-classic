@@ -218,7 +218,7 @@ a:hover {
           <i class="fa-solid fa-sun fa-sm" v-else></i>
         </button>
         <a href="/discord"><i class="fa-brands fa-discord"></i></a>
-        <a href="mailto:scriptkiddie577@gmail.com"
+        <a href="mailto:contact@spectrex.app"
           ><i class="fa-solid fa-envelope"></i
         ></a>
       </div>
