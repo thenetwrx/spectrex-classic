@@ -11,10 +11,13 @@ export default defineNuxtConfig({
   ],
   supabase: {
     cookieOptions: {
-      secure: false,
+      maxAge: 60 * 60 * 8,
+      sameSite: "lax",
+      secure: true,
     },
     clientOptions: {
       auth: {
+        detectSessionInUrl: true,
         autoRefreshToken: true,
         persistSession: true,
       },
