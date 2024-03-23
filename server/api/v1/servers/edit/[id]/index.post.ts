@@ -22,6 +22,10 @@ export default defineEventHandler(async (event) => {
     setResponseStatus(event, 500);
     return { message: "Language must be selected" };
   }
+  if (!body.category?.length) {
+    setResponseStatus(event, 500);
+    return { message: "Category must be selected" };
+  }
   if (body.tags?.length > 5) {
     setResponseStatus(event, 500);
     return { message: "You already have too many tags (max of 5)" };
@@ -53,6 +57,17 @@ export default defineEventHandler(async (event) => {
   } else {
     setResponseStatus(event, 500);
     return { message: "Invalid language selection" };
+  }
+
+  if (
+    body.category === "Community" ||
+    body.category === "Music" ||
+    body.category === "Technology" ||
+    body.category === "Other"
+  ) {
+  } else {
+    setResponseStatus(event, 500);
+    return { message: "Invalid category selection" };
   }
 
   if (body.description.length <= 128) {
@@ -124,9 +139,10 @@ export default defineEventHandler(async (event) => {
       .update({
         public: body.public,
         language: body.language,
-        invite_link: body.invite_link,
+        category: body.category,
         tags: body.tags,
         description: body.description,
+        invite_link: body.invite_link,
         nsfw: body.nsfw,
       })
       .eq("server_id", server_id)

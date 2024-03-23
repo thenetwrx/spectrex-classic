@@ -69,9 +69,9 @@
         </div>
       </div>
       <div class="flex flex-col py-4">
-        <div class="bg-base-200 w-full h-fit p-4 rounded-t-md">
-          <div class="flex flex-row gap-4 items-center">
-            <div class="w-16 h-16 overflow-hidden rounded-lg">
+        <div class="bg-base-200 w-full h-fit p-2 rounded-t-md">
+          <div class="flex flex-wrap gap-2 items-center">
+            <div class="w-16 h-16 overflow-hidden rounded-full">
               <img
                 v-if="server.data[0].icon"
                 :src="
@@ -83,6 +83,7 @@
                 "
                 alt="Server Image"
                 class="object-cover w-full h-full"
+                :class="server.data[0].nsfw ? 'blur-sm' : ''"
               />
               <div
                 v-else
@@ -96,27 +97,23 @@
               </div>
             </div>
             <div class="flex flex-col items-start">
-              <div class="flex flex-row gap-1 items-center">
-                <p class="text-2xl">{{ server.data[0].server_name }}</p>
-                <div class="badge badge-error gap-2" v-if="server.data[0].nsfw">
-                  NSFW
+              <span class="font-medium">{{ server.data[0].server_name }}</span>
+              <div class="flex flex-wrap gap-1 items-center">
+                <div class="bg-primary bg-opacity-50 px-1 rounded-md">
+                  <span class="opacity-75">{{ server.data[0].category }}</span>
                 </div>
-              </div>
-              <div class="flex flex-row max-sm:flex-col sm:gap-2">
+                <div
+                  class="bg-error bg-opacity-50 px-1 rounded-md"
+                  v-if="server.data[0].nsfw"
+                >
+                  <span class="opacity-75">NSFW</span>
+                </div>
                 <div class="flex flex-row gap-1 items-center">
                   <div class="bg-[#23A55A] h-4 w-4 rounded-full"></div>
-                  <p class="text-zinc-500">
+                  <p class="opacity-50">
                     {{ server.data[0].approximate_presence_count }} online
                   </p>
                 </div>
-                <!-- <div class="flex flex-row gap-1 items-center">
-                  <div
-                    class="border-4 border-[#80848E] h-4 w-4 rounded-full"
-                  ></div>
-                  <p class="text-zinc-500">
-                    {{ server.data[0].approximate_member_count }} members
-                  </p>
-                </div> -->
               </div>
             </div>
             <NuxtLink
@@ -127,27 +124,26 @@
           </div>
         </div>
         <div
-          class="bg-base-300 h-fit text-start p-4 rounded-b-md flex flex-col"
+          class="bg-base-300 h-fit text-start p-4 rounded-b-md flex flex-col gap-4"
         >
-          <div class="pb-4">
+          <div>
             <p class="text-2xl pb-2">Tags</p>
 
             <div
               class="flex flex-wrap gap-2 w-fit max-sm:max-w-fit overflow-x-auto"
               v-if="server.data[0].tags.length"
             >
-              <NuxtLink
+              <span
                 v-for="tag in server.data[0].tags"
-                :href="'/explore?tag=' + tag"
                 class="block max-w-fit px-2 py-1 bg-primary border-none bg-opacity-50 rounded-sm gap-2 hover:bg-opacity-65 hover:cursor-pointer transition-colors duration-200 ease-in-out text-black dark:text-white"
               >
                 <span class="text-black dark:text-primary">#</span>
                 {{ tag.toLowerCase() }}
-              </NuxtLink>
+              </span>
             </div>
             <p class="opacity-50" v-else>No tags provided</p>
           </div>
-          <div class="pb-4">
+          <div>
             <p class="text-2xl pb-2">Description</p>
 
             <p class="break-words opacity-50">

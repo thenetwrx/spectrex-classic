@@ -8,7 +8,7 @@
       <div class="flex flex-col py-4">
         <div class="bg-base-200 w-full h-fit p-4 rounded-t-md">
           <div class="flex flex-row gap-4 items-center">
-            <div class="w-16 h-16 overflow-hidden rounded-lg">
+            <div class="w-16 h-16 overflow-hidden rounded-full">
               <img
                 v-if="server.data[0].icon"
                 :src="
@@ -20,6 +20,7 @@
                 "
                 alt="Server Image"
                 class="object-cover w-full h-full"
+                :class="server.data[0].nsfw ? 'blur-sm' : ''"
               />
               <div
                 v-else
@@ -33,22 +34,12 @@
               </div>
             </div>
             <div class="flex flex-col items-start">
-              <p class="text-2xl">{{ server.data[0].server_name }}</p>
-              <div class="flex flex-row gap-2">
-                <div class="flex flex-row gap-1 items-center">
-                  <div class="bg-[#23A55A] h-4 w-4 rounded-full"></div>
-                  <p class="text-zinc-500">
-                    {{ server.data[0].approximate_presence_count }} members
-                  </p>
-                </div>
-                <div class="flex flex-row gap-1 items-center">
-                  <div
-                    class="border-4 border-[#80848E] h-4 w-4 rounded-full"
-                  ></div>
-                  <p class="text-zinc-500">
-                    {{ server.data[0].approximate_member_count }} members
-                  </p>
-                </div>
+              <span class="font-medium">{{ server.data[0].server_name }}</span>
+              <div class="flex flex-row gap-1 items-center">
+                <div class="bg-[#23A55A] h-4 w-4 rounded-full"></div>
+                <p class="opacity-50">
+                  {{ server.data[0].approximate_presence_count }} online
+                </p>
               </div>
             </div>
           </div>
@@ -65,10 +56,26 @@
               v-model="language"
               class="select select-bordered rounded-none w-full"
             >
-              <option disabled selected>Select language</option>
+              <option disabled selected value="">Select language</option>
               <option value="en">English</option>
               <option value="es">Español</option>
               <option value="ru">русский</option>
+            </select>
+          </div>
+          <div>
+            <p class="text-2xl pb-2">
+              Category<span class="text-error">*</span>
+            </p>
+
+            <select
+              v-model="category"
+              class="select select-bordered rounded-none w-full"
+            >
+              <option disabled selected value="">Select category</option>
+              <option value="Community">Community</option>
+              <option value="Music">Music</option>
+              <option value="Technology">Technology</option>
+              <option value="Other">Other</option>
             </select>
           </div>
           <div>
@@ -181,10 +188,10 @@ const route = useRoute();
 const router = useRouter();
 const user = useSupabaseUser();
 const client = useSupabaseClient<Database>();
-const refreshing_server = ref<boolean>(false);
 const server_id = route.params.id;
 
 const language = ref<string>("");
+const category = ref<string>("");
 const description = ref<string>("");
 const invite_link = ref<string>("");
 const nsfw = ref<boolean | null>(null);
@@ -195,6 +202,7 @@ const apply = async () => {
     headers: new Headers({ "content-type": "application/json" }),
     body: JSON.stringify({
       language: language.value,
+      category: category.value,
       invite_link: invite_link.value,
       tags: tags.value,
       nsfw: nsfw.value,

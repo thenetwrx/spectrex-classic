@@ -27,7 +27,7 @@ export default defineNuxtConfig({
     },
   },
   colorMode: {
-    preference: "light", // default value of $colorMode.preference
+    preference: "dark", // default value of $colorMode.preference
     dataValue: "theme",
     classPrefix: "",
     classSuffix: "",

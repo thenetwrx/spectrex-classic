@@ -11,6 +11,7 @@ export type Database = {
     Tables: {
       profiles: {
         Row: {
+          admin: boolean
           avatar_url: string
           description: string | null
           full_name: string
@@ -22,6 +23,7 @@ export type Database = {
           updated_at: number | null
         }
         Insert: {
+          admin?: boolean
           avatar_url: string
           description?: string | null
           full_name: string
@@ -33,6 +35,7 @@ export type Database = {
           updated_at?: number | null
         }
         Update: {
+          admin?: boolean
           avatar_url?: string
           description?: string | null
           full_name?: string
@@ -96,6 +99,7 @@ export type Database = {
           approximate_presence_count: string
           banned: boolean
           bumped_at: number
+          category: string
           created_at: number
           description: string | null
           icon: string | null
@@ -116,6 +120,7 @@ export type Database = {
           approximate_presence_count: string
           banned?: boolean
           bumped_at: number
+          category?: string
           created_at: number
           description?: string | null
           icon?: string | null
@@ -136,6 +141,7 @@ export type Database = {
           approximate_presence_count?: string
           banned?: boolean
           bumped_at?: number
+          category?: string
           created_at?: number
           description?: string | null
           icon?: string | null

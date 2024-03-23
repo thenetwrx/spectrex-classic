@@ -1,5 +1,4 @@
 export default defineNuxtRouteMiddleware(async (to, from) => {
-  console.log("execute");
   const supabase = useSupabaseClient();
   const router = useRouter();
 

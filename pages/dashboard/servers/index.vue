@@ -67,6 +67,7 @@
                 "
                 alt="Server Image"
                 class="object-cover rounded-full w-full h-full"
+                :class="server.nsfw ? 'blur-sm' : ''"
               />
               <div
                 v-else
