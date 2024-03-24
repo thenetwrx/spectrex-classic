@@ -193,7 +193,7 @@ a:hover {
     </div>
     <slot />
     <div
-      class="mt-auto w-full flex flex-row opacity-75 py-24 px-24 max-lg:px-4"
+      class="mt-auto w-full flex flex-row items-center opacity-75 py-24 px-24 max-lg:px-4"
     >
       <p class="flex flex-wrap gap-1">
         &copy; 2024 Apex Studios
@@ -206,7 +206,7 @@ a:hover {
       </p>
       <div class="flex flex-row gap-2 items-center ml-auto">
         <button
-          class="text-xl btn btn-ghost btn-sm"
+          class="text-xl btn btn-ghost"
           @click="
             setColorTheme($colorMode.preference === 'dark' ? 'light' : 'dark')
           "
@@ -217,10 +217,9 @@ a:hover {
           ></i>
           <i class="fa-solid fa-sun fa-sm" v-else></i>
         </button>
-        <a href="/discord"><i class="fa-brands fa-discord"></i></a>
-        <a href="mailto:contact@spectrex.app"
-          ><i class="fa-solid fa-envelope"></i
-        ></a>
+        <a href="mailto:contact@spectrex.app">
+          <i class="fa-solid fa-envelope"></i>
+        </a>
       </div>
     </div>
   </div>
