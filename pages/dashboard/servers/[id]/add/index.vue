@@ -57,8 +57,11 @@
               class="select select-bordered rounded-none w-full"
             >
               <option disabled selected value="">Select language</option>
+              <option value="unspecified">Unspecified</option>
               <option value="en">English</option>
               <option value="es">Español</option>
+              <option value="it">Italiano</option>
+              <option value="ja">日本語</option>
               <option value="ru">русский</option>
             </select>
           </div>
@@ -74,7 +77,10 @@
               <option disabled selected value="">Select category</option>
               <option value="Community">Community</option>
               <option value="Music">Music</option>
+              <option value="Gaming">Gaming</option>
+              <option value="Anime">Gaming</option>
               <option value="Technology">Technology</option>
+              <option value="Movies">Movies</option>
               <option value="Other">Other</option>
             </select>
           </div>

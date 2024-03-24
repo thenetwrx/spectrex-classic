@@ -50,8 +50,11 @@ export default defineEventHandler(async (event) => {
   }
 
   if (
+    body.language === "unspecified" ||
     body.language === "en" ||
     body.language === "es" ||
+    body.language === "it" ||
+    body.language === "ja" ||
     body.language === "ru"
   ) {
   } else {
@@ -62,7 +65,10 @@ export default defineEventHandler(async (event) => {
   if (
     body.category === "Community" ||
     body.category === "Music" ||
+    body.category === "Gaming" ||
+    body.category === "Anime" ||
     body.category === "Technology" ||
+    body.category === "Movies" ||
     body.category === "Other"
   ) {
   } else {

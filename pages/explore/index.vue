@@ -138,7 +138,7 @@
         <i class="fa-solid fa-arrow-left"></i>
       </button>
       <span class="mx-2 bg-base-200 px-2 py-1 rounded-md"
-        >{{ page + 1 }} / NA</span
+        >Page {{ page + 1 }}</span
       >
       <button
         class="btn btn-primary btn-sm"
@@ -162,7 +162,10 @@ const client = useSupabaseClient<Database>();
 const popular_categories = ref<Array<string>>([
   "Community",
   "Music",
+  "Gaming",
+  "Anime",
   "Technology",
+  "Movies",
   "Other",
 ]);
 const category = ref<string>(route.query.category);
