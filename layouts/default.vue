@@ -195,11 +195,14 @@ a:hover {
     <div
       class="mt-auto w-full flex flex-row opacity-75 py-24 px-24 max-lg:px-4"
     >
-      <p>
-        made by
-        <a class="underline" href="https://scriptkiddie5.vercel.app"
-          >scriptkiddie</a
-        >
+      <p class="flex flex-wrap gap-1">
+        &copy; 2024 Apex Studios
+        <span class="opacity-50">•</span>
+        <NuxtLink href="/discord" class="underline"> Support </NuxtLink>
+        <span class="opacity-50">•</span>
+        <NuxtLink href="/legal/terms-of-service" class="underline">
+          Terms
+        </NuxtLink>
       </p>
       <div class="flex flex-row gap-2 items-center ml-auto">
         <button
