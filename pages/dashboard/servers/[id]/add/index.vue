@@ -34,7 +34,9 @@
               </div>
             </div>
             <div class="flex flex-col items-start">
-              <span class="font-medium">{{ server.data[0].server_name }}</span>
+              <span class="font-medium text-lg">{{
+                server.data[0].server_name
+              }}</span>
               <div class="flex flex-row gap-1 items-center">
                 <div class="bg-[#23A55A] h-4 w-4 rounded-full"></div>
                 <p class="opacity-50">
@@ -186,9 +188,6 @@
 </template>
 
 <script setup lang="ts">
-definePageMeta({
-  middleware: ["check-session"],
-});
 import { type Database } from "~/database.types";
 const route = useRoute();
 const router = useRouter();

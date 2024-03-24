@@ -11,7 +11,6 @@ export default defineEventHandler(async (event) => {
 
   // 1. Grab body
   const body = await readBody(event);
-  console.log(body.language.length);
 
   // 2. Check variables on server side to prevent abuse
   if (typeof body.public !== "boolean") {

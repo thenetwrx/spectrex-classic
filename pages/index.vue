@@ -18,7 +18,7 @@
             :href="'/explore?category=' + category"
             class="block max-w-fit px-2 py-1 bg-primary border-none bg-opacity-50 rounded-sm gap-2 hover:bg-opacity-65 hover:cursor-pointer transition-colors duration-200 ease-in-out text-black dark:text-white"
           >
-            <span class="text-black dark:text-primary">#</span>
+            <span class="text-black dark:text-primary">/</span>
             {{ category }}
           </NuxtLink>
         </div>
@@ -42,7 +42,6 @@
 <script setup lang="ts">
 const client = useSupabaseClient();
 const session = await client.auth.getSession();
-console.log(session);
 
 const popular_categories = ref<Array<string>>([
   "Community",

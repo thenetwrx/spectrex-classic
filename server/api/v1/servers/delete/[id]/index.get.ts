@@ -39,13 +39,13 @@ export default defineEventHandler(async (event) => {
 
     const { data, error } = await client
       .from("servers")
-      .select("bumped_at, owner_provider_id")
+      .select("owner_provider_id")
       .eq("server_id", server_id)
       .eq("owner_provider_id", user.user_metadata.provider_id);
 
     if (error) {
       setResponseStatus(event, 500);
-      return { message: "A database error occurred when bumping the server" };
+      return { message: "A database error occurred when fetching the server" };
     }
 
     if (!data.length) {
@@ -53,34 +53,29 @@ export default defineEventHandler(async (event) => {
       return { message: "Server was not found" };
     }
 
-    // Compare the timestamps
-    const now = Date.now();
-    const cooldown = profile[0].premium_since !== null ? 3600000 : 7200000;
-    if ((data[0].bumped_at || 0) + cooldown <= now) {
-      const { error } = await client
-        .from("servers")
-        .update({ bumped_at: now })
-        .eq("server_id", server_id)
-        .eq("owner_provider_id", user.user_metadata.provider_id)
-        .select();
+    const { error: error1 } = await client
+      .from("servers")
+      .update({
+        approved_at: null,
+        public: false,
+        language: null,
+        category: null,
+        tags: [],
+        description: null,
+        invite_link: null,
+        nsfw: false,
+      })
+      .eq("server_id", server_id)
+      .eq("owner_provider_id", user.user_metadata.provider_id)
+      .select();
 
-      if (error) {
-        setResponseStatus(event, 500);
-        return { message: "A database error occurred when bumping the server" };
-      } else {
-        setResponseStatus(event, 200);
-        return { message: "Bumped" };
-      }
+    if (error1) {
+      setResponseStatus(event, 500);
+      return { message: "A database error occurred when deleting the server" };
     }
 
-    const timeLeftMilliseconds = now - (data[0].bumped_at || 0) - cooldown;
-    const timeLeftMessage = `Bump is on cooldown`;
-
-    return {
-      statusCode: 403,
-      message: timeLeftMessage,
-      timeLeft: timeLeftMilliseconds,
-    };
+    setResponseStatus(event, 200);
+    return { message: "Deleted" };
   } catch (err) {
     console.log(err);
 

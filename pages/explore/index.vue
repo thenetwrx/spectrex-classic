@@ -11,7 +11,7 @@
             href="/explore"
             class="block max-w-fit px-2 py-1 bg-primary border-none bg-opacity-50 rounded-sm gap-2 hover:bg-opacity-65 hover:cursor-pointer transition-colors duration-200 ease-in-out text-black dark:text-white"
           >
-            <span class="text-black dark:text-primary">#</span>
+            <span class="text-black dark:text-primary">/</span>
             All
           </NuxtLink>
           <NuxtLink
@@ -19,7 +19,7 @@
             :href="'/explore?category=' + category"
             class="block max-w-fit px-2 py-1 bg-primary border-none bg-opacity-50 rounded-sm gap-2 hover:bg-opacity-65 hover:cursor-pointer transition-colors duration-200 ease-in-out text-black dark:text-white"
           >
-            <span class="text-black dark:text-primary">#</span>
+            <span class="text-black dark:text-primary">/</span>
             {{ category }}
           </NuxtLink>
         </div>
@@ -75,7 +75,9 @@
                 </div>
                 <div class="flex flex-col">
                   <NuxtLink :href="'/servers/' + server.server_id">
-                    <span class="font-medium">{{ server.server_name }}</span>
+                    <span class="font-medium text-lg">{{
+                      server.server_name
+                    }}</span>
                   </NuxtLink>
                   <div class="flex flex-wrap gap-1 items-center">
                     <div class="bg-primary bg-opacity-50 px-1 rounded-md">
@@ -200,7 +202,6 @@ const { data: servers } = await useAsyncData("servers", async () => {
       (page.value + 1) * max_per_page.value - 1
     );
 
-  console.log(category.value);
   // Conditionally add the .eq() filter if category is not null
   if (category.value !== undefined) {
     query = query.eq("category", category.value);

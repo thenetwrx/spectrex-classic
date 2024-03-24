@@ -50,7 +50,10 @@
             <span v-if="server_metadata.on_cooldown">
               {{ formatRemainingTime(server.data[0].bumped_at) }}
             </span>
-            <span v-if="!server_metadata.on_cooldown">Bump </span>
+            <div v-if="!server_metadata.on_cooldown">
+              <span v-if="!server_metadata.bumping">Bump </span>
+              <span v-else>Bumping... </span>
+            </div>
             <i class="fa-solid fa-up-from-line"></i>
           </button>
           <NuxtLink
@@ -97,10 +100,18 @@
               </div>
             </div>
             <div class="flex flex-col items-start">
-              <span class="font-medium">{{ server.data[0].server_name }}</span>
+              <span class="font-medium text-lg">{{
+                server.data[0].server_name
+              }}</span>
               <div class="flex flex-wrap gap-1 items-center">
                 <div class="bg-primary bg-opacity-50 px-1 rounded-md">
                   <span class="opacity-75">{{ server.data[0].category }}</span>
+                </div>
+                <div
+                  class="bg-warning bg-opacity-50 px-1 rounded-md"
+                  v-if="!server.data[0].public"
+                >
+                  <span class="opacity-75">Private</span>
                 </div>
                 <div
                   class="bg-error bg-opacity-50 px-1 rounded-md"

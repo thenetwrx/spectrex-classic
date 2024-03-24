@@ -23,9 +23,10 @@ export default defineNuxtConfig({
       },
     },
     redirectOptions: {
+      cookieRedirect: true,
       callback: "/",
       login: "/login",
-      include: ["/dashboard(/*)?"],
+      include: ["/dashboard(/*)?", "/servers/*/report"],
       exclude: [],
     },
   },

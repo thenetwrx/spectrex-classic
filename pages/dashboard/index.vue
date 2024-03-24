@@ -59,9 +59,6 @@
 </template>
 
 <script setup lang="ts">
-definePageMeta({
-  middleware: ["check-session"],
-});
 import { type Database } from "~/database.types";
 const user = useSupabaseUser();
 const client = useSupabaseClient<Database>();

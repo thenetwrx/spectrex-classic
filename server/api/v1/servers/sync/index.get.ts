@@ -5,7 +5,6 @@ import { type Database } from "~/database.types";
 export default defineEventHandler(async (event) => {
   // 1. Check logged in status to prevent spam
   const user = await serverSupabaseUser(event);
-  console.log(user);
   if (!user) {
     setResponseStatus(event, 401);
     return { message: "Unauthorized" };

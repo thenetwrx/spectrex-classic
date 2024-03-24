@@ -78,7 +78,7 @@
                 </p>
               </div>
             </div>
-            <span class="font-medium">{{ server.server_name }}</span>
+            <span class="font-medium text-lg">{{ server.server_name }}</span>
           </div>
 
           <div>
@@ -137,9 +137,6 @@
 </template>
 
 <script setup lang="ts">
-definePageMeta({
-  middleware: ["check-session"],
-});
 const router = useRouter();
 import { type Database } from "~/database.types";
 const user = useSupabaseUser();

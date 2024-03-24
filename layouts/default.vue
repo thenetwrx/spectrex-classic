@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { useSessionRefresh } from "~/composables/useSessionRefresh";
-
 type Theme = "light" | "dark";
 
 const setColorTheme = (newTheme: Theme) => {
@@ -9,7 +7,6 @@ const setColorTheme = (newTheme: Theme) => {
 
 const user = useSupabaseUser();
 const supabase = useSupabaseClient();
-const { checkAndRefresh } = useSessionRefresh();
 
 useHead({
   link: [
@@ -225,3 +222,4 @@ a:hover {
     </div>
   </div>
 </template>
+~/composables/checkSession

@@ -99,7 +99,7 @@ export type Database = {
           approximate_presence_count: string
           banned: boolean
           bumped_at: number
-          category: string
+          category: string | null
           created_at: number
           description: string | null
           icon: string | null
@@ -120,7 +120,7 @@ export type Database = {
           approximate_presence_count: string
           banned?: boolean
           bumped_at: number
-          category?: string
+          category?: string | null
           created_at: number
           description?: string | null
           icon?: string | null
@@ -141,7 +141,7 @@ export type Database = {
           approximate_presence_count?: string
           banned?: boolean
           bumped_at?: number
-          category?: string
+          category?: string | null
           created_at?: number
           description?: string | null
           icon?: string | null

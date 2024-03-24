@@ -11,7 +11,6 @@ export default defineEventHandler(async (event) => {
 
   // 1. Grab body
   const body = await readBody(event);
-  console.log(body.language.length);
 
   // 2. Check variables on server side to prevent abuse
   if (!body.language?.length) {
@@ -122,7 +121,7 @@ export default defineEventHandler(async (event) => {
 
     const { data, error } = await client
       .from("servers")
-      .select("bumped_at,owner_provider_id")
+      .select("bumped_at")
       .eq("server_id", server_id)
       .eq("owner_provider_id", user.user_metadata.provider_id);
 
@@ -136,14 +135,12 @@ export default defineEventHandler(async (event) => {
       return { message: "Your server was not found" };
     }
 
-    // TODO: Fix exploit of free bump status's when user "deletes" a server and re-adds it
-
     const { error: error1 } = await client
       .from("servers")
       .update({
         approved_at: Date.now(),
-        bumped_at: Date.now(),
-        public: true,
+        bumped_at: data[0].bumped_at === null ? Date.now() : data[0].bumped_at,
+        public: false,
         language: body.language,
         category: body.category,
         tags: body.tags,

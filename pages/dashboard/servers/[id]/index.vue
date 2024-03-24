@@ -34,10 +34,18 @@
               </div>
             </div>
             <div class="flex flex-col items-start">
-              <span class="font-medium">{{ server.data[0].server_name }}</span>
+              <span class="font-medium text-lg">{{
+                server.data[0].server_name
+              }}</span>
               <div class="flex flex-wrap gap-1 items-center">
                 <div class="bg-primary bg-opacity-50 px-1 rounded-md">
                   <span class="opacity-75">{{ server.data[0].category }}</span>
+                </div>
+                <div
+                  class="bg-warning bg-opacity-50 px-1 rounded-md"
+                  v-if="!server.data[0].public"
+                >
+                  <span class="opacity-75">Private</span>
                 </div>
                 <div
                   class="bg-error bg-opacity-50 px-1 rounded-md"
@@ -53,6 +61,12 @@
                 </div>
               </div>
             </div>
+            <button
+              class="btn btn-error rounded-md px-6 ml-auto"
+              @click="deleteServer"
+            >
+              <i class="fa-solid fa-trash"></i> Delete
+            </button>
           </div>
         </div>
         <div
@@ -232,9 +246,6 @@
 </template>
 
 <script setup lang="ts">
-definePageMeta({
-  middleware: ["check-session"],
-});
 import { type Database } from "~/database.types";
 const route = useRoute();
 const router = useRouter();
@@ -271,6 +282,17 @@ const edit = async () => {
   const json = await response.json();
   if (response.status !== 200) return alert(json.message);
   else router.push("/servers/" + server_id);
+};
+const deleteServer = async () => {
+  const response = await fetch(`/api/v1/servers/delete/${server_id}`);
+  if (response.status === 401) {
+    await client.auth.signOut();
+    router.push("/login");
+  }
+
+  const json = await response.json();
+  if (response.status !== 200) return alert(json.message);
+  else router.push("/dashboard/servers");
 };
 
 const { data: server } = await useAsyncData(

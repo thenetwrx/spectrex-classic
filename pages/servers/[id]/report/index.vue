@@ -48,9 +48,6 @@
 </template>
 
 <script setup lang="ts">
-definePageMeta({
-  middleware: ["check-session"],
-});
 import { type Database } from "~/database.types";
 const route = useRoute();
 const router = useRouter();

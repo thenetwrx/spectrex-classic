@@ -34,9 +34,9 @@
         </div>
       </div>
       <div class="flex flex-col py-4">
-        <div class="bg-base-200 w-full h-fit p-4 rounded-t-md">
-          <div class="flex flex-row gap-4 items-center">
-            <div class="w-16 h-16 overflow-hidden rounded-lg">
+        <div class="bg-base-200 w-full h-fit p-2 rounded-t-md">
+          <div class="flex flex-wrap gap-2 items-center">
+            <div class="w-16 h-16 overflow-hidden rounded-full">
               <img
                 v-if="profile.data[0].avatar_url !== null"
                 :src="profile.data[0].avatar_url"
@@ -55,13 +55,13 @@
               </div>
             </div>
             <div class="flex flex-col items-start">
-              <p class="text-2xl">
+              <span class="font-medium text-lg">
                 <i
                   class="fa-solid fa-crown text-accent"
                   v-if="profile.data[0].premium_since !== null ? true : false"
                 ></i>
                 {{ profile.data[0].global_name }}
-              </p>
+              </span>
               <p class="opacity-50">@{{ profile.data[0].full_name }}</p>
             </div>
           </div>
@@ -69,7 +69,7 @@
         <div
           class="bg-base-300 h-fit text-start p-4 rounded-b-md flex flex-col"
         >
-          <div class="pb-4">
+          <div>
             <p class="text-2xl pb-2">Description</p>
 
             <p class="opacity-50">
