@@ -59,7 +59,7 @@ export default defineEventHandler(async (event) => {
     if ((data[0].bumped_at || 0) + cooldown <= now) {
       const { error } = await client
         .from("servers")
-        .update({ bumped_at: now })
+        .update({ bumped_at: now, updated_at: Date.now() })
         .eq("server_id", server_id)
         .eq("owner_provider_id", user.user_metadata.provider_id)
         .select();

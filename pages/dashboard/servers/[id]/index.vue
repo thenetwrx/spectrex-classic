@@ -248,7 +248,6 @@
 <script setup lang="ts">
 import { type Database } from "~/database.types";
 const route = useRoute();
-const router = useRouter();
 const user = useSupabaseUser();
 const client = useSupabaseClient<Database>();
 const server_id = route.params.id;
@@ -276,23 +275,23 @@ const edit = async () => {
   });
   if (response.status === 401) {
     await client.auth.signOut();
-    router.push("/login");
+    navigateTo("/login");
   }
 
   const json = await response.json();
   if (response.status !== 200) return alert(json.message);
-  else router.push("/servers/" + server_id);
+  else navigateTo("/servers/" + server_id);
 };
 const deleteServer = async () => {
   const response = await fetch(`/api/v1/servers/delete/${server_id}`);
   if (response.status === 401) {
     await client.auth.signOut();
-    router.push("/login");
+    navigateTo("/login");
   }
 
   const json = await response.json();
   if (response.status !== 200) return alert(json.message);
-  else router.push("/dashboard/servers");
+  else navigateTo("/dashboard/servers");
 };
 
 const { data: server } = await useAsyncData(

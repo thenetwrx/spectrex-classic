@@ -1,15 +1,14 @@
 export default defineNuxtRouteMiddleware(async (to, from) => {
   const supabase = useSupabaseClient();
-  const router = useRouter();
 
   const { data } = await supabase.auth.getSession();
 
-  if (!data?.session) router.push("/login");
+  if (!data?.session) navigateTo("/login");
   if (data && data.session?.expires_at)
     if (data.session.expires_at > Date.now()) {
       // Session doesn't exist, try to refresh
       const { error } = await supabase.auth.signOut();
-      router.push("/login");
+      navigateTo("/login");
 
       if (error) {
         // Handle the authentication error (e.g., redirect to login)

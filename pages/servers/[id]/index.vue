@@ -179,7 +179,6 @@
 import { type Database } from "~/database.types";
 import useClipboard from "~/composables/useClipboard";
 const route = useRoute();
-const router = useRouter();
 const user = useSupabaseUser();
 const client = useSupabaseClient<Database>();
 const server_id = route.params.id;
@@ -203,7 +202,7 @@ const { data: profile } = await useAsyncData("profile", async () => {
   return { data: null };
 });
 const { data: server } = await useAsyncData(
-  "servers",
+  "server",
   async () =>
     await client.from("servers").select("*").eq("server_id", server_id)
 );
@@ -240,9 +239,9 @@ const syncDiscordServers = async () => {
   const response = await fetch("/api/v1/servers/sync/" + server_id);
   if (response.status === 401) {
     await client.auth.signOut();
-    router.push("/login");
+    navigateTo("/login");
   }
-  refreshNuxtData("servers");
+  refreshNuxtData("server");
   syncing.value = false;
 };
 
@@ -254,7 +253,7 @@ const bump_server = async () => {
     );
     if (response.status === 401) {
       await client.auth.signOut();
-      router.push("/login");
+      navigateTo("/login");
     }
     server_metadata.value.bumping = false;
 

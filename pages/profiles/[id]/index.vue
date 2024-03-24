@@ -94,7 +94,6 @@
 import { type Database } from "~/database.types";
 import useClipboard from "~/composables/useClipboard";
 const route = useRoute();
-const router = useRouter();
 const user = useSupabaseUser();
 const client = useSupabaseClient<Database>();
 const user_id = route.params.id;
@@ -116,7 +115,7 @@ const syncProfile = async () => {
   const response = await fetch("/api/v1/profiles/sync/" + user_id);
   if (response.status === 401) {
     await client.auth.signOut();
-    router.push("/login");
+    navigateTo("/login");
   }
   refreshNuxtData("profile");
   syncing.value = false;

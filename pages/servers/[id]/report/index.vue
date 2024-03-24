@@ -50,7 +50,6 @@
 <script setup lang="ts">
 import { type Database } from "~/database.types";
 const route = useRoute();
-const router = useRouter();
 const client = useSupabaseClient<Database>();
 const server_id = route.params.id;
 
@@ -62,7 +61,7 @@ const issue_type = ref<IssueType | null>(null);
 const description = ref<string>("");
 
 const { data: server } = await useAsyncData(
-  "servers",
+  "server",
   async () =>
     await client.from("servers").select("*").eq("server_id", server_id)
 );
@@ -78,11 +77,11 @@ const report = async () => {
   });
   if (response.status === 401) {
     await client.auth.signOut();
-    router.push("/login");
+    navigateTo("/login");
   }
 
   const json = await response.json();
   if (response.status !== 200) return alert(json.message);
-  else router.push("/thank-you-safety");
+  else navigateTo("/thank-you-safety");
 };
 </script>

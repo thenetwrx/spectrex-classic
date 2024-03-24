@@ -140,6 +140,7 @@ export default defineEventHandler(async (event) => {
       .update({
         approved_at: Date.now(),
         bumped_at: data[0].bumped_at === null ? Date.now() : data[0].bumped_at,
+        updated_at: Date.now(),
         public: false,
         language: body.language,
         category: body.category,

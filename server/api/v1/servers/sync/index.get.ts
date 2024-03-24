@@ -86,6 +86,7 @@ export default defineEventHandler(async (event) => {
               raw_guilds[i].approximate_presence_count,
             created_at: Date.now(),
             bumped_at: Date.now(),
+            updated_at: Date.now(),
             owner_provider_id: user.user_metadata.provider_id,
             owner_id: user.id,
             server_name: raw_guilds[i].name,

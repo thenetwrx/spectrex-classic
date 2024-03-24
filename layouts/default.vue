@@ -174,7 +174,7 @@ a:hover {
               class="dropdown-content menu p-2 shadow bg-base-200 rounded-md w-52 mt-4"
             >
               <li>
-                <NuxtLink href="/dashboard/servers">Manage Servers</NuxtLink>
+                <NuxtLink href="/dashboard/servers">Dashboard</NuxtLink>
               </li>
               <span class="divider w-full py-2 px-4 m-0"></span>
               <li><button @click="logout">Logout</button></li>
@@ -222,4 +222,3 @@ a:hover {
     </div>
   </div>
 </template>
-~/composables/checkSession

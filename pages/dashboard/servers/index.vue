@@ -49,7 +49,7 @@
           .sort((a, b) => a.bumped_at - b.bumped_at)"
         :key="index"
         class="flex flex-row bg-base-200 hover:bg-base-300 rounded-md cursor-pointer transition-colors duration-200 p-4"
-        @click="$router.push('/servers/' + server.server_id)"
+        @click="navigateTo('/servers/' + server.server_id)"
       >
         <div class="flex flex-row items-center w-full">
           <!-- Added relative positioning -->
@@ -120,7 +120,7 @@
       </div>
       <select
         class="select select-bordered rounded-none w-full"
-        @change="((event:any) => $router.push(event?.target?.value || '/'))"
+        @change="((event:any) => navigateTo(event?.target?.value || '/'))"
       >
         <option disabled selected>Select server</option>
         <option
@@ -137,7 +137,6 @@
 </template>
 
 <script setup lang="ts">
-const router = useRouter();
 import { type Database } from "~/database.types";
 const user = useSupabaseUser();
 const client = useSupabaseClient<Database>();
@@ -170,7 +169,7 @@ const syncDiscordServers = async () => {
   const response = await fetch("/api/v1/servers/sync");
   if (response.status === 401) {
     await client.auth.signOut();
-    router.push("/login");
+    navigateTo("/login");
   }
   refreshNuxtData("servers");
   syncing.value = false;

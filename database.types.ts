@@ -113,6 +113,7 @@ export type Database = {
           server_id: string
           server_name: string
           tags: string[]
+          updated_at: number
         }
         Insert: {
           approved_at?: number | null
@@ -134,6 +135,7 @@ export type Database = {
           server_id: string
           server_name: string
           tags?: string[]
+          updated_at: number
         }
         Update: {
           approved_at?: number | null
@@ -155,6 +157,7 @@ export type Database = {
           server_id?: string
           server_name?: string
           tags?: string[]
+          updated_at?: number
         }
         Relationships: []
       }

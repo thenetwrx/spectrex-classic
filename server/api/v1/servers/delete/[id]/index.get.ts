@@ -64,6 +64,7 @@ export default defineEventHandler(async (event) => {
         description: null,
         invite_link: null,
         nsfw: false,
+        updated_at: Date.now(),
       })
       .eq("server_id", server_id)
       .eq("owner_provider_id", user.user_metadata.provider_id)

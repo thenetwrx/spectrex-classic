@@ -67,7 +67,6 @@
 
 <script setup lang="ts">
 import { type Database } from "~/database.types";
-const router = useRouter();
 const user = useSupabaseUser();
 const client = useSupabaseClient<Database>();
 const description = ref<string>("");
@@ -85,12 +84,12 @@ const edit = async () => {
   );
   if (response.status === 401) {
     await client.auth.signOut();
-    router.push("/login");
+    navigateTo("/login");
   }
 
   const json = await response.json();
   if (response.status !== 200) return alert(json.message);
-  else router.push("/profiles/" + user.value?.user_metadata.provider_id);
+  else navigateTo("/profiles/" + user.value?.user_metadata.provider_id);
 };
 
 const { data: profile } = await useAsyncData(
