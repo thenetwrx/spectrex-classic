@@ -42,11 +42,6 @@ useHead({
       content: "Spectrex - Find your Discord server",
     },
     {
-      name: "description",
-      content:
-        "Find Discord servers for gaming, hobbies, and more! Spectrex helps you discover the perfect online communities.",
-    },
-    {
       name: "og:description",
       content:
         "Join awesome Discord communities. Find gamers, hobbyists, and like-minded people on Spectrex. Explore now!",
@@ -54,6 +49,18 @@ useHead({
     {
       name: "og:image",
       content: "https://spectrex.app/images/logo_spectrex_white.png",
+    },
+    {
+      name: "og:site_name",
+      content: "Spectrex",
+    },
+    {
+      name: "og:url",
+      content: "https://spectrex.app",
+    },
+    {
+      name: "og:locale",
+      content: "en_US",
     },
     {
       name: "twitter:card",
