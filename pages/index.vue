@@ -14,7 +14,7 @@
           class="flex flex-wrap gap-2 w-fit max-sm:max-w-fit mx-auto overflow-x-auto py-2"
         >
           <NuxtLink
-            v-for="category in popular_categories"
+            v-for="category in categories"
             :href="'/explore?category=' + category"
             class="block max-w-fit px-2 py-1 bg-primary border-none bg-opacity-50 rounded-sm gap-2 hover:bg-opacity-65 hover:cursor-pointer transition-colors duration-200 ease-in-out text-black dark:text-white"
           >
@@ -40,10 +40,15 @@
 </template>
 
 <script setup lang="ts">
-const client = useSupabaseClient();
-const session = await client.auth.getSession();
+useSeoMeta({
+  title: "Spectrex - Home",
+  ogTitle: "Spectrex - Find your Discord server",
+  ogImage: "https://spectrex.app/images/logo_spectrex_white.png",
+  description:
+    "Unleash a world of niche communities, passionate gamers, and endless possibilities. Curated listings, tailored just for you.",
+});
 
-const popular_categories = ref<Array<string>>([
+const categories = ref<Array<string>>([
   "Community",
   "Music",
   "Gaming",

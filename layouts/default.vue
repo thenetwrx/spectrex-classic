@@ -35,8 +35,6 @@ useHead({
       href: "https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap",
     },
   ],
-  title: "Spectrex",
-  meta: [{ name: "description", content: "Spectrex" }],
 });
 
 const logout = async () => {
