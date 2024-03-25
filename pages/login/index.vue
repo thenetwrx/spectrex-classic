@@ -5,6 +5,7 @@ await client.auth.signInWithOAuth({
   provider: "discord",
   options: {
     scopes: "guilds",
+    redirectTo: "https://spectrex.app/auth/callback",
   },
 });
 </script>
