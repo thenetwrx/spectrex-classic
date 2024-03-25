@@ -37,6 +37,17 @@ useHead({
   ],
 });
 
+useSeoMeta({
+  title: "Spectrex",
+  ogTitle: "Spectrex - Find your Discord server",
+  description:
+    "Unleash a world of niche communities, passionate gamers, and endless possibilities. Curated listings, tailored just for you.",
+  ogDescription:
+    "Unleash a world of niche communities, passionate gamers, and endless possibilities. Curated listings, tailored just for you.",
+  ogImage: "https://spectrex.app/images/logo_spectrex_white.png",
+  twitterCard: "summary_large_image",
+});
+
 const logout = async () => {
   await supabase.auth.signOut();
   useRouter().push("/");
