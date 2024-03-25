@@ -7,7 +7,6 @@ export default defineNuxtConfig({
     "@nuxtjs/tailwindcss",
     "@nuxtjs/color-mode",
     "@nuxtjs/supabase",
-    "nuxt-bootstrap-icons",
   ],
   supabase: {
     cookieOptions: {

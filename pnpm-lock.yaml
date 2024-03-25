@@ -40,9 +40,6 @@ devDependencies:
   nuxt:
     specifier: ^3.11.1
     version: 3.11.1(@unocss/reset@0.58.6)(floating-vue@5.2.2)(unocss@0.58.6)(vite@5.2.6)
-  nuxt-bootstrap-icons:
-    specifier: ^1.1.7
-    version: 1.1.7
   tailwindcss-animated:
     specifier: ^1.0.1
     version: 1.0.1(tailwindcss@3.4.1)
@@ -2811,10 +2808,6 @@ packages:
     requiresBuild: true
     dev: true
 
-  /bootstrap-icons@1.11.3:
-    resolution: {integrity: sha512-+3lpHrCw/it2/7lBL15VR0HEumaBss0+f/Lb6ZvHISn1mlK83jjFpooTLsMWbIjJMDjDjOExMsTxnXSIT4k4ww==}
-    dev: true
-
   /brace-expansion@1.1.11:
     resolution: {integrity: sha512-iCuPHDFgrHX7H2vEI/5xpz07zSHB00TpugqhmYtVmMO6518mCuRMoOYFldEBl0g187ufozdaHgWKcYFb61qGiA==}
     dependencies:
@@ -5520,16 +5513,6 @@ packages:
     hasBin: true
     optionalDependencies:
       fsevents: 2.3.3
-    dev: true
-
-  /nuxt-bootstrap-icons@1.1.7:
-    resolution: {integrity: sha512-icl0DdLKFWa95wDG/FzDnIXfxQmdzyR6/Sc9FCFTbxcmMUs9srmwAa2eqDewyO3LQwK6YvjYAW8Rw0QZqenVlg==}
-    dependencies:
-      '@nuxt/kit': 3.11.1
-      bootstrap-icons: 1.11.3
-    transitivePeerDependencies:
-      - rollup
-      - supports-color
     dev: true
 
   /nuxt@3.11.1(@unocss/reset@0.58.6)(floating-vue@5.2.2)(unocss@0.58.6)(vite@5.2.6):
