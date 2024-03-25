@@ -1,10 +1,9 @@
 <script setup lang="ts">
 const client = useSupabaseClient();
 
-const res = await client.auth.signInWithOAuth({
+await client.auth.signInWithOAuth({
   provider: "discord",
   options: {
-    redirectTo: "/",
     scopes: "guilds",
   },
 });

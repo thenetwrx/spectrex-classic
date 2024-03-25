@@ -24,7 +24,7 @@ export default defineNuxtConfig({
     },
     redirectOptions: {
       cookieRedirect: true,
-      callback: "/",
+      callback: "https://spectrex.app/auth/callback",
       login: "/login",
       include: ["/dashboard(/*)?", "/servers/*/report"],
       exclude: [],
