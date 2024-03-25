@@ -1,5 +1,5 @@
 <template>
-  <section class="py-10 px-4 mx-auto max-w-4xl">
+  <div class="py-10 px-4 mx-auto max-w-4xl">
     <h2 class="text-center text-3xl font-bold">Terms of Service</h2>
     <p class="text-center text-lg">Last modified: 3/24/2024</p>
     <div class="text-start flex flex-col gap-2 py-10">
@@ -243,5 +243,5 @@
       </p>
       <p class="text-2xl py-6">Effective as of March 24th 2024</p>
     </div>
-  </section>
+  </div>
 </template>

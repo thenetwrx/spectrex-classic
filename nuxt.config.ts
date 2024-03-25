@@ -1,13 +1,13 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 
 export default defineNuxtConfig({
-  devtools: { enabled: false },
+  devtools: { enabled: true },
   modules: [
-    "@nuxtjs/tailwindcss",
     "@nuxt/image",
+    "@nuxtjs/tailwindcss",
     "@nuxtjs/color-mode",
-    "@formkit/auto-animate",
     "@nuxtjs/supabase",
+    "nuxt-bootstrap-icons",
   ],
   supabase: {
     cookieOptions: {

@@ -73,10 +73,10 @@ a:hover {
 <template>
   <div class="container-fluid min-h-screen flex flex-col">
     <!-- Mobile Sidebar -->
-    <div class="md:hidden">
+    <div class="md:hidden sticky top-0 left-4 z-50 p-3">
       <button
         @click="isMobileSidebarOpen = !isMobileSidebarOpen"
-        class="sticky top-0 left-4 z-50 bg-base-200 p-2 mt-4 btn-circle"
+        class="bg-base-200 p-4 mt-4 btn"
       >
         <i class="fas fa-bars"></i>
       </button>
@@ -139,7 +139,8 @@ a:hover {
             class="btn btn-sm btn-secondary w-full"
             data-theme="dark"
           >
-            <i class="fa-brands fa-discord"></i> Login
+            <i class="fa-brands fa-discord"></i>
+            Login
           </NuxtLink>
         </div>
       </div>
@@ -195,8 +196,10 @@ a:hover {
             href="/login"
             class="btn btn-sm btn-secondary"
             data-theme="dark"
-            ><i class="fa-brands fa-discord"></i> Login</NuxtLink
           >
+            <i class="fa-brands fa-discord"></i>
+            Login
+          </NuxtLink>
         </div>
       </div>
     </div>
@@ -217,21 +220,20 @@ a:hover {
           Privacy
         </NuxtLink>
       </p>
-      <div class="flex flex-row gap-2 items-center ml-auto">
+      <div class="flex flex-row gap-3 items-center ml-auto">
         <button
-          class="text-xl btn btn-ghost"
           @click="
             setColorTheme($colorMode.preference === 'dark' ? 'light' : 'dark')
           "
         >
           <i
-            class="fa-solid fa-moon fa-sm"
+            class="fa-solid fa-moon fa-lg"
             v-if="$colorMode.preference === 'dark'"
           ></i>
-          <i class="fa-solid fa-sun fa-sm" v-else></i>
+          <i class="fa-solid fa-sun fa-lg" v-else></i>
         </button>
         <a href="mailto:contact@spectrex.app">
-          <i class="fa-solid fa-envelope"></i>
+          <i class="fa-solid fa-lg fa-envelope"></i>
         </a>
       </div>
     </div>

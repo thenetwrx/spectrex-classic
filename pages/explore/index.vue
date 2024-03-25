@@ -1,136 +1,125 @@
 <template>
-  <div class="container max-w-8xl mx-auto px-4 py-8 flex flex-col">
-    <div class="flex items-center justify-center">
-      <div class="container mx-auto p-4">
-        <p class="text-4xl font-bold mb-4">Explore</p>
+  <div class="py-10 px-4 mx-auto max-w-6xl flex flex-col">
+    <p class="text-4xl font-bold mb-4">Explore</p>
 
-        <div
-          class="flex flex-wrap gap-2 w-fit max-sm:max-w-fit overflow-x-auto mb-6"
-        >
-          <NuxtLink
-            href="/explore"
-            class="block max-w-fit px-2 py-1 bg-primary border-none bg-opacity-50 rounded-sm gap-2 hover:bg-opacity-65 hover:cursor-pointer transition-colors duration-200 ease-in-out text-black dark:text-white"
-          >
-            <span class="text-black dark:text-primary">/</span>
-            All
-          </NuxtLink>
-          <NuxtLink
-            v-for="category in popular_categories"
-            :href="'/explore?category=' + category"
-            class="block max-w-fit px-2 py-1 bg-primary border-none bg-opacity-50 rounded-sm gap-2 hover:bg-opacity-65 hover:cursor-pointer transition-colors duration-200 ease-in-out text-black dark:text-white"
-          >
-            <span class="text-black dark:text-primary">/</span>
-            {{ category }}
-          </NuxtLink>
-        </div>
-        <p class="opacity-75 text-md mb-3">
-          Showing ({{ servers?.data?.length || 0 }} / {{ max_per_page }})
-          results
-        </p>
-        <div v-if="!servers?.data?.length">
-          <div class="w-full text-center my-32">
-            <p class="opacity-50">Nothing to see here...</p>
-          </div>
-        </div>
-        <div
-          class="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-4"
-          v-else
-        >
-          <div
-            v-for="server in servers?.data
-              ?.filter((_server) => _server.approved_at !== null)
-              .sort((a, b) => b.bumped_at - a.bumped_at)"
-            class="flex flex-col"
-          >
-            <div class="bg-base-200 rounded-t-md">
-              <!-- Added relative positioning -->
-              <!-- Server Image -->
-              <div class="flex flex-row items-center gap-2 w-full p-2 relative">
-                <div class="w-16 h-16 overflow-hidden rounded-lg">
-                  <NuxtLink :href="'/servers/' + server.server_id">
-                    <img
-                      v-if="server.icon"
-                      :src="
-                        'https://cdn.discordapp.com/icons/' +
-                        server.server_id +
-                        '/' +
-                        server.icon +
-                        '.webp?size=96'
-                      "
-                      alt="Server Image"
-                      class="object-cover rounded-full w-full h-full"
-                      :class="server.nsfw ? 'blur-sm' : ''"
-                    />
-                    <div
-                      v-else
-                      class="h-full flex flex-col items-center rounded-full bg-base-100"
-                    >
-                      <p class="opacity-50 mt-auto mb-auto text-3xl">
-                        {{
-                          server.server_name.slice(0, 1).toUpperCase() || "?"
-                        }}
-                      </p>
-                    </div>
-                  </NuxtLink>
+    <div class="flex flex-wrap gap-2 overflow-x-auto mb-6">
+      <NuxtLink
+        href="/explore"
+        class="block max-w-fit px-2 py-1 bg-primary border-none bg-opacity-50 rounded-sm gap-2 hover:bg-opacity-65 hover:cursor-pointer transition-colors duration-200 ease-in-out text-black dark:text-white"
+      >
+        <span class="text-black dark:text-primary">/</span>
+        All
+      </NuxtLink>
+      <NuxtLink
+        v-for="category in popular_categories"
+        :href="'/explore?category=' + category"
+        class="block max-w-fit px-2 py-1 bg-primary border-none bg-opacity-50 rounded-sm gap-2 hover:bg-opacity-65 hover:cursor-pointer transition-colors duration-200 ease-in-out text-black dark:text-white"
+      >
+        <span class="text-black dark:text-primary">/</span>
+        {{ category }}
+      </NuxtLink>
+    </div>
+    <p class="opacity-75 text-md mb-3">
+      Showing ({{ servers?.data?.length || 0 }} / {{ max_per_page }}) results
+    </p>
+    <div v-if="!servers?.data?.length">
+      <div class="w-full text-center my-32">
+        <p class="opacity-50">Nothing to see here...</p>
+      </div>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-4" v-else>
+      <div
+        v-for="server in servers?.data
+          ?.filter((_server) => _server.approved_at !== null)
+          .sort((a, b) => b.bumped_at - a.bumped_at)"
+        class="flex flex-col"
+      >
+        <div class="bg-base-200 rounded-t-md">
+          <!-- Added relative positioning -->
+          <!-- Server Image -->
+          <div class="flex flex-row items-center gap-2 w-full p-2 relative">
+            <div class="w-16 h-16 overflow-hidden rounded-lg">
+              <NuxtLink :href="'/servers/' + server.server_id">
+                <img
+                  v-if="server.icon"
+                  :src="
+                    'https://cdn.discordapp.com/icons/' +
+                    server.server_id +
+                    '/' +
+                    server.icon +
+                    '.webp?size=96'
+                  "
+                  alt="Server Image"
+                  class="object-cover rounded-full w-full h-full"
+                  :class="server.nsfw ? 'blur-sm' : ''"
+                />
+                <div
+                  v-else
+                  class="h-full flex flex-col items-center rounded-full bg-base-100"
+                >
+                  <p class="opacity-50 mt-auto mb-auto text-3xl">
+                    {{ server.server_name.slice(0, 1).toUpperCase() || "?" }}
+                  </p>
                 </div>
-                <div class="flex flex-col">
-                  <NuxtLink :href="'/servers/' + server.server_id">
-                    <span class="font-medium text-lg">{{
-                      server.server_name
-                    }}</span>
-                  </NuxtLink>
-                  <div class="flex flex-wrap gap-1 items-center">
-                    <div class="bg-primary bg-opacity-50 px-1 rounded-md">
-                      <span class="opacity-75">{{ server.category }}</span>
-                    </div>
-                    <div
-                      class="bg-error bg-opacity-50 px-1 rounded-md"
-                      v-if="server.nsfw"
-                    >
-                      <span class="opacity-75">NSFW</span>
-                    </div>
-                    <div class="flex flex-row gap-1 items-center">
-                      <div class="bg-[#23A55A] h-4 w-4 rounded-full"></div>
-                      <p class="opacity-50">
-                        {{ server.approximate_presence_count }} online
-                      </p>
-                    </div>
-                  </div>
+              </NuxtLink>
+            </div>
+            <div class="flex flex-col">
+              <NuxtLink :href="'/servers/' + server.server_id">
+                <span class="font-medium text-lg">{{
+                  server.server_name
+                }}</span>
+              </NuxtLink>
+              <div class="flex flex-wrap gap-1 items-center">
+                <div class="bg-primary bg-opacity-50 px-1 rounded-md">
+                  <span class="opacity-75">{{ server.category }}</span>
                 </div>
                 <div
-                  class="absolute top-1 right-1 flex flex-row gap-1 items-center justify-start"
+                  class="bg-error bg-opacity-50 px-1 rounded-md"
+                  v-if="server.nsfw"
                 >
-                  <NuxtLink
-                    :href="'/servers/' + server.server_id + '/report'"
-                    class="btn btn-ghost max-sm:btn-sm"
-                  >
-                    <i class="fa-solid md:fa-lg fa-flag"></i>
-                  </NuxtLink>
+                  <span class="opacity-75">NSFW</span>
+                </div>
+                <div class="flex flex-row gap-1 items-center">
+                  <div class="bg-[#23A55A] h-4 w-4 rounded-full"></div>
+                  <p class="opacity-50">
+                    {{ server.approximate_presence_count }} online
+                  </p>
                 </div>
               </div>
             </div>
-            <div class="bg-base-300 rounded-b-md py-2 px-4">
-              <template v-if="server.tags.length">
-                <div
-                  class="flex flex-wrap gap-2 w-fit max-sm:max-w-fit overflow-x-auto my-2"
-                >
-                  <span
-                    v-for="tag in server.tags"
-                    class="block max-w-fit px-2 py-1 bg-primary border-none bg-opacity-50 rounded-sm gap-2 hover:bg-opacity-65 hover:cursor-pointer transition-colors duration-200 ease-in-out text-black dark:text-white"
-                  >
-                    <span class="text-black dark:text-primary">#</span>
-                    {{ tag }}
-                  </span>
-                </div>
-                <div class="divider m-0"></div>
-              </template>
-
-              <p class="opacity-75 break-words">{{ server.description }}</p>
+            <div
+              class="absolute top-1 right-1 flex flex-row gap-1 items-center justify-start"
+            >
+              <NuxtLink
+                :href="'/servers/' + server.server_id + '/report'"
+                class="btn btn-ghost max-sm:btn-sm"
+              >
+                <i class="fa-solid md:fa-lg fa-flag"></i>
+              </NuxtLink>
             </div>
           </div>
         </div>
+        <div class="bg-base-300 rounded-b-md py-2 px-4">
+          <template v-if="server.tags.length">
+            <div
+              class="flex flex-wrap gap-2 w-fit max-sm:max-w-fit overflow-x-auto my-2"
+            >
+              <span
+                v-for="tag in server.tags"
+                class="block max-w-fit px-2 py-1 bg-primary border-none bg-opacity-50 rounded-sm gap-2 hover:bg-opacity-65 hover:cursor-pointer transition-colors duration-200 ease-in-out text-black dark:text-white"
+              >
+                <span class="text-black dark:text-primary">#</span>
+                {{ tag }}
+              </span>
+            </div>
+            <div class="divider m-0"></div>
+          </template>
+
+          <p class="opacity-75 break-words">{{ server.description }}</p>
+        </div>
       </div>
     </div>
+
     <div class="flex flex-row items-center place-self-center mt-8">
       <button
         class="btn btn-primary btn-sm"
