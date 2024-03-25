@@ -196,7 +196,7 @@ a:hover {
       class="mt-auto w-full flex flex-row items-center opacity-75 py-24 px-24 max-lg:px-4"
     >
       <p class="flex flex-wrap gap-1">
-        &copy; 2024 Apex Studios
+        &copy; 2024 Spectrex
         <span class="opacity-50">•</span>
         <NuxtLink href="/discord" class="underline"> Support </NuxtLink>
         <span class="opacity-50">•</span>
