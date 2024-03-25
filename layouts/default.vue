@@ -35,6 +35,36 @@ useHead({
       href: "https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap",
     },
   ],
+  title: "Spectrex",
+  meta: [
+    {
+      name: "og:title",
+      content: "Spectrex - Find your Discord server",
+    },
+    {
+      name: "description",
+      content:
+        "Find Discord servers for gaming, hobbies, and more! Spectrex helps you discover the perfect online communities.",
+    },
+    {
+      name: "og:description",
+      content:
+        "Join awesome Discord communities. Find gamers, hobbyists, and like-minded people on Spectrex. Explore now!",
+    },
+    {
+      name: "og:image",
+      content: "https://spectrex.app/images/logo_spectrex_white.png",
+    },
+    {
+      name: "twitter:card",
+      content: "summary_large_image",
+    },
+    {
+      name: "keywords",
+      content:
+        "Discord servers, find Discord, Discord communities, gaming Discord",
+    },
+  ],
 });
 
 useSeoMeta({
