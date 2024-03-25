@@ -9,8 +9,12 @@
         Spectrex's website (spectrex.app), products, and services ("Products").
         Please read these Terms carefully, and contact us if you have any
         questions. By accessing or using our Products, you agree to be bound by
-        these Terms and by our Privacy Policy.
+        these Terms and by our
+        <NuxtLink href="/legal/privacy-policy" class="text-primary"
+          >Privacy Policy</NuxtLink
+        >.
       </p>
+
       <p class="text-3xl">1. Using Spectrex</p>
       <div>
         <p><span>- </span> Who can use Spectrex</p>
@@ -46,6 +50,7 @@
           commercial purposes, any portion of the Spectrex service.
         </p>
       </div>
+
       <p class="text-3xl">2. Your content</p>
       <div>
         <p><span>- </span> Posting content</p>
@@ -97,6 +102,7 @@
           employees, or obtained from sources other than you.
         </p>
       </div>
+
       <p class="text-3xl">3. Security</p>
       <p class="opacity-75">
         We care about the security of our users. While we work to protect the
@@ -105,6 +111,7 @@
         measures. We ask that you keep your password secure. Please notify us
         immediately of any compromise or unauthorized use of your account.
       </p>
+
       <p class="text-3xl">4. Third-party links, sites, and services</p>
       <p class="opacity-75">
         Our Products may contain (back)links to third-party websites,
@@ -116,6 +123,7 @@
         agree that Spectrex will have no liability arising from your use of or
         access to any third-party website, service, or content.
       </p>
+
       <p class="text-3xl">5. Termination</p>
       <p class="opacity-75">
         Spectrex may terminate or suspend this license at any time, with or
@@ -123,6 +131,7 @@
         bound by Sections 2 and 5 of these Terms. We reserve the right to refuse
         service to anyone.
       </p>
+
       <p class="text-3xl">6. Indemnity</p>
       <p class="opacity-75">
         You agree to indemnify and hold harmless Spectrex and its respective
@@ -134,6 +143,7 @@
         access to or use of our Products, (b) your User Content, or (c) your
         breach of any of these Terms.
       </p>
+
       <p class="text-3xl">7. Disclaimers</p>
       <p class="opacity-75">
         The Products and all included content are provided on an "as is" basis
@@ -151,6 +161,7 @@
         have a chance to take it down. If you see bad stuff, please report it to
         us.
       </p>
+
       <p class="text-3xl">8. Limitation of liability</p>
       <p class="opacity-75">
         TO THE MAXIMUM EXTENT PERMITTED BY LAW, SPECTREX SHALL NOT BE LIABLE FOR
@@ -165,6 +176,7 @@
         IN NO EVENT SHALL SPECTREX'S AGGREGATE LIABILITY FOR ALL CLAIMS RELATING
         TO THE PRODUCTS EXCEED ONE HUNDRED USD ($100).
       </p>
+
       <p class="text-3xl">9. Dispute Resolution</p>
       <p class="opacity-75">
         For any dispute you have with Spectrex, you agree to first contact us
@@ -182,12 +194,14 @@
         OTHERWISE, THE ARBITRATOR MAY NOT CONSOLIDATE MORE THAN ONE PERSON'S
         CLAIMS.
       </p>
+
       <p class="text-3xl">10. Governing law and jurisdiction</p>
       <p class="opacity-75">
         These Terms shall be governed by the laws of The United States of
         America and are subject to the exclusive jurisdiction of the courts of
         Indianapolis, Indiana.
       </p>
+
       <p class="text-3xl">11. General terms</p>
       <p class="opacity-75">
         Notification procedures and changes to these Terms Spectrex reserves the
@@ -200,6 +214,7 @@
         by the revised Terms. If you do not agree to the new terms, please stop
         using the Products.
       </p>
+
       <p class="text-3xl">Assignment</p>
       <p class="opacity-75">
         These Terms, and any rights and licenses granted hereunder, may not be
@@ -207,6 +222,7 @@
         restriction. Any attempted transfer or assignment in violation hereof
         shall be null and void.
       </p>
+
       <p class="text-3xl">Entire agreement/severability</p>
       <p class="opacity-75">
         These Terms, together with the Privacy policy and any amendments and any
@@ -217,6 +233,7 @@
         minimum extent necessary, and the remaining provisions of these Terms
         will remain in full force and effect.
       </p>
+
       <p class="text-3xl">No waiver</p>
       <p class="opacity-75">
         No waiver of any term of these Terms shall be deemed a further or
@@ -224,7 +241,7 @@
         to assert any right or provision under these Terms shall not constitute
         a waiver of such right or provision.
       </p>
-      <p class="text-2xl">Effective March 24th 2024</p>
+      <p class="text-2xl py-6">Effective as of March 24th 2024</p>
     </div>
   </section>
 </template>

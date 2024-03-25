@@ -203,6 +203,10 @@ a:hover {
         <NuxtLink href="/legal/terms-of-service" class="underline">
           Terms
         </NuxtLink>
+        <span class="opacity-50">•</span>
+        <NuxtLink href="/legal/privacy-policy" class="underline">
+          Privacy
+        </NuxtLink>
       </p>
       <div class="flex flex-row gap-2 items-center ml-auto">
         <button
