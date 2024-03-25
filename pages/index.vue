@@ -43,9 +43,12 @@
 useSeoMeta({
   title: "Spectrex - Home",
   ogTitle: "Spectrex - Find your Discord server",
-  ogImage: "https://spectrex.app/images/logo_spectrex_white.png",
   description:
     "Unleash a world of niche communities, passionate gamers, and endless possibilities. Curated listings, tailored just for you.",
+  ogDescription:
+    "Unleash a world of niche communities, passionate gamers, and endless possibilities. Curated listings, tailored just for you.",
+  ogImage: "https://spectrex.app/images/logo_spectrex_white.png",
+  twitterCard: "summary_large_image",
 });
 
 const categories = ref<Array<string>>([
