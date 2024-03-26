@@ -38,7 +38,7 @@ useHead({
     },
     {
       name: "og:title",
-      content: "Spectrex - Find your Discord server",
+      content: "Spectrex - Find YOUR Discord server",
     },
     {
       name: "og:description",
@@ -79,7 +79,7 @@ useHead({
     },
     {
       name: "twitter:title",
-      content: "Spectrex - Find your Discord server",
+      content: "Spectrex - Find YOUR Discord server",
     },
     {
       name: "twitter:description",
