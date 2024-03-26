@@ -200,16 +200,17 @@ a:hover {
 
     <!-- Desktop Navbar -->
     <div
-      class="hidden md:block w-full p-0 sticky top-0 z-40 animate-once animate-fade-down animate-ease-in-out"
+      class="hidden md:block w-full p-0 animate-once animate-fade-down animate-ease-in-out"
     >
       <div
         class="py-4 px-20 max-md:px-4 h-16 bg-base-200 flex flex-row items-center justify-between"
       >
         <div class="flex items-center gap-2">
-          <NuxtLink href="/" class="mr-3">
+          <!-- <NuxtLink href="/" class="mr-3">
             <NuxtImg src="/images/logo_spectrex.png" class="h-6" />
-          </NuxtLink>
+          </NuxtLink> -->
 
+          <NuxtLink href="/"><span>Home</span></NuxtLink>
           <NuxtLink href="/explore"><span>Explore</span></NuxtLink>
           <NuxtLink href="/dashboard/servers"><span>Add server</span></NuxtLink>
           <NuxtLink href="/premium"><span>Premium</span></NuxtLink>
@@ -248,26 +249,31 @@ a:hover {
     </div>
     <slot />
     <div
-      class="mt-auto w-full flex flex-row items-center opacity-75 py-24 px-24 max-lg:px-4"
+      class="mt-auto w-full flex flex-col gap-12 bg-base-300 p-24 max-md:p-10"
     >
-      <p class="flex flex-wrap gap-1">
-        &copy; 2024 Spectrex
-        <span class="opacity-50">•</span>
-        <NuxtLink href="/discord" class="underline"> Support </NuxtLink>
-        <span class="opacity-50">•</span>
-        <NuxtLink href="/legal/terms-of-service" class="underline">
-          Terms
+      <div class="flex flex-row max-md:flex-col gap-6">
+        <NuxtLink href="/">
+          <NuxtImg src="/images/logo_spectrex.png" class="h-6"></NuxtImg>
         </NuxtLink>
-        <span class="opacity-50">•</span>
-        <NuxtLink href="/legal/privacy-policy" class="underline">
-          Privacy
-        </NuxtLink>
-      </p>
-      <div class="flex flex-row gap-3 items-center ml-auto">
-        <a href="mailto:contact@spectrex.app">
-          <i class="fa-solid fa-lg fa-envelope"></i>
-        </a>
+        <div class="flex flex-col gap-2">
+          <p class="opacity-75 text-md whitespace-break-spaces">SERVICE</p>
+          <NuxtLink href="/explore">Find a server</NuxtLink>
+          <NuxtLink href="/dashboard/servers">Add your server</NuxtLink>
+          <NuxtLink href="/premium">Premium</NuxtLink>
+        </div>
+        <div class="flex flex-col gap-2">
+          <p class="opacity-75 text-md whitespace-break-spaces">USEFUL LINKS</p>
+          <NuxtLink href="/discord">Discord Support</NuxtLink>
+          <NuxtLink href="mailto:contact@spectrex.app">Email Support</NuxtLink>
+        </div>
+        <div class="flex flex-col gap-2">
+          <p class="opacity-75 text-md whitespace-break-spaces">LEGAL</p>
+          <NuxtLink href="/legal/terms-of-service">Terms of Service</NuxtLink>
+          <NuxtLink href="/legal/privacy-policy">Privacy Policy</NuxtLink>
+        </div>
       </div>
+
+      <p class="opacity-75 ml-auto max-md:mx-auto">&copy; 2024 Spectrex</p>
     </div>
   </div>
 </template>
