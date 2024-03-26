@@ -1,10 +1,4 @@
 <script setup lang="ts">
-type Theme = "light" | "dark";
-
-const setColorTheme = (newTheme: Theme) => {
-  useColorMode().preference = newTheme;
-};
-
 const user = useSupabaseUser();
 const supabase = useSupabaseClient();
 
@@ -53,7 +47,7 @@ useHead({
     },
     {
       name: "og:image",
-      content: "https://spectrex.app/images/logo_spectrex_white.png",
+      content: "https://spectrex.app/images/logo_spectrex.png",
     },
     {
       name: "og:site_name",
@@ -94,7 +88,7 @@ useHead({
     },
     {
       name: "twitter:image",
-      content: "https://spectrex.app/images/logo_spectrex_white.png",
+      content: "https://spectrex.app/images/logo_spectrex.png",
     },
     {
       name: "keywords",
@@ -158,17 +152,8 @@ a:hover {
       >
         <div class="flex flex-col gap-2 p-2">
           <!-- Logo and Navigation Links -->
-          <NuxtLink href="/" class="ml-auto mr-auto py-3">
-            <NuxtImg
-              v-if="$colorMode.preference === 'dark'"
-              src="/images/logo_spectrex_white.png"
-              class="h-8 mr-3"
-            ></NuxtImg>
-            <NuxtImg
-              v-else
-              src="/images/logo_spectrex_black.png"
-              class="h-8 mr-3"
-            ></NuxtImg>
+          <NuxtLink href="/" class="mx-auto py-3">
+            <NuxtImg src="/images/logo_spectrex.png" class="h-6" />
           </NuxtLink>
           <NuxtLink href="/explore" class="p-2 bg-base-300 rounded-md">
             <span>Explore</span>
@@ -221,17 +206,8 @@ a:hover {
         class="py-4 px-20 max-md:px-4 h-16 bg-base-200 flex flex-row items-center justify-between"
       >
         <div class="flex items-center gap-2">
-          <NuxtLink href="/">
-            <NuxtImg
-              v-if="$colorMode.preference === 'dark'"
-              src="/images/logo_spectrex_white.png"
-              class="h-8 mr-3"
-            />
-            <NuxtImg
-              v-else
-              src="/images/logo_spectrex_black.png"
-              class="h-8 mr-3"
-            />
+          <NuxtLink href="/" class="mr-3">
+            <NuxtImg src="/images/logo_spectrex.png" class="h-6" />
           </NuxtLink>
 
           <NuxtLink href="/explore"><span>Explore</span></NuxtLink>
@@ -288,17 +264,6 @@ a:hover {
         </NuxtLink>
       </p>
       <div class="flex flex-row gap-3 items-center ml-auto">
-        <button
-          @click="
-            setColorTheme($colorMode.preference === 'dark' ? 'light' : 'dark')
-          "
-        >
-          <i
-            class="fa-solid fa-moon fa-lg"
-            v-if="$colorMode.preference === 'dark'"
-          ></i>
-          <i class="fa-solid fa-sun fa-lg" v-else></i>
-        </button>
         <a href="mailto:contact@spectrex.app">
           <i class="fa-solid fa-lg fa-envelope"></i>
         </a>

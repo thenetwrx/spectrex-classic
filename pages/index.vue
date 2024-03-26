@@ -16,9 +16,9 @@
           <NuxtLink
             v-for="category in categories"
             :href="'/explore?category=' + category"
-            class="block max-w-fit px-2 py-1 bg-primary border-none bg-opacity-50 rounded-sm gap-2 hover:bg-opacity-65 hover:cursor-pointer transition-colors duration-200 ease-in-out text-black dark:text-white"
+            class="block max-w-fit px-2 py-1 bg-primary border-none bg-opacity-50 rounded-sm gap-2 hover:bg-opacity-65 hover:cursor-pointer transition-colors duration-200 ease-in-out text-white"
           >
-            <span class="text-black dark:text-primary">/</span>
+            <span class="text-primary">/</span>
             {{ category }}
           </NuxtLink>
         </div>

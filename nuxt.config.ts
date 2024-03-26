@@ -5,7 +5,6 @@ export default defineNuxtConfig({
   modules: [
     "@nuxt/image",
     "@nuxtjs/tailwindcss",
-    "@nuxtjs/color-mode",
     "@nuxtjs/supabase",
     "nuxt-vercel-analytics",
   ],
@@ -37,13 +36,6 @@ export default defineNuxtConfig({
       exclude: [],
     },
   },
-  colorMode: {
-    preference: "dark", // default value of $colorMode.preference
-    dataValue: "theme",
-    classPrefix: "",
-    classSuffix: "",
-  },
-
   routeRules: {
     "/auth/callback": { ssr: false },
   },

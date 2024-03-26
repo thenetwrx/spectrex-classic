@@ -16,16 +16,16 @@ export default {
   daisyui: {
     themes: [
       {
-        light: {
-          ...require("daisyui/src/theming/themes")["light"],
-          "base-content": "#000",
-          primary: "#1076eb",
-          "primary-content": "#fff",
-          secondary: "#000",
-          "secondary-content": "#fff",
-          accent: "#ffbf28",
-          "accent-content": "#fff",
-        },
+        // light: {
+        //   ...require("daisyui/src/theming/themes")["light"],
+        //   "base-content": "#000",
+        //   primary: "#1076eb",
+        //   "primary-content": "#fff",
+        //   secondary: "#000",
+        //   "secondary-content": "#fff",
+        //   accent: "#ffbf28",
+        //   "accent-content": "#fff",
+        // },
         dark: {
           ...require("daisyui/src/theming/themes")["dark"],
           "base-content": "#fff",

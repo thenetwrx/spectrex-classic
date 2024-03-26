@@ -155,11 +155,11 @@
               <span
                 v-for="(tag, index) in tags"
                 :key="index"
-                class="block max-w-fit px-2 py-1 bg-primary border-none bg-opacity-50 rounded-sm gap-2 hover:bg-opacity-65 hover:cursor-pointer transition-colors duration-200 ease-in-out text-black dark:text-white"
+                class="block max-w-fit px-2 py-1 bg-primary border-none bg-opacity-50 rounded-sm gap-2 hover:bg-opacity-65 hover:cursor-pointer transition-colors duration-200 ease-in-out text-white"
                 @click="removeTag(index)"
               >
                 <i class="fa-solid fa-square-xmark fa-lg mr-2"></i>
-                <span class="text-black dark:text-primary">#</span>
+                <span class="text-primary">#</span>
                 {{ tag }}
               </span>
             </div>
