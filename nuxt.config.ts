@@ -44,5 +44,5 @@ export default defineNuxtConfig({
     classSuffix: "",
   },
 
-  ssr: false,
+  ssr: true,
 });
