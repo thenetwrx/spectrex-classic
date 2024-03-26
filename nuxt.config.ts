@@ -44,5 +44,9 @@ export default defineNuxtConfig({
     classSuffix: "",
   },
 
+  routeRules: {
+    "/auth/callback": { ssr: false },
+  },
+
   ssr: true,
 });
