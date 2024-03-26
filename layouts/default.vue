@@ -38,6 +38,11 @@ useHead({
   title: "Spectrex",
   meta: [
     {
+      name: "description",
+      content:
+        "Join awesome Discord communities. Find gamers, hobbyists, and like-minded people on Spectrex. Explore now!",
+    },
+    {
       name: "og:title",
       content: "Spectrex - Find your Discord server",
     },

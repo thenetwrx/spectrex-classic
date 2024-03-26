@@ -7,7 +7,15 @@ export default defineNuxtConfig({
     "@nuxtjs/tailwindcss",
     "@nuxtjs/color-mode",
     "@nuxtjs/supabase",
+    "nuxt-vercel-analytics",
   ],
+  vercelAnalytics: {
+    mode: "auto",
+    debug: true,
+    beforeSend: (event: any) => {
+      return event;
+    },
+  },
   supabase: {
     cookieOptions: {
       maxAge: 60 * 60 * 8,
