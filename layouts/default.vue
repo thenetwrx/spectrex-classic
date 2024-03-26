@@ -55,6 +55,10 @@ useHead({
       content: "Spectrex",
     },
     {
+      name: "og:type",
+      content: "website",
+    },
+    {
       name: "og:url",
       content: "https://spectrex.app",
     },
@@ -67,6 +71,27 @@ useHead({
       content: "summary_large_image",
     },
     {
+      name: "twitter:site",
+      content: "@joebiden",
+    },
+    {
+      name: "twitter:creator",
+      content: "@joebiden",
+    },
+    {
+      name: "twitter:title",
+      content: "Spectrex - Find your Discord server",
+    },
+    {
+      name: "twitter:description",
+      content:
+        "Join awesome Discord communities. Find gamers, hobbyists, and like-minded people on Spectrex. Explore now!",
+    },
+    {
+      name: "twitter:image",
+      content: "https://spectrex.app/images/logo_spectrex_white.png",
+    },
+    {
       name: "keywords",
       content:
         "Discord servers, find Discord, Discord communities, gaming Discord",
@@ -74,16 +99,16 @@ useHead({
   ],
 });
 
-useSeoMeta({
-  title: "Spectrex",
-  ogTitle: "Spectrex - Find your Discord server",
-  description:
-    "Unleash a world of niche communities, passionate gamers, and endless possibilities. Curated listings, tailored just for you.",
-  ogDescription:
-    "Unleash a world of niche communities, passionate gamers, and endless possibilities. Curated listings, tailored just for you.",
-  ogImage: "https://spectrex.app/images/logo_spectrex_white.png",
-  twitterCard: "summary_large_image",
-});
+// useSeoMeta({
+//   title: "Spectrex",
+//   ogTitle: "Spectrex - Find your Discord server",
+//   description:
+//     "Unleash a world of niche communities, passionate gamers, and endless possibilities. Curated listings, tailored just for you.",
+//   ogDescription:
+//     "Unleash a world of niche communities, passionate gamers, and endless possibilities. Curated listings, tailored just for you.",
+//   ogImage: "https://spectrex.app/images/logo_spectrex_white.png",
+//   twitterCard: "summary_large_image",
+// });
 
 const logout = async () => {
   await supabase.auth.signOut();
