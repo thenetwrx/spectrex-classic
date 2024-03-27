@@ -1,4 +1,7 @@
-import { serverSupabaseUser, serverSupabaseClient } from "#supabase/server";
+import {
+  serverSupabaseUser,
+  serverSupabaseServiceRole,
+} from "#supabase/server";
 import { type Database } from "~/database.types";
 
 export default defineEventHandler(async (event) => {
@@ -36,7 +39,7 @@ export default defineEventHandler(async (event) => {
     }
 
     const discord_user = await response.json();
-    const client = await serverSupabaseClient<Database>(event);
+    const client = await serverSupabaseServiceRole<Database>(event);
 
     if (!discord_user.id?.length) {
       setResponseStatus(event, 500);

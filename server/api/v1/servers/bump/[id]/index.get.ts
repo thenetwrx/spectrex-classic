@@ -1,4 +1,7 @@
-import { serverSupabaseUser, serverSupabaseClient } from "#supabase/server";
+import {
+  serverSupabaseUser,
+  serverSupabaseServiceRole,
+} from "#supabase/server";
 import { type Database } from "~/database.types";
 
 // TODO: think about keeping bump cooldowns user specific instead of guild specific to prevent spam
@@ -12,12 +15,12 @@ export default defineEventHandler(async (event) => {
   const user = await serverSupabaseUser(event);
   if (!user) {
     setResponseStatus(event, 401);
-    return { message: "Unauthorized" };
+    return { message: "You are not logged in" };
   }
 
   // 2. Fetch guild and user and then update if applicable
   try {
-    const client = await serverSupabaseClient<Database>(event);
+    const client = await serverSupabaseServiceRole<Database>(event);
 
     const { data: profile, error: profile_error } = await client
       .from("profiles")

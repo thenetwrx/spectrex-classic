@@ -30,7 +30,7 @@ export default defineEventHandler(async (event) => {
   const user = await serverSupabaseUser(event);
   if (!user) {
     setResponseStatus(event, 401);
-    return { message: "Unauthorized", result: null };
+    return { message: "You are not logged in", result: null };
   }
 
   // 2. Fetch guilds and user

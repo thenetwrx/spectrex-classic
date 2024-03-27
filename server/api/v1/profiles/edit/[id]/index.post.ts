@@ -35,7 +35,7 @@ export default defineEventHandler(async (event) => {
   const user = await serverSupabaseUser(event);
   if (!user) {
     setResponseStatus(event, 401);
-    return { message: "Unauthorized" };
+    return { message: "You are not logged in" };
   }
 
   // 4. Fetch user and then update if applicable
