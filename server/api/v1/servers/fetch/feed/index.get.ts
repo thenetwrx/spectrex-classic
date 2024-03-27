@@ -26,38 +26,9 @@ export default defineEventHandler(async (event) => {
     return { message: "Exceeded page query (50 maximum)", result: null };
   }
 
-  // 1. Check logged in status to prevent spam
-  const user = await serverSupabaseUser(event);
-  if (!user) {
-    setResponseStatus(event, 401);
-    return { message: "You are not logged in", result: null };
-  }
-
-  // 2. Fetch guilds and user
+  // 1. Fetch guilds and user
   try {
     const client = await serverSupabaseServiceRole<Database>(event);
-
-    const { data: profile, error: profile_error } = await client
-      .from("profiles")
-      .select("*")
-      .eq("id", user.id);
-
-    if (profile_error) {
-      setResponseStatus(event, 500);
-      return {
-        message: "A database error occurred when fetching your profile",
-        result: null,
-      };
-    }
-
-    if (!profile.length) {
-      setResponseStatus(event, 500);
-      return { message: "Your profile was not found", result: null };
-    }
-    if (profile[0].banned) {
-      setResponseStatus(event, 500);
-      return { message: "Your profile is banned", result: null };
-    }
 
     const max_per_page = 10;
 
