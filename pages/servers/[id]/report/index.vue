@@ -23,7 +23,7 @@
               v-model="issue_type"
               class="select select-bordered rounded-none w-full"
             >
-              <option disabled selected>Select issue</option>
+              <option disabled selected value="">Select issue</option>
               <option :value="IssueType.Server">The Discord Server</option>
               <option :value="IssueType.Listing">The Listing</option>
             </select>
@@ -62,7 +62,7 @@ enum IssueType {
   Server,
   Listing,
 }
-const issue_type = ref<IssueType | null>(null);
+const issue_type = ref<string>("");
 const description = ref<string>("");
 
 const {
