@@ -69,7 +69,7 @@ const {
   data: server,
   refresh: refreshServer,
   pending: server_pending,
-} = useFetch(`/api/v1/servers/fetch/${server_id}`);
+} = useFetch(`/api/v1/servers/fetch/${server_id}`, { retry: false });
 
 const report = async () => {
   const response = await fetch(`/api/v1/servers/report/${server_id}`, {

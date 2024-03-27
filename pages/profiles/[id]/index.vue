@@ -107,7 +107,10 @@ const {
   data: profile,
   refresh: refreshProfile,
   pending: profile_pending,
-} = useFetch(`/api/v1/profiles/fetch/${user.value?.user_metadata.provider_id}`);
+} = useFetch(
+  `/api/v1/profiles/fetch/${user.value?.user_metadata.provider_id}`,
+  { retry: false }
+);
 
 const copy_current_url = async () => {
   const { toClipboard } = useClipboard();

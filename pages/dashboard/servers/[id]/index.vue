@@ -304,7 +304,7 @@ const {
   data: server,
   refresh: refreshServer,
   pending: server_pending,
-} = useFetch(`/api/v1/servers/fetch/${server_id}`);
+} = useFetch(`/api/v1/servers/fetch/${server_id}`, { retry: false });
 
 watch(server, () => {
   if (server.value?.result?.length) {

@@ -228,7 +228,8 @@ const apply = async () => {
 };
 
 const { data: server, pending: server_pending } = useFetch(
-  `/api/v1/servers/fetch/${server_id}`
+  `/api/v1/servers/fetch/${server_id}`,
+  { retry: false }
 );
 
 // Define a ref to store tags

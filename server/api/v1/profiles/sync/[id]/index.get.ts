@@ -46,7 +46,7 @@ export default defineEventHandler(async (event) => {
     const { data: profile, error: profile_error } = await client
       .from("profiles")
       .select("*")
-      .eq("id", user.id);
+      .eq("provider_id", user_id);
 
     if (profile_error) {
       setResponseStatus(event, 500);

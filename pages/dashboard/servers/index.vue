@@ -158,13 +158,16 @@ const {
   data: profile,
   pending: profile_pending,
   refresh: refreshProfile,
-} = useFetch(`/api/v1/profiles/fetch/${user.value?.user_metadata.provider_id}`);
+} = useFetch(
+  `/api/v1/profiles/fetch/${user.value?.user_metadata.provider_id}`,
+  { retry: false }
+);
 
 const {
   data: servers,
   pending: server_pending,
   refresh: refreshServers,
-} = useFetch("/api/v1/servers/fetch/all");
+} = useFetch("/api/v1/servers/fetch/all", { retry: false });
 
 const syncDiscordServers = async () => {
   syncing.value = true;
