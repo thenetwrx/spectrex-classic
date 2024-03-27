@@ -26,9 +26,36 @@ export default defineEventHandler(async (event) => {
     return { message: "Exceeded page query (50 maximum)", result: null };
   }
 
-  // 1. Fetch guilds and user
+  // 1. Get local user
+  const user = await serverSupabaseUser(event);
+
+  // 2. Fetch guilds
   try {
     const client = await serverSupabaseServiceRole<Database>(event);
+
+    if (user) {
+      const { data: profile, error: profile_error } = await client
+        .from("profiles")
+        .select("*")
+        .eq("id", user.id);
+
+      if (profile_error) {
+        setResponseStatus(event, 500);
+        return {
+          message: "A database error occurred when fetching your profile",
+          result: null,
+        };
+      }
+
+      if (!profile.length) {
+        setResponseStatus(event, 500);
+        return { message: "Your profile was not found", result: null };
+      }
+      if (profile[0].banned) {
+        setResponseStatus(event, 500);
+        return { message: "Your profile is banned", result: null };
+      }
+    }
 
     const max_per_page = 10;
 

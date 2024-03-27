@@ -9,37 +9,35 @@ export default defineEventHandler(async (event) => {
   const params = getRouterParams(event);
   const server_id = params.id;
 
-  // 1. Check logged in status to prevent spam
+  // 1. Get local user
   const user = await serverSupabaseUser(event);
-  if (!user) {
-    setResponseStatus(event, 401);
-    return { message: "You are not logged in", result: null };
-  }
 
-  // 2. Fetch guild and user
+  // 2. Fetch guild
   try {
     const client = serverSupabaseServiceRole<Database>(event);
 
-    const { data: profile, error: profile_error } = await client
-      .from("profiles")
-      .select("*")
-      .eq("id", user.id);
+    if (user) {
+      const { data: profile, error: profile_error } = await client
+        .from("profiles")
+        .select("*")
+        .eq("id", user.id);
 
-    if (profile_error) {
-      setResponseStatus(event, 500);
-      return {
-        message: "A database error occurred when fetching your profile",
-        result: null,
-      };
-    }
+      if (profile_error) {
+        setResponseStatus(event, 500);
+        return {
+          message: "A database error occurred when fetching your profile",
+          result: null,
+        };
+      }
 
-    if (!profile.length) {
-      setResponseStatus(event, 500);
-      return { message: "Your profile was not found", result: null };
-    }
-    if (profile[0].banned) {
-      setResponseStatus(event, 500);
-      return { message: "Your profile is banned", result: null };
+      if (!profile.length) {
+        setResponseStatus(event, 500);
+        return { message: "Your profile was not found", result: null };
+      }
+      if (profile[0].banned) {
+        setResponseStatus(event, 500);
+        return { message: "Your profile is banned", result: null };
+      }
     }
 
     const { data, error } = await client
@@ -62,6 +60,7 @@ export default defineEventHandler(async (event) => {
 
     if (
       !data[0].public &&
+      user &&
       data[0].owner_provider_id !== user.user_metadata.provider_id
     ) {
       setResponseStatus(event, 500);
@@ -69,6 +68,7 @@ export default defineEventHandler(async (event) => {
     }
     if (
       data[0].banned &&
+      user &&
       data[0].owner_provider_id !== user.user_metadata.provider_id
     ) {
       setResponseStatus(event, 500);
@@ -76,6 +76,7 @@ export default defineEventHandler(async (event) => {
     }
     if (
       data[0].approved_at === null &&
+      user &&
       data[0].owner_provider_id !== user.user_metadata.provider_id
     ) {
       setResponseStatus(event, 500);
