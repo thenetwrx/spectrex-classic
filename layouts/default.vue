@@ -171,7 +171,7 @@ a:hover {
         <div class="flex flex-col items-start gap-2 p-4 w-full">
           <div class="join flex flex-row w-full items-center gap-1" v-if="user">
             <NuxtLink
-              href="/dashboard/servers"
+              href="/dashboard"
               data-theme="dark"
               class="btn btn-secondary btn-sm flex-grow join-item"
             >
@@ -228,7 +228,7 @@ a:hover {
               class="dropdown-content menu p-2 shadow bg-base-200 rounded-md w-52 mt-4"
             >
               <li>
-                <NuxtLink href="/dashboard/servers">Dashboard</NuxtLink>
+                <NuxtLink href="/dashboard">Dashboard</NuxtLink>
               </li>
               <span class="divider w-full py-2 px-4 m-0"></span>
               <li><button @click="logout">Logout</button></li>

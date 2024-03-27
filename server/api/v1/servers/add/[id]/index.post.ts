@@ -1,4 +1,3 @@
-// server/api/me/guilds.js
 import { serverSupabaseUser, serverSupabaseClient } from "#supabase/server";
 import { type Database } from "~/database.types";
 
@@ -118,12 +117,15 @@ export default defineEventHandler(async (event) => {
       setResponseStatus(event, 500);
       return { message: "Your profile was not found" };
     }
+    if (profile[0].banned) {
+      setResponseStatus(event, 500);
+      return { message: "Your profile is banned" };
+    }
 
     const { data, error } = await client
       .from("servers")
-      .select("bumped_at")
-      .eq("server_id", server_id)
-      .eq("owner_provider_id", user.user_metadata.provider_id);
+      .select("*")
+      .eq("server_id", server_id);
 
     if (error) {
       setResponseStatus(event, 500);
@@ -132,7 +134,20 @@ export default defineEventHandler(async (event) => {
 
     if (!data.length) {
       setResponseStatus(event, 500);
-      return { message: "Your server was not found" };
+      return { message: "Server was not found" };
+    }
+
+    if (data[0].owner_provider_id !== user.user_metadata.provider_id) {
+      setResponseStatus(event, 500);
+      return { message: "Server was not found" };
+    }
+    if (data[0].banned) {
+      setResponseStatus(event, 500);
+      return { message: "Server is banned" };
+    }
+    if (data[0].approved_at !== null) {
+      setResponseStatus(event, 500);
+      return { message: "Server is already approved" };
     }
 
     const { error: error1 } = await client

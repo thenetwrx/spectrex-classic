@@ -1,6 +1,9 @@
 <template>
   <div class="container max-w-4xl mx-auto px-4 py-8 text-center">
-    <p class="text-4xl" v-if="!server?.data?.length">
+    <div class="w-full text-center mt-12" v-if="server_pending">
+      <i class="fa-solid fa-2xl fa-spinner-third fa-spin"></i>
+    </div>
+    <p class="text-4xl" v-else-if="!server?.result?.length">
       Hm... That server doesn't seem to exist!
     </p>
     <template v-else>
@@ -10,17 +13,17 @@
           <div class="flex flex-row gap-4 items-center">
             <div class="w-16 h-16 overflow-hidden rounded-full">
               <img
-                v-if="server.data[0].icon"
+                v-if="server.result[0].icon"
                 :src="
                   'https://cdn.discordapp.com/icons/' +
-                  server.data[0].server_id +
+                  server.result[0].server_id +
                   '/' +
-                  server.data[0].icon +
+                  server.result[0].icon +
                   '.webp?size=96'
                 "
                 alt="Server Image"
                 class="object-cover w-full h-full"
-                :class="server.data[0].nsfw ? 'blur-sm' : ''"
+                :class="server.result[0].nsfw ? 'blur-sm' : ''"
               />
               <div
                 v-else
@@ -28,19 +31,20 @@
               >
                 <p class="text-zinc-500 mt-auto mb-auto text-3xl">
                   {{
-                    server.data[0].server_name.slice(0, 1).toUpperCase() || "?"
+                    server.result[0].server_name.slice(0, 1).toUpperCase() ||
+                    "?"
                   }}
                 </p>
               </div>
             </div>
             <div class="flex flex-col items-start">
               <span class="font-medium text-lg">{{
-                server.data[0].server_name
+                server.result[0].server_name
               }}</span>
               <div class="flex flex-row gap-1 items-center">
                 <div class="bg-[#23A55A] h-4 w-4 rounded-full"></div>
                 <p class="opacity-50">
-                  {{ server.data[0].approximate_presence_count }} online
+                  {{ server.result[0].approximate_presence_count }} online
                 </p>
               </div>
             </div>
@@ -130,9 +134,9 @@
           <div>
             <p class="text-2xl pb-2">
               Invite Link<span class="text-error">*</span>
-              <a class="text-sm opacity-75 ml-2"
-                >(make sure it's a permanent invite!)</a
-              >
+              <span class="text-sm opacity-75"
+                >(make sure it's a permanent invite!)
+              </span>
             </p>
 
             <input
@@ -223,14 +227,8 @@ const apply = async () => {
   else navigateTo("/servers/" + server_id);
 };
 
-const { data: server } = await useAsyncData(
-  "servers",
-  async () =>
-    await client
-      .from("servers")
-      .select("*")
-      .eq("owner_provider_id", user.value?.user_metadata.provider_id || 0)
-      .eq("server_id", server_id)
+const { data: server, pending: server_pending } = useFetch(
+  `/api/v1/servers/fetch/${server_id}`
 );
 
 // Define a ref to store tags

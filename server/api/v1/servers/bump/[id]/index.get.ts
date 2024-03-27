@@ -1,4 +1,3 @@
-// server/api/me/guilds.js
 import { serverSupabaseUser, serverSupabaseClient } from "#supabase/server";
 import { type Database } from "~/database.types";
 
@@ -36,12 +35,15 @@ export default defineEventHandler(async (event) => {
       setResponseStatus(event, 500);
       return { message: "Your profile was not found" };
     }
+    if (profile[0].banned) {
+      setResponseStatus(event, 500);
+      return { message: "Your profile is banned" };
+    }
 
     const { data, error } = await client
       .from("servers")
-      .select("bumped_at, owner_provider_id")
-      .eq("server_id", server_id)
-      .eq("owner_provider_id", user.user_metadata.provider_id);
+      .select("*")
+      .eq("server_id", server_id);
 
     if (error) {
       setResponseStatus(event, 500);
@@ -53,6 +55,19 @@ export default defineEventHandler(async (event) => {
       return { message: "Server was not found" };
     }
 
+    if (data[0].owner_provider_id !== user.user_metadata.provider_id) {
+      setResponseStatus(event, 500);
+      return { message: "Server was not found" };
+    }
+    if (data[0].banned) {
+      setResponseStatus(event, 500);
+      return { message: "Server is banned" };
+    }
+    if (data[0].approved_at === null) {
+      setResponseStatus(event, 500);
+      return { message: "Server is not approved" };
+    }
+
     // Compare the timestamps
     const now = Date.now();
     const cooldown = profile[0].premium_since !== null ? 3600000 : 7200000;
@@ -61,7 +76,6 @@ export default defineEventHandler(async (event) => {
         .from("servers")
         .update({ bumped_at: now, updated_at: Date.now() })
         .eq("server_id", server_id)
-        .eq("owner_provider_id", user.user_metadata.provider_id)
         .select();
 
       if (error) {
@@ -76,8 +90,9 @@ export default defineEventHandler(async (event) => {
     const timeLeftMilliseconds = now - (data[0].bumped_at || 0) - cooldown;
     const timeLeftMessage = `Bump is on cooldown`;
 
+    setResponseStatus(event, 403);
+
     return {
-      statusCode: 403,
       message: timeLeftMessage,
       timeLeft: timeLeftMilliseconds,
     };

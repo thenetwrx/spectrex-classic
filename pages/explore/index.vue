@@ -20,16 +20,20 @@
       </NuxtLink>
     </div>
     <p class="opacity-75 text-md mb-3">
-      Showing ({{ servers?.data?.length || 0 }} / {{ max_per_page }}) results
+      Showing ({{ servers?.result?.length || 0 }} / {{ max_per_page }}) results
     </p>
-    <div v-if="!servers?.data?.length">
-      <div class="w-full text-center my-32">
-        <p class="opacity-50">Nothing to see here...</p>
-      </div>
+    <div class="w-full text-center my-16" v-if="servers_pending">
+      <i class="fa-solid fa-2xl fa-spinner-third fa-spin"></i>
     </div>
+    <p
+      class="w-full text-center opacity-50 my-16"
+      v-else-if="!servers?.result?.length"
+    >
+      No servers found
+    </p>
     <div class="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-4" v-else>
       <div
-        v-for="server in servers?.data
+        v-for="server in servers?.result
           ?.filter((_server) => _server.approved_at !== null)
           .sort((a, b) => b.bumped_at - a.bumped_at)"
         class="flex flex-col"
@@ -134,7 +138,7 @@
       <button
         class="btn btn-primary btn-sm"
         :class="
-          page === max_pages || (servers?.data?.length || 0) < max_per_page
+          page === max_pages || (servers?.result?.length || 0) < max_per_page
             ? 'btn-disabled'
             : ''
         "
@@ -147,9 +151,7 @@
 </template>
 
 <script setup lang="ts">
-const route: any = useRoute();
-import { type Database } from "~/database.types";
-const client = useSupabaseClient<Database>();
+const route = useRoute();
 const popular_categories = ref<Array<string>>([
   "Community",
   "Music",
@@ -159,44 +161,22 @@ const popular_categories = ref<Array<string>>([
   "Movies",
   "Other",
 ]);
-const category = ref<string>(route.query.category);
-
-watch(
-  () => route.query,
-  (query) => {
-    category.value = query.category;
-    refreshNuxtData("servers");
-  }
-);
+const category = computed(() => route.query.category);
 
 const go_to_page = async (num: number) => {
+  console.log("page change");
   page.value = num;
-  refreshNuxtData("servers");
 };
 
 const page = ref<number>(0);
 const max_per_page = ref<number>(10);
 const max_pages = ref<number>(50);
 
-const { data: servers } = await useAsyncData("servers", async () => {
-  let query = client
-    .from("servers")
-    .select("*")
-    .not("approved_at", "is", null)
-    .not("public", "is", false)
-    .order("bumped_at")
-    .limit(max_per_page.value)
-    .range(
-      max_per_page.value * page.value,
-      (page.value + 1) * max_per_page.value - 1
-    );
-
-  // Conditionally add the .eq() filter if category is not null
-  if (category.value !== undefined) {
-    query = query.eq("category", category.value);
+const { data: servers, pending: servers_pending } = useFetch(
+  "/api/v1/servers/fetch/feed",
+  {
+    query: { page, category },
+    retry: false,
   }
-
-  // Execute the query
-  return await query;
-});
+);
 </script>

@@ -1,6 +1,9 @@
 <template>
   <div class="container max-w-4xl mx-auto px-4 py-8 text-center">
-    <p class="text-4xl" v-if="!profile?.data?.length">
+    <div class="w-full text-center mt-12" v-if="profile_pending">
+      <i class="fa-solid fa-2xl fa-spinner-third fa-spin"></i>
+    </div>
+    <p class="text-4xl" v-else-if="!profile?.result?.length">
       Hm... That profile doesn't seem to exist!
     </p>
     <template v-else>
@@ -9,7 +12,7 @@
           <NuxtLink
             class="btn btn-ghost btn-sm"
             href="/dashboard/profile"
-            v-if="profile.data[0].id === user?.id"
+            v-if="profile.result[0].id === user?.id"
           >
             Edit <i class="fa-solid fa-pen-to-square"></i>
           </NuxtLink>
@@ -17,7 +20,7 @@
             class="btn btn-ghost btn-sm"
             :class="syncing ? 'btn-disabled' : ''"
             v-if="
-              profile.data[0].provider_id === user?.user_metadata.provider_id
+              profile.result[0].provider_id === user?.user_metadata.provider_id
             "
             @click.stop="syncProfile"
           >
@@ -38,8 +41,8 @@
           <div class="flex flex-wrap gap-2 items-center">
             <div class="w-16 h-16 overflow-hidden rounded-full">
               <img
-                v-if="profile.data[0].avatar_url !== null"
-                :src="profile.data[0].avatar_url"
+                v-if="profile.result[0].avatar_url !== null"
+                :src="profile.result[0].avatar_url"
                 alt="Server Image"
                 class="object-cover w-full h-full"
               />
@@ -49,7 +52,8 @@
               >
                 <p class="text-zinc-500 mt-auto mb-auto text-3xl">
                   {{
-                    profile.data[0].global_name.slice(0, 1).toUpperCase() || "?"
+                    profile.result[0].global_name.slice(0, 1).toUpperCase() ||
+                    "?"
                   }}
                 </p>
               </div>
@@ -58,11 +62,11 @@
               <span class="font-medium text-lg">
                 <i
                   class="fa-solid fa-crown text-accent"
-                  v-if="profile.data[0].premium_since !== null ? true : false"
+                  v-if="profile.result[0].premium_since !== null ? true : false"
                 ></i>
-                {{ profile.data[0].global_name }}
+                {{ profile.result[0].global_name }}
               </span>
-              <p class="opacity-50">@{{ profile.data[0].full_name }}</p>
+              <p class="opacity-50">@{{ profile.result[0].full_name }}</p>
             </div>
           </div>
         </div>
@@ -73,7 +77,7 @@
             <p class="text-2xl pb-2">Description</p>
 
             <p class="opacity-50">
-              {{ profile.data[0].description || "No description provided" }}
+              {{ profile.result[0].description || "No description provided" }}
             </p>
           </div>
         </div>
@@ -91,19 +95,19 @@
 </template>
 
 <script setup lang="ts">
-import { type Database } from "~/database.types";
 import useClipboard from "~/composables/useClipboard";
 const route = useRoute();
 const user = useSupabaseUser();
-const client = useSupabaseClient<Database>();
+const client = useSupabaseClient();
 const user_id = route.params.id;
+
 const syncing = ref<boolean>(false);
 
-const { data: profile } = await useAsyncData(
-  "profile",
-  async () =>
-    await client.from("profiles").select("*").eq("provider_id", user_id)
-);
+const {
+  data: profile,
+  refresh: refreshProfile,
+  pending: profile_pending,
+} = useFetch(`/api/v1/profiles/fetch/${user.value?.user_metadata.provider_id}`);
 
 const copy_current_url = async () => {
   const { toClipboard } = useClipboard();
@@ -117,7 +121,7 @@ const syncProfile = async () => {
     await client.auth.signOut();
     navigateTo("/login");
   }
-  refreshNuxtData("profile");
+  refreshProfile();
   syncing.value = false;
 };
 </script>

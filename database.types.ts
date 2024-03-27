@@ -13,6 +13,7 @@ export type Database = {
         Row: {
           admin: boolean
           avatar_url: string
+          banned: boolean
           description: string | null
           full_name: string
           global_name: string
@@ -25,6 +26,7 @@ export type Database = {
         Insert: {
           admin?: boolean
           avatar_url: string
+          banned?: boolean
           description?: string | null
           full_name: string
           global_name: string
@@ -37,6 +39,7 @@ export type Database = {
         Update: {
           admin?: boolean
           avatar_url?: string
+          banned?: boolean
           description?: string | null
           full_name?: string
           global_name?: string
@@ -166,7 +169,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      check_ip_access: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
     }
     Enums: {
       [_ in never]: never

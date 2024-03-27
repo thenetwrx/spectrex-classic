@@ -1,4 +1,3 @@
-// server/api/me/guilds.js
 import { serverSupabaseUser, serverSupabaseClient } from "#supabase/server";
 import { type Database } from "~/database.types";
 
@@ -59,6 +58,10 @@ export default defineEventHandler(async (event) => {
     if (!profile.length) {
       setResponseStatus(event, 500);
       return { message: "Your profile was not found" };
+    }
+    if (profile[0].banned) {
+      setResponseStatus(event, 500);
+      return { message: "Your profile is banned" };
     }
 
     const { error: error1 } = await client

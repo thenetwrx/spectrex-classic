@@ -1,10 +1,15 @@
 <template>
   <div class="container max-w-4xl mx-auto px-4 py-8 text-center">
-    <p class="text-4xl" v-if="!server?.data?.length">
+    <div class="w-full text-center mt-12" v-if="server_pending">
+      <i class="fa-solid fa-2xl fa-spinner-third fa-spin"></i>
+    </div>
+    <p class="text-4xl" v-else-if="!server?.result?.length">
       Hm... That server doesn't seem to exist!
     </p>
     <template v-else>
-      <p class="text-4xl">Report server</p>
+      <p class="text-4xl">
+        Reporting server "{{ server.result[0].server_name }}"
+      </p>
       <div class="flex flex-col py-4">
         <div
           class="bg-base-200 h-fit text-start p-4 rounded-md flex flex-col gap-4"
@@ -60,11 +65,11 @@ enum IssueType {
 const issue_type = ref<IssueType | null>(null);
 const description = ref<string>("");
 
-const { data: server } = await useAsyncData(
-  "server",
-  async () =>
-    await client.from("servers").select("*").eq("server_id", server_id)
-);
+const {
+  data: server,
+  refresh: refreshServer,
+  pending: server_pending,
+} = useFetch(`/api/v1/servers/fetch/${server_id}`);
 
 const report = async () => {
   const response = await fetch(`/api/v1/servers/report/${server_id}`, {

@@ -1,8 +1,5 @@
-// server/api/me/guilds.js
 import { serverSupabaseUser, serverSupabaseClient } from "#supabase/server";
 import { type Database } from "~/database.types";
-
-// TODO: think about keeping bump cooldowns user specific instead of guild specific to prevent spam
 
 export default defineEventHandler(async (event) => {
   // Parameters
@@ -36,12 +33,15 @@ export default defineEventHandler(async (event) => {
       setResponseStatus(event, 500);
       return { message: "Your profile was not found" };
     }
+    if (profile[0].banned) {
+      setResponseStatus(event, 500);
+      return { message: "Your profile is banned" };
+    }
 
     const { data, error } = await client
       .from("servers")
-      .select("owner_provider_id")
-      .eq("server_id", server_id)
-      .eq("owner_provider_id", user.user_metadata.provider_id);
+      .select("*")
+      .eq("server_id", server_id);
 
     if (error) {
       setResponseStatus(event, 500);
@@ -51,6 +51,19 @@ export default defineEventHandler(async (event) => {
     if (!data.length) {
       setResponseStatus(event, 500);
       return { message: "Server was not found" };
+    }
+
+    if (data[0].owner_provider_id !== user.user_metadata.provider_id) {
+      setResponseStatus(event, 500);
+      return { message: "Server was not found" };
+    }
+    if (data[0].banned) {
+      setResponseStatus(event, 500);
+      return { message: "Server is banned" };
+    }
+    if (data[0].approved_at === null) {
+      setResponseStatus(event, 500);
+      return { message: "Server is not approved" };
     }
 
     const { error: error1 } = await client

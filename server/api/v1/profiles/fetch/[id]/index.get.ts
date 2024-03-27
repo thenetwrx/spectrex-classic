@@ -11,34 +11,9 @@ export default defineEventHandler(async (event) => {
   const params = getRouterParams(event);
   const user_id = params.id;
 
-  // 1. Grab body
-  const body = await readBody(event);
-
-  // 2. Check variables on server side to prevent abuse
-  if (!body.description?.length) {
-    setResponseStatus(event, 500);
-    return { message: "Description must not be empty" };
-  }
-
-  if (body.description.length <= 6) {
-    setResponseStatus(event, 500);
-    return {
-      message: "Description does not have enough characters (minimum of 6)",
-    };
-  }
-  if (body.description.length >= 256) {
-    setResponseStatus(event, 500);
-    return { message: "Description has too many characters (max of 256)" };
-  }
-
-  // 3. Check logged in status to prevent spam
   const user = await serverSupabaseUser(event);
-  if (!user) {
-    setResponseStatus(event, 401);
-    return { message: "Unauthorized" };
-  }
 
-  // 4. Fetch user and then update if applicable
+  // 1. Fetch user
   try {
     const client = await serverSupabaseServiceRole<Database>(event);
 
@@ -67,30 +42,26 @@ export default defineEventHandler(async (event) => {
       setResponseStatus(event, 500);
       return { message: "Profile was not found", result: null };
     }
-    if (data[0].banned) {
+    if (
+      data[0].banned &&
+      data[0].provider_id !== user?.user_metadata.provider_id
+    ) {
       setResponseStatus(event, 500);
       return { message: "Profile is banned", result: null };
     }
 
-    const { error: error1 } = await client
-      .from("profiles")
-      .update({
-        description: body.description,
-      })
-      .eq("provider_id", user_id)
-      .select();
-
-    if (error1) {
-      setResponseStatus(event, 500);
-      return { message: "A database error occurred when editing the profile" };
-    }
-
     setResponseStatus(event, 200);
-    return { message: "Edited" };
+    return {
+      message: null,
+      result: data,
+    };
   } catch (err) {
     console.log(err);
 
     setResponseStatus(event, 500);
-    return { message: "An unknown error occurred, try again later" };
+    return {
+      message: "An unknown error occurred, try again later",
+      result: null,
+    };
   }
 });

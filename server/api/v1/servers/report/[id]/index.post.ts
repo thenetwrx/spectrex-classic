@@ -1,8 +1,8 @@
-// server/api/me/guilds.js
-import { serverSupabaseUser, serverSupabaseClient } from "#supabase/server";
+import {
+  serverSupabaseUser,
+  serverSupabaseServiceRole,
+} from "#supabase/server";
 import { type Database } from "~/database.types";
-
-// TODO: think about keeping bump cooldowns user specific instead of guild specific to prevent spam
 
 export default defineEventHandler(async (event) => {
   // Parameters
@@ -49,7 +49,7 @@ export default defineEventHandler(async (event) => {
 
   // 4. Fetch guild and user and then update if applicable
   try {
-    const client = await serverSupabaseClient<Database>(event);
+    const client = await serverSupabaseServiceRole<Database>(event);
 
     const { data: profile, error: profile_error } = await client
       .from("profiles")
@@ -60,17 +60,22 @@ export default defineEventHandler(async (event) => {
       setResponseStatus(event, 500);
       return {
         message: "A database error occurred when fetching your profile",
+        result: null,
       };
     }
 
     if (!profile.length) {
       setResponseStatus(event, 500);
-      return { message: "Your profile was not found" };
+      return { message: "Your profile was not found", result: null };
+    }
+    if (profile[0].banned) {
+      setResponseStatus(event, 500);
+      return { message: "Your profile is banned", result: null };
     }
 
     const { data, error } = await client
       .from("servers")
-      .select("owner_provider_id, owner_id")
+      .select("*")
       .eq("server_id", server_id);
 
     if (error) {
@@ -79,6 +84,19 @@ export default defineEventHandler(async (event) => {
     }
 
     if (!data.length) {
+      setResponseStatus(event, 500);
+      return { message: "Server was not found" };
+    }
+
+    if (data[0].owner_provider_id === user.user_metadata.provider_id) {
+      setResponseStatus(event, 500);
+      return { message: "You can not report your own server" };
+    }
+    if (data[0].banned) {
+      setResponseStatus(event, 500);
+      return { message: "Server is already banned" };
+    }
+    if (!data[0].public) {
       setResponseStatus(event, 500);
       return { message: "Server was not found" };
     }

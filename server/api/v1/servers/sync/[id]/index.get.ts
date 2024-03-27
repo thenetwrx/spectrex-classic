@@ -1,5 +1,7 @@
-// server/api/me/guilds.js
-import { serverSupabaseUser, serverSupabaseClient } from "#supabase/server";
+import {
+  serverSupabaseUser,
+  serverSupabaseServiceRole,
+} from "#supabase/server";
 import { type Database } from "~/database.types";
 
 export default defineEventHandler(async (event) => {
@@ -23,6 +25,30 @@ export default defineEventHandler(async (event) => {
 
   // 3. Fetch guilds using raw HTTP
   try {
+    const client = await serverSupabaseServiceRole<Database>(event);
+
+    const { data: profile, error: profile_error } = await client
+      .from("profiles")
+      .select("*")
+      .eq("id", user.id);
+
+    if (profile_error) {
+      setResponseStatus(event, 500);
+      return {
+        message: "A database error occurred when fetching your profile",
+        result: null,
+      };
+    }
+
+    if (!profile.length) {
+      setResponseStatus(event, 500);
+      return { message: "Your profile was not found", result: null };
+    }
+    if (profile[0].banned) {
+      setResponseStatus(event, 500);
+      return { message: "Your profile is banned", result: null };
+    }
+
     const response = await fetch(
       "https://discord.com/api/users/@me/guilds?with_counts=true",
       {
@@ -38,9 +64,7 @@ export default defineEventHandler(async (event) => {
         message: "An unknown Discord API error occurred, try again later",
       };
     }
-
     const raw_guilds = await response.json();
-    const client = await serverSupabaseClient<Database>(event);
 
     if (!raw_guilds.length) {
       setResponseStatus(event, 500);
@@ -62,6 +86,8 @@ export default defineEventHandler(async (event) => {
         }
 
         if (data?.length) {
+          if (data[0].banned) continue;
+
           const { error: error1 } = await client
             .from("servers")
             .update({

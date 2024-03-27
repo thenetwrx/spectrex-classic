@@ -1,6 +1,9 @@
 <template>
   <div class="container max-w-4xl mx-auto px-4 py-8 text-center">
-    <p class="text-4xl" v-if="!profile?.data?.length">
+    <div class="w-full text-center mt-12" v-if="profile_pending">
+      <i class="fa-solid fa-2xl fa-spinner-third fa-spin"></i>
+    </div>
+    <p class="text-4xl" v-else-if="!profile?.result?.length">
       Hm... That profile doesn't seem to exist!
     </p>
     <template v-else>
@@ -10,8 +13,8 @@
           <div class="flex flex-row gap-4 items-center">
             <div class="w-16 h-16 overflow-hidden rounded-lg">
               <img
-                v-if="profile.data[0].avatar_url !== null"
-                :src="profile.data[0].avatar_url"
+                v-if="profile.result[0].avatar_url !== null"
+                :src="profile.result[0].avatar_url"
                 alt="Server Image"
                 class="object-cover w-full h-full"
               />
@@ -21,7 +24,8 @@
               >
                 <p class="text-zinc-500 mt-auto mb-auto text-3xl">
                   {{
-                    profile.data[0].global_name.slice(0, 1).toUpperCase() || "?"
+                    profile.result[0].global_name.slice(0, 1).toUpperCase() ||
+                    "?"
                   }}
                 </p>
               </div>
@@ -30,11 +34,11 @@
               <p class="text-2xl">
                 <i
                   class="fa-solid fa-crown text-accent"
-                  v-if="profile.data[0].premium_since !== null ? true : false"
+                  v-if="profile.result[0].premium_since !== null ? true : false"
                 ></i>
-                {{ profile.data[0].global_name }}
+                {{ profile.result[0].global_name }}
               </p>
-              <p class="opacity-50">@{{ profile.data[0].full_name }}</p>
+              <p class="opacity-50">@{{ profile.result[0].full_name }}</p>
             </div>
           </div>
         </div>
@@ -92,18 +96,14 @@ const edit = async () => {
   else navigateTo("/profiles/" + user.value?.user_metadata.provider_id);
 };
 
-const { data: profile } = await useAsyncData(
-  "profile",
-  async () =>
-    await client
-      .from("profiles")
-      .select("*")
-      .eq("provider_id", user.value?.user_metadata.provider_id || 0)
-);
+const {
+  data: profile,
+  refresh: refreshProfile,
+  pending: profile_pending,
+} = useFetch(`/api/v1/profiles/fetch/${user.value?.user_metadata.provider_id}`);
 
-onMounted(() => {
-  if (profile.value?.data?.length) {
-    description.value = profile.value.data[0].description || "";
-  }
+watch(profile, () => {
+  description.value =
+    (profile.value?.result && profile.value.result[0].description) || "";
 });
 </script>
