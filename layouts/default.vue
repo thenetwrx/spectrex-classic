@@ -1,7 +1,4 @@
 <script setup lang="ts">
-const user = useSupabaseUser();
-const supabase = useSupabaseClient();
-
 useHead({
   link: [
     {
@@ -110,11 +107,18 @@ useHead({
 // });
 
 const logout = async () => {
-  await supabase.auth.signOut();
-  useRouter().push("/");
+  await $fetch("/api/v1/auth/logout", {
+    method: "POST",
+    retry: false,
+  });
+  user.value = null;
+  navigateTo("/");
 };
 
 const isMobileSidebarOpen = ref<boolean>(false);
+
+const user = useUser();
+const discordCdn = useDiscordCdn();
 </script>
 
 <style>
@@ -187,7 +191,8 @@ a:hover {
           </div>
           <NuxtLink
             v-else
-            href="/login"
+            href="/api/v1/auth/discord"
+            external
             class="btn btn-sm btn-secondary w-full"
             data-theme="dark"
           >
@@ -219,7 +224,11 @@ a:hover {
           <div class="dropdown dropdown-end" v-if="user">
             <div tabindex="0" class="btn btn-ghost avatar">
               <div class="w-8 rounded-full">
-                <NuxtImg :src="user.user_metadata.avatar_url" />
+                <NuxtImg
+                  v-if="user.avatar"
+                  :src="discordCdn.user_avatar(user.discord_id, user.avatar)"
+                />
+                <p v-else>{{ user.username }}</p>
               </div>
               <i class="fa-solid fa-caret-down"></i>
             </div>
@@ -237,7 +246,8 @@ a:hover {
 
           <NuxtLink
             v-else
-            href="/login"
+            href="/api/v1/auth/discord"
+            external
             class="btn btn-sm btn-secondary"
             data-theme="dark"
           >

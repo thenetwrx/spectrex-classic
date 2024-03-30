@@ -1,55 +1,29 @@
-import {
-  serverSupabaseUser,
-  serverSupabaseServiceRole,
-} from "#supabase/server";
-import { type Database } from "~/database.types";
+import Cryptr from "cryptr";
+import { generateId } from "lucia";
+import { Server } from "~/types/Server";
 
 export default defineEventHandler(async (event) => {
   // 1. Check logged in status to prevent spam
-  const user = await serverSupabaseUser(event);
-  if (!user) {
+  if (!event.context.user) {
     setResponseStatus(event, 401);
-    return { message: "You are not logged in" };
+    return { message: "Unauthorized", result: null };
+  }
+  if (event.context.user.banned) {
+    setResponseStatus(event, 403);
+    return { message: "You are banned", result: null };
   }
 
-  // 2. Get access token from Supabase session
-  const provider_token = getCookie(event, "sb-provider-token");
-  if (!provider_token) {
-    setResponseStatus(event, 401);
-    return { message: "Unauthorized" };
-  }
-
-  // 3. Fetch guilds using raw HTTP
+  // 2. Fetch guilds using raw HTTP
   try {
-    const client = await serverSupabaseServiceRole<Database>(event);
-
-    const { data: profile, error: profile_error } = await client
-      .from("profiles")
-      .select("*")
-      .eq("id", user.id);
-
-    if (profile_error) {
-      setResponseStatus(event, 500);
-      return {
-        message: "A database error occurred when fetching your profile",
-        result: null,
-      };
-    }
-
-    if (!profile.length) {
-      setResponseStatus(event, 500);
-      return { message: "Your profile was not found", result: null };
-    }
-    if (profile[0].banned) {
-      setResponseStatus(event, 500);
-      return { message: "Your profile is banned", result: null };
-    }
+    const cryptr = new Cryptr(process.env.ENCRYPTION_KEY!);
 
     const response = await fetch(
       "https://discord.com/api/users/@me/guilds?with_counts=true",
       {
         headers: {
-          Authorization: `Bearer ${provider_token}`,
+          Authorization: `Bearer ${cryptr.decrypt(
+            event.context.session?.discord_access_token || ""
+          )}`,
         },
       }
     );
@@ -63,68 +37,49 @@ export default defineEventHandler(async (event) => {
     const raw_guilds = await response.json();
 
     if (!raw_guilds.length) {
-      setResponseStatus(event, 500);
-      return { message: "You are not in any servers" };
+      setResponseStatus(event, 403);
+      return { message: "No servers found from Discord" };
     }
 
     for (let i = 0; i < raw_guilds.length; i++) {
       if (raw_guilds[i].owner) {
-        const { data, error } = await client
-          .from("servers")
-          .select("*")
-          .eq("server_id", raw_guilds[i].id);
+        const servers = await database<Server[]>`
+            select 
+                *
+            from servers
+            where
+                discord_id = ${raw_guilds[i].id} 
+        `;
 
-        if (error) {
-          setResponseStatus(event, 500);
-          return {
-            message: "A database error occurred when fetching the server",
-          };
-        }
+        const server = servers.find(
+          (server) => server.discord_id === raw_guilds[i].id
+        );
+        if (server) {
+          if (server.banned) continue;
 
-        if (data?.length) {
-          if (data[0].banned) continue;
-
-          const { error: error1 } = await client
-            .from("servers")
-            .update({
-              server_id: raw_guilds[i].id,
-              approximate_member_count: raw_guilds[i].approximate_member_count,
-              approximate_presence_count:
-                raw_guilds[i].approximate_presence_count,
-              owner_provider_id: user.user_metadata.provider_id,
-              server_name: raw_guilds[i].name,
-              icon: raw_guilds[i].icon,
-            })
-            .eq("server_id", raw_guilds[i].id)
-            .select();
-
-          if (error1) {
-            setResponseStatus(event, 500);
-            return {
-              message: "A database error occurred when fetching a server",
-            };
-          }
+          await database`
+            update servers set updated_at = ${Date.now()}, approximate_member_count = ${
+            raw_guilds[i].approximate_member_count
+          }, approximate_presence_count = ${
+            raw_guilds[i].approximate_presence_count
+          }, name = ${raw_guilds[i].name}, icon = ${raw_guilds[i].icon}
+            where
+                discord_id = ${raw_guilds[i].id} 
+            `;
         } else {
-          const { error: error1 } = await client.from("servers").insert({
-            server_id: raw_guilds[i].id,
-            approximate_member_count: raw_guilds[i].approximate_member_count,
-            approximate_presence_count:
-              raw_guilds[i].approximate_presence_count,
-            created_at: Date.now(),
-            bumped_at: Date.now(),
-            updated_at: Date.now(),
-            owner_provider_id: user.user_metadata.provider_id,
-            owner_id: user.id,
-            server_name: raw_guilds[i].name,
-            icon: raw_guilds[i].icon,
-          });
-
-          if (error1) {
-            setResponseStatus(event, 500);
-            return {
-              message: "A database error occurred when fetching a server",
-            };
-          }
+          await database`insert into servers
+            (id, discord_id, approximate_member_count, approximate_presence_count, created_at, bumped_at, updated_at, owner_discord_id, owner_id, name, icon)
+        values
+            (${generateId(15)}, ${raw_guilds[i].id}, ${
+            raw_guilds[i].approximate_member_count
+          }, ${
+            raw_guilds[i].approximate_presence_count
+          }, ${Date.now()}, ${Date.now()}, ${Date.now()}, ${
+            event.context.user.discord_id
+          }, ${event.context.user.id}, ${raw_guilds[i].name}, ${
+            raw_guilds[i].icon
+          })
+        `;
         }
       }
     }

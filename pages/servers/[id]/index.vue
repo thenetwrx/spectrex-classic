@@ -1,12 +1,9 @@
 <template>
   <div class="container max-w-4xl mx-auto px-4 py-8 text-center">
-    <div
-      class="w-full text-center mt-12"
-      v-if="server_pending || profile_pending"
-    >
+    <div class="w-full text-center my-16" v-if="server_pending">
       <i class="fa-solid fa-2xl fa-spinner-third fa-spin"></i>
     </div>
-    <p class="text-4xl" v-else-if="!server?.result?.length">
+    <p class="text-4xl" v-else-if="!server?.result">
       Hm... That server doesn't seem to exist!
     </p>
     <template v-else>
@@ -16,21 +13,15 @@
         >
           <NuxtLink
             class="btn btn-ghost btn-sm"
-            :href="'/dashboard/servers/' + server.result[0].server_id"
-            v-if="
-              server.result[0].owner_provider_id ===
-              user?.user_metadata.provider_id
-            "
+            :href="'/dashboard/servers/' + server.result.discord_id"
+            v-if="server.result.owner_discord_id === user?.discord_id"
           >
             Manage <i class="fa-solid fa-gear"></i>
           </NuxtLink>
           <button
             class="btn btn-ghost btn-sm"
             :class="syncing ? 'btn-disabled' : ''"
-            v-if="
-              server.result[0].owner_provider_id ===
-              user?.user_metadata.provider_id
-            "
+            v-if="server.result.owner_discord_id === user?.discord_id"
             @click.stop="syncDiscordServers"
           >
             <span v-if="syncing">Syncing...</span>
@@ -47,14 +38,11 @@
                 ? 'btn-disabled'
                 : ''
             "
-            v-if="
-              server.result[0].owner_provider_id ===
-              user?.user_metadata.provider_id
-            "
+            v-if="server.result.owner_discord_id === user?.discord_id"
             @click.stop="bump_server"
           >
             <span v-if="server_metadata.on_cooldown">
-              {{ formatRemainingTime(server.result[0].bumped_at || 0) }}
+              {{ formatRemainingTime(Number(server.result.bumped_at)) }}
             </span>
             <div v-if="!server_metadata.on_cooldown">
               <span v-if="!server_metadata.bumping">Bump </span>
@@ -63,12 +51,9 @@
             <i class="fa-solid fa-up-from-line"></i>
           </button>
           <NuxtLink
-            :href="'/servers/' + server.result[0].server_id + '/report'"
+            :href="'/servers/' + server.result.discord_id + '/report'"
             class="btn btn-ghost btn-sm"
-            v-if="
-              server.result[0].owner_provider_id !==
-              user?.user_metadata.provider_id
-            "
+            v-if="server.result.owner_discord_id !== user?.discord_id"
           >
             Report <i class="fa-solid fa-flag"></i>
           </NuxtLink>
@@ -82,65 +67,57 @@
           <div class="flex flex-wrap gap-2 items-center">
             <div class="w-16 h-16 overflow-hidden rounded-full">
               <img
-                v-if="server.result[0].icon"
+                v-if="server.result.icon"
                 :src="
-                  'https://cdn.discordapp.com/icons/' +
-                  server.result[0].server_id +
-                  '/' +
-                  server.result[0].icon +
-                  '.webp?size=96'
+                  discordCdn.server_icon(
+                    server.result.discord_id,
+                    server.result.icon
+                  )
                 "
                 alt="Server Image"
                 class="object-cover w-full h-full"
-                :class="server.result[0].nsfw ? 'blur-sm' : ''"
+                :class="server.result.nsfw ? 'blur-sm' : ''"
               />
               <div
                 v-else
                 class="h-full flex flex-col items-center rounded-full bg-base-100"
               >
                 <p class="text-zinc-500 mt-auto mb-auto text-3xl">
-                  {{
-                    server.result[0].server_name?.slice(0, 1).toUpperCase() ||
-                    "?"
-                  }}
+                  {{ server.result.name?.slice(0, 1).toUpperCase() || "?" }}
                 </p>
               </div>
             </div>
             <div class="flex flex-col items-start">
-              <span class="font-medium text-lg">{{
-                server.result[0].server_name
-              }}</span>
+              <span class="font-medium text-lg">{{ server.result.name }}</span>
               <div class="flex flex-wrap gap-1 items-center">
                 <div
                   class="bg-primary bg-opacity-50 px-1 rounded-md"
                   v-if="
-                    server.result[0].category !== null &&
-                    server.result[0].approved_at !== null
+                    server.result.category !== null &&
+                    server.result.approved_at !== null
                   "
                 >
-                  <span class="opacity-75">{{
-                    server.result[0].category
-                  }}</span>
+                  <span class="opacity-75">{{ server.result.category }}</span>
                 </div>
                 <div class="bg-error bg-opacity-50 px-1 rounded-md" v-else>
                   <span class="opacity-75">Not Approved</span>
                 </div>
                 <div
                   class="bg-warning bg-opacity-50 px-1 rounded-md"
-                  v-if="!server.result[0].public"
+                  v-if="!server.result.public"
                 >
                   <span class="opacity-75">Private</span>
                 </div>
                 <div
                   class="bg-error bg-opacity-50 px-1 rounded-md"
-                  v-if="server.result[0].nsfw"
+                  v-if="server.result.nsfw"
                 >
                   <span class="opacity-75">NSFW</span>
                 </div>
                 <div class="flex flex-row gap-1 items-center">
                   <div class="bg-[#23A55A] h-4 w-4 rounded-full"></div>
                   <p class="opacity-50">
-                    {{ server.result[0].approximate_presence_count }}
+                    {{ server.result.approximate_presence_count }}
                     online
                   </p>
                 </div>
@@ -148,7 +125,7 @@
             </div>
             <NuxtLink
               class="btn btn-success text-white rounded-md px-6 ml-auto"
-              :href="server.result[0].invite_link || '#'"
+              :href="server.result.invite_link || '#'"
               >Join</NuxtLink
             >
           </div>
@@ -161,10 +138,10 @@
 
             <div
               class="flex flex-wrap gap-2 w-fit max-sm:max-w-fit overflow-x-auto"
-              v-if="server.result[0].tags?.length"
+              v-if="server.result.tags?.length"
             >
               <span
-                v-for="tag in server.result[0].tags"
+                v-for="tag in server.result.tags"
                 class="block max-w-fit px-2 py-1 bg-primary border-none bg-opacity-50 rounded-sm gap-2 hover:bg-opacity-65 hover:cursor-pointer transition-colors duration-200 ease-in-out text-white"
               >
                 <span class="text-primary">#</span>
@@ -177,7 +154,7 @@
             <p class="text-2xl pb-2">Description</p>
 
             <p class="break-words opacity-50">
-              {{ server.result[0].description }}
+              {{ server.result.description }}
             </p>
           </div>
         </div>
@@ -196,10 +173,12 @@
 
 <script setup lang="ts">
 import useClipboard from "~/composables/useClipboard";
+import type { Server } from "~/types/Server";
+
+const discordCdn = useDiscordCdn();
+const user = useUser();
 const route = useRoute();
-const user = useSupabaseUser();
-const client = useSupabaseClient();
-const server_id = route.params.id;
+const server_discord_id = route.params.id;
 
 const syncing = ref<boolean>(false);
 const server_metadata = ref<{
@@ -208,18 +187,13 @@ const server_metadata = ref<{
 }>({ on_cooldown: false, bumping: false });
 
 const {
-  data: profile,
-  refresh: refreshProfile,
-  pending: profile_pending,
-} = useFetch(
-  `/api/v1/profiles/fetch/${user.value?.user_metadata.provider_id}`,
-  { retry: false }
-);
-const {
   data: server,
   refresh: refreshServer,
   pending: server_pending,
-} = useFetch(`/api/v1/servers/fetch/${server_id}`, { retry: false });
+} = useFetch<{ message: string | null; result: Server | null }>(
+  `/api/v1/servers/fetch/${server_discord_id}`,
+  { retry: false }
+);
 
 const copy_current_url = async () => {
   const { toClipboard } = useClipboard();
@@ -233,12 +207,12 @@ watch(server, () => {
 
 const refreshServerMetadata = () => {
   if (server.value !== null) {
-    const premium =
-      profile.value?.result && profile.value.result[0].premium_since !== null;
+    const premium = user?.value?.premium_since !== null ? true : false;
 
     const cooldown = premium ? 3600000 : 7200000;
     const on_cooldown =
-      ((server.value.result !== null && server.value.result[0].bumped_at) ||
+      ((server.value.result !== null &&
+        Number(server.value.result.bumped_at)) ||
         0) +
         cooldown <=
       Date.now()
@@ -252,9 +226,13 @@ const refreshServerMetadata = () => {
 
 const syncDiscordServers = async () => {
   syncing.value = true;
-  const response = await fetch("/api/v1/servers/sync/" + server_id);
+  const response = await fetch("/api/v1/servers/sync/" + server_discord_id);
   if (response.status === 401) {
-    await client.auth.signOut();
+    await $fetch("/api/v1/auth/logout", {
+      method: "POST",
+      retry: false,
+    });
+    user.value = null;
     navigateTo("/login");
   }
   refreshServer();
@@ -264,9 +242,15 @@ const syncDiscordServers = async () => {
 const bump_server = async () => {
   if (server.value !== null) {
     server_metadata.value.bumping = true;
-    const response = await fetch("/api/v1/servers/bump/" + server_id);
+    const response = await fetch("/api/v1/servers/bump/" + server_discord_id, {
+      method: "POST",
+    });
     if (response.status === 401) {
-      await client.auth.signOut();
+      await $fetch("/api/v1/auth/logout", {
+        method: "POST",
+        retry: false,
+      });
+      user.value = null;
       navigateTo("/login");
     }
     server_metadata.value.bumping = false;
@@ -276,8 +260,7 @@ const bump_server = async () => {
 };
 
 function formatRemainingTime(bumped_at: number) {
-  const premium =
-    profile.value?.result && profile.value.result[0].premium_since !== null;
+  const premium = user?.value?.premium_since ? true : false;
 
   const cooldownDuration = premium ? 3600000 : 7200000;
   const targetTime = new Date(bumped_at + cooldownDuration);

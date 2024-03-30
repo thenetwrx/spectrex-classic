@@ -35,7 +35,7 @@
       <div
         v-for="server in servers?.result
           ?.filter((_server) => _server.approved_at !== null)
-          .sort((a, b) => b.bumped_at - a.bumped_at)"
+          .sort((a, b) => Number(b.bumped_at) - Number(a.bumped_at))"
         class="flex flex-col"
       >
         <div class="bg-base-200 rounded-t-md">
@@ -43,16 +43,10 @@
           <!-- Server Image -->
           <div class="flex flex-row items-center gap-2 w-full p-2 relative">
             <div class="w-16 h-16 overflow-hidden rounded-lg">
-              <NuxtLink :href="'/servers/' + server.server_id">
+              <NuxtLink :href="'/servers/' + server.discord_id">
                 <img
                   v-if="server.icon"
-                  :src="
-                    'https://cdn.discordapp.com/icons/' +
-                    server.server_id +
-                    '/' +
-                    server.icon +
-                    '.webp?size=96'
-                  "
+                  :src="discordCdn.server_icon(server.discord_id, server.icon)"
                   alt="Server Image"
                   class="object-cover rounded-full w-full h-full"
                   :class="server.nsfw ? 'blur-sm' : ''"
@@ -62,16 +56,14 @@
                   class="h-full flex flex-col items-center rounded-full bg-base-100"
                 >
                   <p class="opacity-50 mt-auto mb-auto text-3xl">
-                    {{ server.server_name.slice(0, 1).toUpperCase() || "?" }}
+                    {{ server.name.slice(0, 1).toUpperCase() || "?" }}
                   </p>
                 </div>
               </NuxtLink>
             </div>
             <div class="flex flex-col">
-              <NuxtLink :href="'/servers/' + server.server_id">
-                <span class="font-medium text-lg">{{
-                  server.server_name
-                }}</span>
+              <NuxtLink :href="'/servers/' + server.discord_id">
+                <span class="font-medium text-lg">{{ server.name }}</span>
               </NuxtLink>
               <div class="flex flex-wrap gap-1 items-center">
                 <div class="bg-primary bg-opacity-50 px-1 rounded-md">
@@ -95,7 +87,7 @@
               class="absolute top-1 right-1 flex flex-row gap-1 items-center justify-start"
             >
               <NuxtLink
-                :href="'/servers/' + server.server_id + '/report'"
+                :href="'/servers/' + server.discord_id + '/report'"
                 class="btn btn-ghost max-sm:btn-sm"
               >
                 <i class="fa-solid md:fa-lg fa-flag"></i>
@@ -151,6 +143,10 @@
 </template>
 
 <script setup lang="ts">
+import type { Server } from "~/types/Server";
+
+const discordCdn = useDiscordCdn();
+
 const route = useRoute();
 const popular_categories = ref<Array<string>>([
   "Community",
@@ -164,7 +160,6 @@ const popular_categories = ref<Array<string>>([
 const category = computed(() => route.query.category);
 
 const go_to_page = async (num: number) => {
-  console.log("page change");
   page.value = num;
 };
 
@@ -172,11 +167,11 @@ const page = ref<number>(0);
 const max_per_page = ref<number>(10);
 const max_pages = ref<number>(50);
 
-const { data: servers, pending: servers_pending } = useFetch(
-  "/api/v1/servers/fetch/feed",
-  {
-    query: { page, category },
-    retry: false,
-  }
-);
+const { data: servers, pending: servers_pending } = useFetch<{
+  message: string | null;
+  result: Server[] | null;
+}>("/api/v1/servers/fetch/feed", {
+  query: { page, category },
+  retry: false,
+});
 </script>

@@ -1,84 +1,66 @@
 <template>
   <div class="container max-w-4xl mx-auto px-4 py-8">
-    <div class="w-full text-center mt-12" v-if="profile_pending">
-      <i class="fa-solid fa-2xl fa-spinner-third fa-spin"></i>
+    <div class="flex items-center justify-between mb-8">
+      <div class="flex items-center">
+        <img
+          :src="
+            discordCdn.user_avatar(user?.discord_id || '', user?.avatar || '')
+          "
+          alt="User Avatar"
+          class="w-12 h-12 rounded-full mr-4"
+        />
+        <div>
+          <h2
+            class="text-lg"
+            :class="user?.premium_since !== null ? 'text-accent' : ''"
+          >
+            <i
+              class="fa-solid fa-crown"
+              v-if="user?.premium_since !== null ? true : false"
+            ></i>
+            {{ user?.global_name || user?.username || "Unknown" }}
+          </h2>
+          <p class="text-gray-500">@{{ user?.username || "unknown" }}</p>
+        </div>
+      </div>
     </div>
-    <p class="text-4xl" v-else-if="!profile?.result?.length">
-      Hm... That profile doesn't seem to exist!
-    </p>
-    <template v-else>
-      <div class="flex items-center justify-between mb-8">
-        <div class="flex items-center">
-          <img
-            :src="user?.user_metadata.avatar_url"
-            alt="User Avatar"
-            class="w-12 h-12 rounded-full mr-4"
-          />
-          <div>
-            <h2 class="text-lg font-semibold">
-              Welcome back,
-              <i
-                class="fa-solid fa-crown text-accent"
-                v-if="
-                  profile?.result?.length &&
-                  profile.result[0].premium_since !== null
-                    ? true
-                    : false
-                "
-              ></i>
-              {{ user?.user_metadata.full_name || "Unknown" }}!
-            </h2>
-            <p class="text-gray-500">
-              Last login: {{ formatDateString(user?.last_sign_in_at || "") }}
-            </p>
-          </div>
+    <h2 class="text-lg font-semibold">Dashboard</h2>
+    <div class="divider"></div>
+    <div class="flex flex-row max-md:flex-col gap-2 w-full">
+      <div
+        @click="navigateTo('/profiles/' + user?.discord_id)"
+        class="bg-base-200 max-md:w-full md:w-1/2 h-20 rounded-md flex flex-row gap-3 p-4 hover:bg-base-300 transition-colors duration-200 cursor-pointer"
+      >
+        <div class="p-4 rounded-lg w-full flex flex-row gap-4 items-center">
+          <i class="fa-solid fa-address-card fa-2xl"></i>
+          <p class="text-2xl">Profile</p>
+        </div>
+        <div class="p-2 mb-auto mt-auto ml-auto">
+          <i class="fa-solid fa-arrow-up-right-from-square"></i>
         </div>
       </div>
-      <h2 class="text-lg font-semibold mb-4">Dashboard</h2>
-      <div class="divider"></div>
-      <div class="flex flex-row max-md:flex-col gap-2 w-full">
-        <div
-          @click="navigateTo('/profiles/' + user?.user_metadata.provider_id)"
-          class="bg-base-200 max-md:w-full md:w-1/2 h-20 rounded-md flex flex-row gap-3 p-4 hover:bg-base-300 transition-colors duration-200 cursor-pointer"
-        >
-          <div class="p-4 rounded-lg w-full flex flex-row gap-4 items-center">
-            <i class="fa-solid fa-address-card fa-2xl"></i>
-            <p class="text-2xl">Profile</p>
-          </div>
-          <div class="p-2 mb-auto mt-auto ml-auto">
-            <i class="fa-solid fa-arrow-up-right-from-square"></i>
-          </div>
+      <div
+        @click="navigateTo('/dashboard/servers')"
+        class="bg-base-200 max-md:w-full md:w-1/2 h-20 rounded-md flex flex-row gap-3 p-4 hover:bg-base-300 transition-colors duration-200 cursor-pointer"
+      >
+        <div class="p-4 rounded-lg w-full flex flex-row gap-4 items-center">
+          <i class="fa-solid fa-server fa-2xl"></i>
+          <p class="text-2xl">Servers</p>
         </div>
-        <div
-          @click="navigateTo('/dashboard/servers')"
-          class="bg-base-200 max-md:w-full md:w-1/2 h-20 rounded-md flex flex-row gap-3 p-4 hover:bg-base-300 transition-colors duration-200 cursor-pointer"
-        >
-          <div class="p-4 rounded-lg w-full flex flex-row gap-4 items-center">
-            <i class="fa-solid fa-server fa-2xl"></i>
-            <p class="text-2xl">Servers</p>
-          </div>
-          <div class="p-2 mb-auto mt-auto ml-auto">
-            <i class="fa-solid fa-arrow-up-right-from-square"></i>
-          </div>
+        <div class="p-2 mb-auto mt-auto ml-auto">
+          <i class="fa-solid fa-arrow-up-right-from-square"></i>
         </div>
       </div>
-    </template>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { type Database } from "~/database.types";
-const user = useSupabaseUser();
-const client = useSupabaseClient<Database>();
-
-const {
-  data: profile,
-  refresh: refreshProfile,
-  pending: profile_pending,
-} = useFetch(
-  `/api/v1/profiles/fetch/${user.value?.user_metadata.provider_id}`,
-  { retry: false }
-);
+definePageMeta({
+  middleware: ["1-protected"],
+});
+const user = useUser();
+const discordCdn = useDiscordCdn();
 
 function formatDateString(dynamicString: string) {
   // Parse the string into a Date object

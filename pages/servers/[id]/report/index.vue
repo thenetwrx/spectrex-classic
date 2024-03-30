@@ -1,15 +1,13 @@
 <template>
   <div class="container max-w-4xl mx-auto px-4 py-8 text-center">
-    <div class="w-full text-center mt-12" v-if="server_pending">
+    <div class="w-full text-center my-16" v-if="server_pending">
       <i class="fa-solid fa-2xl fa-spinner-third fa-spin"></i>
     </div>
-    <p class="text-4xl" v-else-if="!server?.result?.length">
+    <p class="text-4xl" v-else-if="!server?.result">
       Hm... That server doesn't seem to exist!
     </p>
     <template v-else>
-      <p class="text-4xl">
-        Reporting server "{{ server.result[0].server_name }}"
-      </p>
+      <p class="text-4xl">Reporting server "{{ server.result.name }}"</p>
       <div class="flex flex-col py-4">
         <div
           class="bg-base-200 h-fit text-start p-4 rounded-md flex flex-col gap-4"
@@ -53,10 +51,14 @@
 </template>
 
 <script setup lang="ts">
-import { type Database } from "~/database.types";
+import type { Server } from "~/types/Server";
+
+definePageMeta({
+  middleware: ["1-protected"],
+});
+const user = useUser();
 const route = useRoute();
-const client = useSupabaseClient<Database>();
-const server_id = route.params.id;
+const server_discord_id = route.params.id;
 
 enum IssueType {
   Server,
@@ -69,10 +71,13 @@ const {
   data: server,
   refresh: refreshServer,
   pending: server_pending,
-} = useFetch(`/api/v1/servers/fetch/${server_id}`, { retry: false });
+} = useFetch<{ message: string | null; result: Server | null }>(
+  `/api/v1/servers/fetch/${server_discord_id}`,
+  { retry: false }
+);
 
 const report = async () => {
-  const response = await fetch(`/api/v1/servers/report/${server_id}`, {
+  const response = await fetch(`/api/v1/servers/report/${server_discord_id}`, {
     method: "POST",
     headers: new Headers({ "content-type": "application/json" }),
     body: JSON.stringify({
@@ -81,7 +86,11 @@ const report = async () => {
     }),
   });
   if (response.status === 401) {
-    await client.auth.signOut();
+    await $fetch("/api/v1/auth/logout", {
+      method: "POST",
+      retry: false,
+    });
+    user.value = null;
     navigateTo("/login");
   }
 

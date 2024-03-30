@@ -1,9 +1,9 @@
 <template>
   <div class="container max-w-4xl mx-auto px-4 py-8 text-center">
-    <div class="w-full text-center mt-12" v-if="server_pending">
+    <div class="w-full text-center my-16" v-if="server_pending">
       <i class="fa-solid fa-2xl fa-spinner-third fa-spin"></i>
     </div>
-    <p class="text-4xl" v-else-if="!server?.result?.length">
+    <p class="text-4xl" v-else-if="!server?.result">
       Hm... That server doesn't seem to exist!
     </p>
     <template v-else>
@@ -13,38 +13,32 @@
           <div class="flex flex-row gap-4 items-center">
             <div class="w-16 h-16 overflow-hidden rounded-full">
               <img
-                v-if="server.result[0].icon"
+                v-if="server.result.icon"
                 :src="
-                  'https://cdn.discordapp.com/icons/' +
-                  server.result[0].server_id +
-                  '/' +
-                  server.result[0].icon +
-                  '.webp?size=96'
+                  discordCdn.server_icon(
+                    server.result.discord_id,
+                    server.result.icon
+                  )
                 "
                 alt="Server Image"
                 class="object-cover w-full h-full"
-                :class="server.result[0].nsfw ? 'blur-sm' : ''"
+                :class="server.result.nsfw ? 'blur-sm' : ''"
               />
               <div
                 v-else
                 class="h-full flex flex-col items-center rounded-full bg-base-100"
               >
                 <p class="text-zinc-500 mt-auto mb-auto text-3xl">
-                  {{
-                    server.result[0].server_name.slice(0, 1).toUpperCase() ||
-                    "?"
-                  }}
+                  {{ server.result.name.slice(0, 1).toUpperCase() || "?" }}
                 </p>
               </div>
             </div>
             <div class="flex flex-col items-start">
-              <span class="font-medium text-lg">{{
-                server.result[0].server_name
-              }}</span>
+              <span class="font-medium text-lg">{{ server.result.name }}</span>
               <div class="flex flex-row gap-1 items-center">
                 <div class="bg-[#23A55A] h-4 w-4 rounded-full"></div>
                 <p class="opacity-50">
-                  {{ server.result[0].approximate_presence_count }} online
+                  {{ server.result.approximate_presence_count }} online
                 </p>
               </div>
             </div>
@@ -160,7 +154,7 @@
                     name="radio-nsfw"
                     class="radio"
                     v-model="nsfw"
-                    value="true"
+                    :value="true"
                   />
                   <span class="label-text">Yes</span>
                 </label>
@@ -172,7 +166,7 @@
                     name="radio-nsfw"
                     class="radio"
                     v-model="nsfw"
-                    value="false"
+                    :value="false"
                   />
                   <span class="label-text">No</span>
                 </label>
@@ -192,11 +186,15 @@
 </template>
 
 <script setup lang="ts">
-import { type Database } from "~/database.types";
+import type { Server } from "~/types/Server";
+
+definePageMeta({
+  middleware: ["1-protected"],
+});
+const discordCdn = useDiscordCdn();
+const user = useUser();
 const route = useRoute();
-const user = useSupabaseUser();
-const client = useSupabaseClient<Database>();
-const server_id = route.params.id;
+const server_discord_id = route.params.id;
 
 const language = ref<string>("");
 const category = ref<string>("");
@@ -205,7 +203,7 @@ const invite_link = ref<string>("");
 const nsfw = ref<boolean | null>(null);
 
 const apply = async () => {
-  const response = await fetch(`/api/v1/servers/add/${server_id}`, {
+  const response = await fetch(`/api/v1/servers/add/${server_discord_id}`, {
     method: "POST",
     headers: new Headers({ "content-type": "application/json" }),
     body: JSON.stringify({
@@ -218,17 +216,25 @@ const apply = async () => {
     }),
   });
   if (response.status === 401) {
-    await client.auth.signOut();
-    navigateTo("/login");
+    await $fetch("/api/v1/auth/logout", {
+      method: "POST",
+      retry: false,
+    });
+    user.value = null;
+    await navigateTo("/");
   }
 
   const json = await response.json();
   if (response.status !== 200) return alert(json.message);
-  else navigateTo("/servers/" + server_id);
+  else navigateTo("/servers/" + server_discord_id);
 };
 
-const { data: server, pending: server_pending } = useFetch(
-  `/api/v1/servers/fetch/${server_id}`,
+const {
+  data: server,
+  refresh: refreshServer,
+  pending: server_pending,
+} = useFetch<{ message: string | null; result: Server | null }>(
+  `/api/v1/servers/fetch/${server_discord_id}`,
   { retry: false }
 );
 

@@ -1,93 +1,59 @@
-import {
-  serverSupabaseUser,
-  serverSupabaseServiceRole,
-} from "#supabase/server";
-import { type Database } from "~/database.types";
+import { type Server } from "~/types/Server";
 
 export default defineEventHandler(async (event) => {
+  if (event.context.user?.banned) {
+    setResponseStatus(event, 403);
+    return { message: "You are banned", result: null };
+  }
+
   // Parameters
   const params = getRouterParams(event);
-  const server_id = params.id;
+  const server_discord_id = params.id;
 
-  // 1. Get local user
-  const user = await serverSupabaseUser(event);
-
-  // 2. Fetch guild
+  // 2. Sync guild
   try {
-    const client = serverSupabaseServiceRole<Database>(event);
+    const servers = await database<Server[]>`
+      select 
+        *
+      from servers
+      where
+        discord_id = ${server_discord_id} 
+    `;
 
-    if (user) {
-      const { data: profile, error: profile_error } = await client
-        .from("profiles")
-        .select("*")
-        .eq("id", user.id);
-
-      if (profile_error) {
-        setResponseStatus(event, 500);
-        return {
-          message: "A database error occurred when fetching your profile",
-          result: null,
-        };
-      }
-
-      if (!profile.length) {
-        setResponseStatus(event, 500);
-        return { message: "Your profile was not found", result: null };
-      }
-      if (profile[0].banned) {
-        setResponseStatus(event, 500);
-        return { message: "Your profile is banned", result: null };
-      }
-    }
-
-    const { data, error } = await client
-      .from("servers")
-      .select("*")
-      .eq("server_id", server_id);
-
-    if (error) {
-      setResponseStatus(event, 500);
-      return {
-        message: "A database error occurred when bumping the server",
-        result: null,
-      };
-    }
-
-    if (!data.length) {
-      setResponseStatus(event, 500);
-      return { message: "Server was not found", result: null };
+    if (!servers.length) {
+      setResponseStatus(event, 404);
+      return { message: "Server not found", result: null };
     }
 
     if (
-      !data[0].public &&
-      user &&
-      data[0].owner_provider_id !== user.user_metadata.provider_id
+      !servers[0].public &&
+      event.context.user &&
+      servers[0].owner_discord_id !== event.context.user.discord_id
     ) {
-      setResponseStatus(event, 500);
+      setResponseStatus(event, 404);
       return { message: "Server was not found", result: null };
     }
     if (
-      data[0].banned &&
-      user &&
-      data[0].owner_provider_id !== user.user_metadata.provider_id
+      servers[0].banned &&
+      event.context.user &&
+      servers[0].owner_discord_id !== event.context.user.discord_id
     ) {
-      setResponseStatus(event, 500);
+      setResponseStatus(event, 403);
       return { message: "Server is banned", result: null };
     }
     if (
-      data[0].approved_at === null &&
-      user &&
-      data[0].owner_provider_id !== user.user_metadata.provider_id
+      servers[0].approved_at === null &&
+      event.context.user &&
+      servers[0].owner_discord_id !== event.context.user.discord_id
     ) {
-      setResponseStatus(event, 500);
+      setResponseStatus(event, 403);
       return { message: "Server is not approved", result: null };
     }
 
     setResponseStatus(event, 200);
-
     return {
       message: null,
-      result: data,
+      result: servers[0],
     };
   } catch (err) {
     console.log(err);
