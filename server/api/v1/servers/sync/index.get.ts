@@ -43,13 +43,14 @@ export default defineEventHandler(async (event) => {
 
     for (let i = 0; i < raw_guilds.length; i++) {
       if (raw_guilds[i].owner) {
-        const servers = await database<Server[]>`
-            select 
-                *
-            from servers
-            where
-                discord_id = ${raw_guilds[i].id} 
-        `;
+        const { rows: servers } = await database.query<Server>(
+          `
+            SELECT * FROM servers
+            WHERE
+              discord_id = $1 
+        `,
+          [raw_guilds[i].id]
+        );
 
         const server = servers.find(
           (server) => server.discord_id === raw_guilds[i].id
@@ -57,29 +58,46 @@ export default defineEventHandler(async (event) => {
         if (server) {
           if (server.banned) continue;
 
-          await database`
-            update servers set updated_at = ${Date.now()}, approximate_member_count = ${
-            raw_guilds[i].approximate_member_count
-          }, approximate_presence_count = ${
-            raw_guilds[i].approximate_presence_count
-          }, name = ${raw_guilds[i].name}, icon = ${raw_guilds[i].icon}
-            where
-                discord_id = ${raw_guilds[i].id} 
-            `;
+          await database.query(
+            `
+            UPDATE servers 
+              SET updated_at = $1, approximate_member_count = $2, approximate_presence_count = $3, name = $4, icon = $5
+            WHERE
+                discord_id = $6
+            `,
+            [
+              Date.now(),
+              raw_guilds[i].approximate_member_count,
+              raw_guilds[i].approximate_presence_count,
+              raw_guilds[i].name,
+              raw_guilds[i].icon,
+              raw_guilds[i].id,
+            ]
+          );
         } else {
-          await database`insert into servers
+          const now = Date.now();
+
+          await database.query(
+            `
+          INSERT INTO servers
             (id, discord_id, approximate_member_count, approximate_presence_count, created_at, bumped_at, updated_at, owner_discord_id, owner_id, name, icon)
-        values
-            (${generateId(15)}, ${raw_guilds[i].id}, ${
-            raw_guilds[i].approximate_member_count
-          }, ${
-            raw_guilds[i].approximate_presence_count
-          }, ${Date.now()}, ${Date.now()}, ${Date.now()}, ${
-            event.context.user.discord_id
-          }, ${event.context.user.id}, ${raw_guilds[i].name}, ${
-            raw_guilds[i].icon
-          })
-        `;
+          VALUES
+            ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+        `,
+            [
+              generateId(15),
+              raw_guilds[i].id,
+              raw_guilds[i].approximate_member_count,
+              raw_guilds[i].approximate_presence_count,
+              now,
+              now,
+              now,
+              event.context.user.discord_id,
+              event.context.user.id,
+              raw_guilds[i].name,
+              raw_guilds[i].icon,
+            ]
+          );
         }
       }
     }

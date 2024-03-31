@@ -7,10 +7,9 @@ export default defineEventHandler(async (event) => {
   }
 
   // Parameters
-  const max_per_page = 10;
+
   const query = getQuery(event);
   const page = query.page;
-  const category = query.category;
 
   if (Number.isNaN(page)) {
     setResponseStatus(event, 400);
@@ -30,49 +29,33 @@ export default defineEventHandler(async (event) => {
 
   // 2. Fetch guilds
   try {
-    if (category?.toString().length) {
-      const servers = await database<Server[]>`
-        select 
-            *
-        from servers
-        where
-            banned = false 
-            and public = true 
-            and approved_at is not null
-            and category = ${category.toString()}
-        order by bumped_at
-        limit ${max_per_page}
-        offset ${max_per_page * Number(page)}
-        `;
+    const max_per_page = 10;
+    const category: string | null = query.category?.toString() || null;
 
-      if (servers.length) {
-        setResponseStatus(event, 200);
-        return {
-          message: null,
-          result: servers,
-        };
-      }
+    let servers;
+    let sqlQuery = `
+      SELECT * FROM servers  
+      WHERE
+          banned = false 
+          AND public = true 
+          AND approved_at IS NOT NULL
+          ${category !== null ? `AND category = $1` : ``}
+      ORDER BY bumped_at
+      LIMIT ${max_per_page}
+      OFFSET ${max_per_page * Number(page)}`;
+
+    if (category?.length) {
+      servers = await database.query<Server>(sqlQuery, [category]);
     } else {
-      const servers = await database<Server[]>`
-        select 
-            *
-        from servers
-        where
-            banned = false 
-            and public = true 
-            and approved_at is not null
-        order by bumped_at
-        limit ${max_per_page}
-        offset ${max_per_page * Number(page)}
-        `;
+      servers = await database.query<Server>(sqlQuery);
+    }
 
-      if (servers.length) {
-        setResponseStatus(event, 200);
-        return {
-          message: null,
-          result: servers,
-        };
-      }
+    if (servers.rows.length) {
+      setResponseStatus(event, 200);
+      return {
+        message: null,
+        result: servers.rows,
+      };
     }
 
     setResponseStatus(event, 404);

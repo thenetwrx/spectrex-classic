@@ -17,13 +17,14 @@ export default defineEventHandler(async (event) => {
 
   // 2. Edit server
   try {
-    const servers = await database<Server[]>`
-      select 
-        *
-      from servers
-      where
-        discord_id = ${server_discord_id}
-    `;
+    const { rows: servers } = await database.query<Server>(
+      `
+      SELECT * FROM servers
+      WHERE
+        discord_id = $1
+    `,
+      [server_discord_id]
+    );
 
     if (!servers.length) {
       setResponseStatus(event, 404);
@@ -48,11 +49,15 @@ export default defineEventHandler(async (event) => {
     const cooldown =
       event.context.user.premium_since !== null ? 3600000 : 7200000;
     if ((Number(servers[0].bumped_at) || 0) + cooldown <= now) {
-      await database`
-        update servers set bumped_at = ${now}, updated_at = ${Date.now()}
-        where
-            discord_id = ${server_discord_id}
-    `;
+      await database.query<any>(
+        `
+        UPDATE servers
+        SET bumped_at = $1, updated_at = $2
+        WHERE
+            discord_id = $3
+    `,
+        [now, now, server_discord_id]
+      );
 
       setResponseStatus(event, 200);
       return { message: "Bumped" };

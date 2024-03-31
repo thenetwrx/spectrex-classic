@@ -12,13 +12,14 @@ export default defineEventHandler(async (event) => {
 
   // 2. Sync guild
   try {
-    const servers = await database<Server[]>`
-      select 
-        *
-      from servers
-      where
-        discord_id = ${server_discord_id} 
-    `;
+    const { rows: servers } = await database.query<Server>(
+      `
+      SELECT * FROM servers
+      WHERE
+        discord_id = $1 
+    `,
+      [server_discord_id]
+    );
 
     if (!servers.length) {
       setResponseStatus(event, 404);

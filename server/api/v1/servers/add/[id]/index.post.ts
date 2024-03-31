@@ -97,13 +97,14 @@ export default defineEventHandler(async (event) => {
 
   // 3. Edit server
   try {
-    const servers = await database<Server[]>`
-      select 
-        *
-      from servers
-      where
-        discord_id = ${server_discord_id}
-    `;
+    const { rows: servers } = await database.query<Server>(
+      `
+      SELECT * FROM servers
+      WHERE
+        discord_id = $1
+    `,
+      [server_discord_id]
+    );
 
     if (!servers.length) {
       setResponseStatus(event, 404);
@@ -123,17 +124,28 @@ export default defineEventHandler(async (event) => {
       return { message: "Server is already approved" };
     }
 
-    await database`
-        update servers set approved_at = ${Date.now()}, bumped_at = ${
-      servers[0].bumped_at === null ? Date.now() : servers[0].bumped_at
-    }, public = false, language = ${body.language}, category = ${
-      body.category
-    }, tags = ${body.tags}, description = ${body.description}, invite_link = ${
-      body.invite_link
-    }, nsfw = ${body.nsfw}, updated_at = ${Date.now()}
-        where
-            discord_id = ${server_discord_id}
-    `;
+    const now = Date.now();
+
+    await database.query(
+      `
+        UPDATE servers
+        SET approved_at = $1, bumped_at = $2, public = false, language = $3, category = $4, tags = $5, description = $6, invite_link = $7, nsfw = $8, updated_at = $9
+        WHERE
+            discord_id = $10
+    `,
+      [
+        now,
+        servers[0].bumped_at === null ? now : servers[0].bumped_at,
+        body.language,
+        body.category,
+        body.tags,
+        body.description,
+        body.invite_link,
+        body.nsfw,
+        now,
+        server_discord_id,
+      ]
+    );
 
     setResponseStatus(event, 200);
     return {

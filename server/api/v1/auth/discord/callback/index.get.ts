@@ -34,15 +34,17 @@ export default defineEventHandler(async (event) => {
     const discordUser: DiscordUser = await discordUserResponse.json();
 
     // Replace this with your own DB client.
-    const existingUser = await database`
-      select 
-        id
-      from users
-      where discord_id = ${discordUser.id}
-    `;
+    const existingUser = await database.query(
+      `
+      SELECT id FROM users
+      WHERE
+        discord_id = $1
+    `,
+      [discordUser.id]
+    );
 
-    if (existingUser.length) {
-      const session = await lucia.createSession(existingUser[0].id, {
+    if (existingUser.rows.length) {
+      const session = await lucia.createSession(existingUser.rows[0].id, {
         discord_access_token: cryptr.encrypt(tokens.accessToken),
       });
       const cookie = lucia.createSessionCookie(session.id);
@@ -52,20 +54,30 @@ export default defineEventHandler(async (event) => {
 
     const userId = generateId(15);
 
-    const createdUser = await database`
-      insert into users
+    const createdUser = await database.query(
+      `
+      INSERT INTO users
         (id, discord_id, username, avatar, global_name, email)
-      values
-        (${userId}, ${discordUser.id}, ${discordUser.username}, ${discordUser.avatar}, ${discordUser.global_name}, ${discordUser.email})
-      returning id
-    `;
+      VALUES
+        ($1, $2, $3, $4, $5, $6)
+      RETURNING id
+    `,
+      [
+        userId,
+        discordUser.id,
+        discordUser.username,
+        discordUser.avatar!,
+        discordUser.global_name!,
+        discordUser.email!,
+      ]
+    );
 
-    if (!createdUser.length) {
+    if (!createdUser.rows.length) {
       setResponseStatus(event, 500);
       return sendRedirect(event, "/");
     }
 
-    const session = await lucia.createSession(createdUser[0].id, {
+    const session = await lucia.createSession(createdUser.rows[0].id, {
       discord_access_token: cryptr.encrypt(tokens.accessToken),
     });
     const cookie = lucia.createSessionCookie(session.id);

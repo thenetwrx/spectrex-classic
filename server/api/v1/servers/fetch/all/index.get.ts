@@ -13,13 +13,14 @@ export default defineEventHandler(async (event) => {
 
   // 2. Fetch guilds
   try {
-    const servers = await database<Server[]>`
-      select 
-        *
-      from servers
-      where
-        owner_id = ${event.context.user.id}     
-      `;
+    const { rows: servers } = await database.query<Server>(
+      `
+      SELECT * FROM servers
+      WHERE
+        owner_id = $1     
+      `,
+      [event.context.user.id]
+    );
 
     if (!servers.length) {
       setResponseStatus(event, 404);

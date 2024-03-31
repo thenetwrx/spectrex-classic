@@ -101,13 +101,14 @@ export default defineEventHandler(async (event) => {
 
   // 3. Edit server
   try {
-    const servers = await database<Server[]>`
-      select 
-        *
-      from servers
-      where
-        discord_id = ${server_discord_id}
-    `;
+    const { rows: servers } = await database.query<Server>(
+      `
+      SELECT * FROM servers
+      WHERE
+        discord_id = $1
+    `,
+      [server_discord_id]
+    );
 
     if (!servers.length) {
       setResponseStatus(event, 404);
@@ -127,17 +128,25 @@ export default defineEventHandler(async (event) => {
       return { message: "Server is not approved" };
     }
 
-    await database`
-        update servers set public = ${body.public}, language = ${
-      body.language
-    }, category = ${body.category}, tags = ${body.tags}, description = ${
-      body.description
-    }, invite_link = ${body.invite_link}, nsfw = ${
-      body.nsfw
-    }, updated_at = ${Date.now()}
-        where
-            discord_id = ${server_discord_id}
-    `;
+    await database.query(
+      `
+        UPDATE servers 
+        SET public = $1, language = $2, category = $3, tags = $4, description = $5, invite_link = $6, nsfw = $7, updated_at = $8
+        WHERE
+            discord_id = $9
+    `,
+      [
+        body.public,
+        body.language,
+        body.category,
+        body.tags,
+        body.description,
+        body.invite_link,
+        body.nsfw,
+        Date.now(),
+        server_discord_id,
+      ]
+    );
 
     setResponseStatus(event, 200);
     return {

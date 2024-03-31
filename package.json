@@ -16,7 +16,7 @@
     "clipboard": "^2.0.11",
     "cryptr": "^6.3.0",
     "lucia": "^3.1.1",
-    "postgres": "^3.4.4",
+    "pg": "^8.11.4",
     "tailwindcss-animate": "^1.0.7",
     "vue": "^3.4.21",
     "vue-router": "^4.3.0"
@@ -25,6 +25,7 @@
     "@nuxt/image": "^1.4.0",
     "@nuxtjs/tailwindcss": "^6.11.4",
     "@types/node": "^20.11.30",
+    "@types/pg": "^8.11.4",
     "daisyui": "^4.7.3",
     "nitropack": "^2.9.5",
     "nuxt": "^3.11.1",

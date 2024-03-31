@@ -49,13 +49,14 @@ export default defineEventHandler(async (event) => {
 
   // 4. Insert server report
   try {
-    const servers = await database<Server[]>`
-      select 
-        *
-      from servers
-      where
-        discord_id = ${server_discord_id}
-    `;
+    const { rows: servers } = await database.query<Server>(
+      `
+      SELECT * FROM servers
+      WHERE
+        discord_id = $1
+    `,
+      [server_discord_id]
+    );
 
     if (!servers.length) {
       setResponseStatus(event, 404);
@@ -75,15 +76,24 @@ export default defineEventHandler(async (event) => {
       return { message: "Server is banned" };
     }
 
-    await database`insert into server_reports
-            (id, from_id, type, discord_id, server_discord_id, server_owner_discord_id, server_owner_id, description, from_discord_id)
-        values
-            (${generateId(15)}, ${event.context.user.id}, ${body.issue_type}, ${
-      servers[0].discord_id
-    }, ${servers[0].owner_discord_id}, ${servers[0].owner_id}, ${
-      body.description
-    }, ${event.context.user.discord_id})
-        `;
+    await database.query(
+      `
+      INSERT INTO server_reports
+        (id, from_id, type, discord_id, server_discord_id, server_owner_discord_id, server_owner_id, description, from_discord_id)
+      VALUES
+        ($1, $2, $3, $4, $5, $6, $7, $8)
+    `,
+      [
+        generateId(15),
+        event.context.user.id,
+        body.issue_type,
+        servers[0].discord_id,
+        servers[0].owner_discord_id,
+        servers[0].owner_id,
+        body.description,
+        event.context.user.discord_id,
+      ]
+    );
 
     setResponseStatus(event, 200);
     return { message: "Report recorded" };
