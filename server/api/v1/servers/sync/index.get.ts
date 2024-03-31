@@ -80,16 +80,15 @@ export default defineEventHandler(async (event) => {
           await database.query(
             `
           INSERT INTO servers
-            (id, discord_id, approximate_member_count, approximate_presence_count, created_at, bumped_at, updated_at, owner_discord_id, owner_id, name, icon)
+            (id, discord_id, approximate_member_count, approximate_presence_count, created_at, updated_at, owner_discord_id, owner_id, name, icon)
           VALUES
-            ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+            ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
         `,
             [
               generateId(15),
               raw_guilds[i].id,
               raw_guilds[i].approximate_member_count,
               raw_guilds[i].approximate_presence_count,
-              now,
               now,
               now,
               event.context.user.discord_id,
