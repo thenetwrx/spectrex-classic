@@ -64,7 +64,7 @@ useHead({
     },
     {
       name: "twitter:card",
-      content: "summary_large_image",
+      content: "summary",
     },
     {
       name: "twitter:site",
@@ -85,7 +85,7 @@ useHead({
     },
     {
       name: "twitter:image",
-      content: "https://spectrex.app/images/logo_spectrex.png",
+      content: "https://spectrex.app/images/logo.png",
     },
     {
       name: "keywords",

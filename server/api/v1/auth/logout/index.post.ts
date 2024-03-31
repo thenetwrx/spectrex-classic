@@ -3,6 +3,7 @@ export default eventHandler(async (event) => {
     setResponseStatus(event, 401);
     return sendRedirect(event, "/");
   }
+  // TODO: invalidate discord access token
   await lucia.invalidateSession(event.context.session.id);
   appendHeader(
     event,
