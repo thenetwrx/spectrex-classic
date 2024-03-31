@@ -17,19 +17,19 @@
     "cryptr": "^6.3.0",
     "lucia": "^3.1.1",
     "postgres": "^3.4.4",
-    "supabase": "^1.150.0",
+    "tailwindcss-animate": "^1.0.7",
     "vue": "^3.4.21",
     "vue-router": "^4.3.0"
   },
   "devDependencies": {
     "@nuxt/image": "^1.4.0",
-    "@nuxtjs/supabase": "^1.1.7",
     "@nuxtjs/tailwindcss": "^6.11.4",
     "@types/node": "^20.11.30",
     "daisyui": "^4.7.3",
     "nitropack": "^2.9.5",
     "nuxt": "^3.11.1",
     "nuxt-vercel-analytics": "^1.0.0",
-    "tailwindcss-animated": "^1.0.1"
+    "tailwindcss-animated": "^1.0.1",
+    "typescript": "^5.4.3"
   }
 }

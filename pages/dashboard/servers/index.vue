@@ -1,6 +1,5 @@
 <template>
-  <div class="container max-w-4xl mx-auto px-4 py-8">
-    <!-- User Profile -->
+  <div class="container max-w-4xl mx-auto px-4 pt-32 min-h-screen">
     <div class="flex items-center justify-between mb-8">
       <div class="flex items-center">
         <img
@@ -13,7 +12,7 @@
         <div>
           <h2
             class="text-lg"
-            :class="user?.premium_since !== null ? 'text-accent' : ''"
+            :class="user?.premium_since !== null ? 'text-[#ffbf28]' : ''"
           >
             <i
               class="fa-solid fa-crown"
@@ -98,7 +97,7 @@
     </ul>
   </div>
   <dialog class="modal" id="my_modal_1">
-    <div class="modal-box">
+    <div class="modal-box bg-base-200">
       <div class="flex flex-row gap-1 items-center w-full pb-4">
         <h3 class="text-lg font-bold">Add server</h3>
         <button

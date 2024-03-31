@@ -1,5 +1,5 @@
 <template>
-  <div class="container max-w-4xl mx-auto px-4 py-8">
+  <div class="container max-w-4xl mx-auto px-4 pt-32 min-h-screen">
     <div class="flex items-center justify-between mb-8">
       <div class="flex items-center">
         <img
@@ -12,7 +12,7 @@
         <div>
           <h2
             class="text-lg"
-            :class="user?.premium_since !== null ? 'text-accent' : ''"
+            :class="user?.premium_since !== null ? 'text-[#ffbf28]' : ''"
           >
             <i
               class="fa-solid fa-crown"

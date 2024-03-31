@@ -1,21 +1,23 @@
 <template>
-  <div class="py-10 px-4 mx-auto max-w-6xl flex flex-col">
+  <div
+    class="container max-w-6xl mx-auto px-4 pt-32 min-h-screen flex flex-col"
+  >
     <p class="text-4xl font-bold mb-4">Explore</p>
 
     <div class="flex flex-wrap gap-2 overflow-x-auto mb-6">
       <NuxtLink
         href="/explore"
-        class="block max-w-fit px-2 py-1 bg-primary border-none bg-opacity-50 rounded-sm gap-2 hover:bg-opacity-65 hover:cursor-pointer transition-colors duration-200 ease-in-out text-white"
+        class="block max-w-fit px-2 py-1 bg-accent border-none bg-opacity-50 rounded-sm gap-2 hover:bg-opacity-65 hover:cursor-pointer transition-colors duration-200 ease-in-out text-white"
       >
-        <span class="text-primary">/</span>
+        <span class="text-accent">/</span>
         All
       </NuxtLink>
       <NuxtLink
         v-for="category in popular_categories"
         :href="'/explore?category=' + category"
-        class="block max-w-fit px-2 py-1 bg-primary border-none bg-opacity-50 rounded-sm gap-2 hover:bg-opacity-65 hover:cursor-pointer transition-colors duration-200 ease-in-out text-white"
+        class="block max-w-fit px-2 py-1 bg-accent border-none bg-opacity-50 rounded-sm gap-2 hover:bg-opacity-65 hover:cursor-pointer transition-colors duration-200 ease-in-out text-white"
       >
-        <span class="text-primary">/</span>
+        <span class="text-accent">/</span>
         {{ category }}
       </NuxtLink>
     </div>
@@ -66,7 +68,7 @@
                 <span class="font-medium text-lg">{{ server.name }}</span>
               </NuxtLink>
               <div class="flex flex-wrap gap-1 items-center">
-                <div class="bg-primary bg-opacity-50 px-1 rounded-md">
+                <div class="bg-accent bg-opacity-50 px-1 rounded-md">
                   <span class="opacity-75">{{ server.category }}</span>
                 </div>
                 <div
@@ -102,9 +104,9 @@
             >
               <span
                 v-for="tag in server.tags"
-                class="block max-w-fit px-2 py-1 bg-primary border-none bg-opacity-50 rounded-sm gap-2 hover:bg-opacity-65 hover:cursor-pointer transition-colors duration-200 ease-in-out text-white"
+                class="block max-w-fit px-2 py-1 bg-accent border-none bg-opacity-50 rounded-sm gap-2 hover:bg-opacity-65 hover:cursor-pointer transition-colors duration-200 ease-in-out text-white"
               >
-                <span class="text-primary">#</span>
+                <span class="text-accent">#</span>
                 {{ tag }}
               </span>
             </div>
@@ -118,7 +120,7 @@
 
     <div class="flex flex-row items-center place-self-center mt-8">
       <button
-        class="btn btn-primary btn-sm"
+        class="btn btn-accent btn-sm"
         :class="page === 0 ? 'btn-disabled' : ''"
         @click="go_to_page(page - 1)"
       >
@@ -128,7 +130,7 @@
         >Page {{ page + 1 }}</span
       >
       <button
-        class="btn btn-primary btn-sm"
+        class="btn btn-accent btn-sm"
         :class="
           page === max_pages || (servers?.result?.length || 0) < max_per_page
             ? 'btn-disabled'

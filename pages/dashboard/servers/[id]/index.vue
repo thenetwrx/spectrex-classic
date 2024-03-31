@@ -1,5 +1,5 @@
 <template>
-  <div class="container max-w-4xl mx-auto px-4 py-8 text-center">
+  <div class="container max-w-4xl mx-auto px-4 pt-32 min-h-screen text-center">
     <div class="w-full text-center my-16" v-if="server_pending">
       <i class="fa-solid fa-2xl fa-spinner-third fa-spin"></i>
     </div>
@@ -37,7 +37,7 @@
               <span class="font-medium text-lg">{{ server.result.name }}</span>
               <div class="flex flex-wrap gap-1 items-center">
                 <div
-                  class="bg-primary bg-opacity-50 px-1 rounded-md"
+                  class="bg-accent bg-opacity-50 px-1 rounded-md"
                   v-if="
                     server.result.category !== null &&
                     server.result.approved_at !== null
@@ -162,11 +162,11 @@
               <span
                 v-for="(tag, index) in tags"
                 :key="index"
-                class="block max-w-fit px-2 py-1 bg-primary border-none bg-opacity-50 rounded-sm gap-2 hover:bg-opacity-65 hover:cursor-pointer transition-colors duration-200 ease-in-out text-white"
+                class="block max-w-fit px-2 py-1 bg-accent border-none bg-opacity-50 rounded-sm gap-2 hover:bg-opacity-65 hover:cursor-pointer transition-colors duration-200 ease-in-out text-white"
                 @click="removeTag(index)"
               >
                 <i class="fa-solid fa-square-xmark fa-lg mr-2"></i>
-                <span class="text-primary">#</span>
+                <span class="text-accent">#</span>
                 {{ tag }}
               </span>
             </div>
@@ -242,7 +242,7 @@
           </div>
           <button
             @click="edit"
-            class="btn btn-primary ml-auto mr-auto md:min-w-48 max-md:w-full"
+            class="btn btn-accent ml-auto mr-auto md:min-w-48 max-md:w-full"
           >
             <i class="fa-solid fa-pen-to-square"></i> Save
           </button>

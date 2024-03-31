@@ -125,9 +125,6 @@ const discordCdn = useDiscordCdn();
 body {
   font-family: Cairo;
 }
-a:hover {
-  text-decoration: underline;
-}
 .mono {
   font-family: "Share Tech Mono", monospace;
   font-weight: 400;
@@ -138,7 +135,7 @@ a:hover {
 <template>
   <div class="container-fluid min-h-screen flex flex-col">
     <!-- Mobile Sidebar -->
-    <div class="md:hidden sticky top-0 left-4 z-50 p-3">
+    <div class="md:hidden fixed top-0 left-4 z-[9999]">
       <button
         @click="isMobileSidebarOpen = !isMobileSidebarOpen"
         class="bg-base-200 p-4 mt-4 btn"
@@ -148,27 +145,30 @@ a:hover {
       <div
         v-show="isMobileSidebarOpen"
         @click="isMobileSidebarOpen = false"
-        class="fixed inset-0 bg-black bg-opacity-50 z-40"
+        class="fixed inset-0 bg-black bg-opacity-50 z-[9999]"
       ></div>
       <div
         v-show="isMobileSidebarOpen"
-        class="fixed inset-y-0 left-0 bg-base-200 w-64 z-50 flex flex-col justify-between animate-once animate-duration-300 animate-fade-right animate-ease-in-out"
+        class="fixed inset-y-0 left-0 bg-base-200 w-64 z-[9999] flex flex-col justify-between animate-once animate-duration-300 animate-fade-right animate-ease-in-out"
       >
-        <div class="flex flex-col gap-2 p-2">
+        <div class="flex flex-col gap-3 p-2">
           <!-- Logo and Navigation Links -->
-          <NuxtLink href="/" class="mx-auto py-3">
-            <NuxtImg src="/images/logo_spectrex.png" class="h-6" />
+          <NuxtLink
+            href="/"
+            class="flex flex-row items-center gap-1 h-fit text-xl py-3"
+          >
+            <NuxtImg src="/images/logo.png" class="h-12"></NuxtImg>
           </NuxtLink>
-          <NuxtLink href="/explore" class="p-2 bg-base-300 rounded-md">
+          <NuxtLink href="/explore" class="p-2 bg-secondary rounded-md">
             <span>Explore</span>
           </NuxtLink>
           <NuxtLink
             href="/dashboard/servers"
-            class="p-2 bg-base-300 rounded-md"
+            class="p-2 bg-secondary rounded-md"
           >
             <span>Add server</span>
           </NuxtLink>
-          <NuxtLink href="/premium" class="p-2 bg-base-300 rounded-md">
+          <NuxtLink href="/premium" class="p-2 bg-secondary rounded-md">
             <span>Premium</span>
           </NuxtLink>
         </div>
@@ -205,22 +205,34 @@ a:hover {
 
     <!-- Desktop Navbar -->
     <div
-      class="hidden md:block w-full p-0 animate-once animate-fade-down animate-ease-in-out"
+      class="hidden md:block w-full p-0 fixed top-0 z-[9999] animate-once animate-fade-down animate-ease-in-out border-b-2 border-y-[#2D2D2D]"
     >
       <div
-        class="py-4 px-20 max-md:px-4 h-16 bg-base-200 flex flex-row items-center justify-between"
+        class="py-4 px-2 max-md:px-4 h-16 bg-base-200 flex flex-row items-center gap-3"
       >
-        <div class="flex items-center gap-2">
-          <!-- <NuxtLink href="/" class="mr-3">
-            <NuxtImg src="/images/logo_spectrex.png" class="h-6" />
-          </NuxtLink> -->
+        <NuxtLink href="/" class="btn btn-ghost items-center px-3">
+          <NuxtImg src="/images/logo.png" class="h-10" />
+          <!-- <span class="text-lg">Spectrex</span> -->
+        </NuxtLink>
+        <NuxtLink
+          href="/explore"
+          class="text-[#a1a1a1] hover:text-[#fff] transition-all duration-300"
+        >
+          Explore
+        </NuxtLink>
+        <NuxtLink
+          href="/dashboard/servers"
+          class="text-[#a1a1a1] hover:text-[#fff] transition-all duration-300"
+        >
+          Add server
+        </NuxtLink>
+        <NuxtLink
+          href="/premium"
+          class="text-[#a1a1a1] hover:text-[#fff] transition-all duration-300"
+          >Premium
+        </NuxtLink>
 
-          <NuxtLink href="/"><span>Home</span></NuxtLink>
-          <NuxtLink href="/explore"><span>Explore</span></NuxtLink>
-          <NuxtLink href="/dashboard/servers"><span>Add server</span></NuxtLink>
-          <NuxtLink href="/premium"><span>Premium</span></NuxtLink>
-        </div>
-        <div class="flex items-center gap-1">
+        <div class="flex items-center gap-1 ml-auto">
           <div class="dropdown dropdown-end" v-if="user">
             <div tabindex="0" class="btn btn-ghost avatar">
               <div class="w-8 rounded-full">
@@ -248,7 +260,7 @@ a:hover {
             v-else
             href="/api/v1/auth/discord"
             external
-            class="btn btn-sm btn-secondary"
+            class="btn btn-sm px-4 btn-secondary"
             data-theme="dark"
           >
             <i class="fa-brands fa-discord"></i>
@@ -257,13 +269,18 @@ a:hover {
         </div>
       </div>
     </div>
+
     <slot />
     <div
-      class="mt-auto w-full flex flex-col gap-12 bg-base-300 p-24 max-md:p-10"
+      class="mt-auto w-full flex flex-col gap-12 bg-base-200 p-24 max-md:p-10 border-t-2 border-y-[#2D2D2D]"
     >
       <div class="flex flex-row max-md:flex-col gap-6">
-        <NuxtLink href="/">
-          <NuxtImg src="/images/logo_spectrex.png" class="h-6"></NuxtImg>
+        <NuxtLink
+          href="/"
+          class="flex flex-row items-center gap-1 h-fit text-xl"
+        >
+          <NuxtImg src="/images/logo.png" class="h-12"></NuxtImg>
+          <span class="text-3xl">SPECTREX</span>
         </NuxtLink>
         <div class="flex flex-col gap-2">
           <p class="opacity-75 text-md whitespace-break-spaces">SERVICE</p>
