@@ -59,7 +59,10 @@
           member counts and ID. Anything you submit or otherwise make available
           on our Products is referred to as "User Content." You retain all
           rights in, and are solely responsible for, the User Content you submit
-          to Spectrex.
+          to Spectrex. Submitting a Discord server to Spectrex means you agree
+          to the
+          <NuxtLink href="/guidelines" class="text-accent">Guidelines</NuxtLink
+          >.
         </p>
       </div>
       <div>
@@ -241,7 +244,6 @@
         to assert any right or provision under these Terms shall not constitute
         a waiver of such right or provision.
       </p>
-      <p class="text-2xl py-6">Effective as of March 24th 2024</p>
     </div>
   </div>
 </template>

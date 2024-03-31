@@ -8,6 +8,10 @@
     </p>
     <template v-else>
       <p class="text-4xl">Add new server</p>
+      <p class="opacity-75">
+        Submitting a Discord server to Spectrex means you agree to the
+        <NuxtLink href="/guidelines" class="text-accent">Guidelines</NuxtLink>.
+      </p>
       <div class="flex flex-col py-4">
         <div class="bg-base-200 w-full h-fit p-4 rounded-t-md">
           <div class="flex flex-row gap-4 items-center">

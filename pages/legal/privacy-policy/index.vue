@@ -99,7 +99,6 @@
         purposes. Feel free to contact us if you have any concerns or questions
         about how we handle your data and personal information.
       </p>
-      <p class="text-2xl py-6">Effective as of March 24th 2024</p>
     </div>
   </div>
 </template>

@@ -292,6 +292,7 @@ body {
           <p class="opacity-75 text-md whitespace-break-spaces">USEFUL LINKS</p>
           <NuxtLink href="/api/v1/discord" external>Discord Support</NuxtLink>
           <NuxtLink href="mailto:contact@spectrex.app">Email Support</NuxtLink>
+          <NuxtLink href="/guidelines">Guidelines</NuxtLink>
         </div>
         <div class="flex flex-col gap-2">
           <p class="opacity-75 text-md whitespace-break-spaces">LEGAL</p>
