@@ -1,4 +1,5 @@
 import type { User } from "lucia";
+import pool from "~/server/utils/database";
 
 export default defineEventHandler(async (event) => {
   if (event.context.user?.banned) {
@@ -11,8 +12,9 @@ export default defineEventHandler(async (event) => {
   const user_discord_id = params.id;
 
   // 3. Fetch user
+  const client = await pool.connect();
   try {
-    const { rows: users } = await database.query<User>(
+    const { rows: users } = await client.query<User>(
       `
       SELECT * FROM users
       WHERE
@@ -20,6 +22,8 @@ export default defineEventHandler(async (event) => {
     `,
       [user_discord_id]
     );
+
+    client.release();
 
     if (!users.length) {
       setResponseStatus(event, 404);
@@ -50,6 +54,8 @@ export default defineEventHandler(async (event) => {
     };
   } catch (err) {
     console.log(err);
+
+    client.release();
 
     setResponseStatus(event, 500);
     return {

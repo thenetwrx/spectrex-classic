@@ -1,3 +1,4 @@
+import pool from "~/server/utils/database";
 import type Server from "~/types/Server";
 
 export default defineEventHandler(async (event) => {
@@ -16,8 +17,9 @@ export default defineEventHandler(async (event) => {
   }
 
   // 2. Edit server
+  const client = await pool.connect();
   try {
-    const { rows: servers } = await database.query<Server>(
+    const { rows: servers } = await client.query<Server>(
       `
       SELECT * FROM servers
       WHERE
@@ -27,19 +29,27 @@ export default defineEventHandler(async (event) => {
     );
 
     if (!servers.length) {
+      client.release();
+
       setResponseStatus(event, 404);
       return { message: "Server not found" };
     }
 
     if (servers[0].owner_id !== event.context.user.id) {
+      client.release();
+
       setResponseStatus(event, 404);
       return { message: "Server not found" };
     }
     if (servers[0].banned) {
+      client.release();
+
       setResponseStatus(event, 403);
       return { message: "Server is banned" };
     }
     if (servers[0].approved_at === null) {
+      client.release();
+
       setResponseStatus(event, 403);
       return { message: "Server is not approved" };
     }
@@ -49,15 +59,17 @@ export default defineEventHandler(async (event) => {
     const cooldown =
       event.context.user.premium_since !== null ? 3600000 : 7200000;
     if (Number(servers[0].bumped_at || 0) + cooldown <= now) {
-      await database.query(
+      await client.query(
         `
         UPDATE servers
         SET bumped_at = $1, updated_at = $1
         WHERE
             discord_id = $2
-    `,
+      `,
         [now.toString(), server_discord_id]
       );
+
+      client.release();
 
       setResponseStatus(event, 200);
       return { message: "Bumped" };
@@ -67,14 +79,17 @@ export default defineEventHandler(async (event) => {
       now - Number(servers[0].bumped_at || 0) - cooldown;
     const timeLeftMessage = `Bump is on cooldown`;
 
-    setResponseStatus(event, 403);
+    client.release();
 
+    setResponseStatus(event, 403);
     return {
       message: timeLeftMessage,
       timeLeft: timeLeftMilliseconds,
     };
   } catch (err) {
     console.log(err);
+
+    client.release();
 
     setResponseStatus(event, 500);
     return {

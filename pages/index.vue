@@ -35,13 +35,13 @@
 </template>
 
 <script setup lang="ts">
-const categories = ref<Array<string>>([
-  "Community",
-  "Music",
-  "Gaming",
-  "Anime",
-  "Technology",
-  "Movies",
-  "Other",
-]);
+  const categories = ref<Array<string>>([
+    "Community",
+    "Music",
+    "Gaming",
+    "Anime",
+    "Technology",
+    "Movies",
+    "Other",
+  ]);
 </script>

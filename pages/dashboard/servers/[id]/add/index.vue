@@ -100,7 +100,7 @@
                 v-for="(tag, index) in tags"
                 :key="index"
                 class="block max-w-fit px-2 py-1 bg-accent border-none bg-opacity-50 rounded-sm gap-2 hover:bg-opacity-65 hover:cursor-pointer transition-colors duration-200 ease-in-out text-white"
-                @click="removeTag(index)"
+                v-on:click="removeTag(index)"
               >
                 <i class="fa-solid fa-square-xmark fa-lg mr-2"></i>
                 <span class="text-accent">#</span>
@@ -113,7 +113,7 @@
               type="text"
               placeholder="Separate with enter or comma"
               class="input input-bordered rounded-none w-full"
-              @keydown="checkForComma($event)"
+              v-on:keydown="checkForComma($event)"
               v-model="newTag"
             />
           </div>
@@ -178,7 +178,7 @@
             </div>
           </div>
           <button
-            @click="apply"
+            v-on:click="apply"
             class="btn btn-accent ml-auto mr-auto md:min-w-48 max-md:w-full"
           >
             <i class="fa-solid fa-inbox-out"></i> Submit
@@ -190,86 +190,86 @@
 </template>
 
 <script setup lang="ts">
-import type Server from "~/types/Server";
+  import type Server from "~/types/Server";
 
-definePageMeta({
-  middleware: ["1-protected"],
-});
-const discordCdn = useDiscordCdn();
-const user = useUser();
-const route = useRoute();
-const server_discord_id = route.params.id;
-
-const language = ref<string>("");
-const category = ref<string>("");
-const description = ref<string>("");
-const invite_link = ref<string>("");
-const nsfw = ref<boolean | null>(null);
-
-const apply = async () => {
-  const response = await fetch(`/api/v1/servers/add/${server_discord_id}`, {
-    method: "POST",
-    headers: new Headers({ "content-type": "application/json" }),
-    body: JSON.stringify({
-      language: language.value,
-      category: category.value,
-      invite_link: invite_link.value,
-      tags: tags.value,
-      nsfw: nsfw.value,
-      description: description.value,
-    }),
+  definePageMeta({
+    middleware: ["1-protected"],
   });
-  if (response.status === 401) {
-    await $fetch("/api/v1/auth/logout", {
+  const discordCdn = useDiscordCdn();
+  const user = useUser();
+  const route = useRoute();
+  const server_discord_id = route.params.id;
+
+  const language = ref<string>("");
+  const category = ref<string>("");
+  const description = ref<string>("");
+  const invite_link = ref<string>("");
+  const nsfw = ref<boolean | null>(null);
+
+  const apply = async () => {
+    const response = await fetch(`/api/v1/servers/add/${server_discord_id}`, {
       method: "POST",
-      retry: false,
+      headers: new Headers({ "content-type": "application/json" }),
+      body: JSON.stringify({
+        language: language.value,
+        category: category.value,
+        invite_link: invite_link.value,
+        tags: tags.value,
+        nsfw: nsfw.value,
+        description: description.value,
+      }),
     });
-    user.value = null;
-    await navigateTo("/");
-  }
+    if (response.status === 401) {
+      await $fetch("/api/v1/auth/logout", {
+        method: "POST",
+        retry: false,
+      });
+      user.value = null;
+      await navigateTo("/");
+    }
 
-  const json = await response.json();
-  if (response.status !== 200) return alert(json.message);
-  else navigateTo("/servers/" + server_discord_id);
-};
+    const json = await response.json();
+    if (response.status !== 200) return alert(json.message);
+    else navigateTo("/servers/" + server_discord_id);
+  };
 
-const {
-  data: server,
-  refresh: refreshServer,
-  pending: server_pending,
-} = useFetch<{ message: string | null; result: Server | null }>(
-  `/api/v1/servers/fetch/${server_discord_id}`,
-  { retry: false }
-);
+  const {
+    data: server,
+    refresh: refreshServer,
+    pending: server_pending,
+  } = useFetch<{ message: string | null; result: Server | null }>(
+    `/api/v1/servers/fetch/${server_discord_id}`,
+    { retry: false }
+  );
 
-// Define a ref to store tags
-const tags = ref<Array<string>>([]);
-// Define a ref to store the current input value
-const newTag = ref<string>("");
+  // Define a ref to store tags
+  const tags = ref<Array<string>>([]);
+  // Define a ref to store the current input value
+  const newTag = ref<string>("");
 
-// Method to add a tag to the array
-const addTag = () => {
-  if (newTag.value.trim() !== "") {
-    if (tags.value.length >= 5)
-      return alert("You already have too many tags (max of 5)");
+  // Method to add a tag to the array
+  const addTag = () => {
+    if (newTag.value.trim() !== "") {
+      if (tags.value.length >= 5)
+        return alert("You already have too many tags (max of 5)");
 
-    if (newTag.value.trim().length > 16)
-      return alert("Tag has too many characters (max of 16)");
-    tags.value.push(newTag.value.trim().toLowerCase());
-    newTag.value = ""; // Clear the input field after adding tag
-  }
-};
+      if (newTag.value.trim().length > 16)
+        return alert("Tag has too many characters (max of 16)");
+      tags.value.push(newTag.value.trim().toLowerCase());
+      newTag.value = ""; // Clear the input field after adding tag
+    }
+  };
 
-// Method to check for comma key press
-const checkForComma = (event: any) => {
-  if (event.key === "," || event.code === "Comma" || event.code === "Enter") {
-    event.preventDefault(); // Prevent comma from being entered
-    addTag(); // If a comma is entered, add the tag
-  }
-};
+  // Method to check for comma key press
+  const checkForComma = (event: any) => {
+    if (event.key === "," || event.code === "Comma" || event.code === "Enter") {
+      event.preventDefault(); // Prevent comma from being entered
+      addTag(); // If a comma is entered, add the tag
+    }
+  };
 
-// Method to remove a tag from the array
-const removeTag = (index: any) => {
-  tags.value.splice(index, 1);
-};
+  // Method to remove a tag from the array
+  const removeTag = (index: any) => {
+    tags.value.splice(index, 1);
+  };
 </script>

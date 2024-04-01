@@ -31,7 +31,7 @@
       <button
         class="btn btn-ghost btn-sm ml-auto"
         :class="syncing ? 'btn-disabled' : ''"
-        @click.stop="syncDiscordServers"
+        v-on:click="syncDiscordServers"
       >
         <span v-if="syncing">Syncing...</span>
         <span v-else>Sync</span>
@@ -53,7 +53,7 @@
           .sort((c, d) => Number(c.bumped_at || 0) - Number(d.bumped_at || 0))"
         :key="index"
         class="flex flex-row bg-base-200 hover:bg-base-300 rounded-md cursor-pointer transition-colors duration-200 p-4"
-        @click="navigateTo('/servers/' + server.discord_id)"
+        v-on:click="navigateTo('/servers/' + server.discord_id)"
       >
         <div class="flex flex-row items-center w-full">
           <!-- Added relative positioning -->
@@ -87,7 +87,7 @@
       </li>
       <li
         class="flex flex-row bg-base-200 hover:bg-base-300 rounded-md cursor-pointer transition-colors duration-200 p-4"
-        @click="syncDiscordServers"
+        v-on:click="syncDiscordServers"
         onclick="my_modal_1.showModal()"
       >
         <div class="w-full h-full flex justify-center items-center py-10">
@@ -103,7 +103,7 @@
         <button
           class="btn btn-ghost btn-sm ml-auto"
           :class="syncing ? 'btn-disabled' : ''"
-          @click.stop="syncDiscordServers"
+          v-on:click="syncDiscordServers"
         >
           <span v-if="syncing">Syncing...</span>
           <span v-else>Sync</span>
@@ -118,7 +118,7 @@
       </div>
       <select
         class="select select-bordered rounded-none w-full"
-        @change="((event:any) => navigateTo(event?.target?.value || '/'))"
+        v-on:change="((event:any) => navigateTo(event?.target?.value || '/'))"
       >
         <option disabled selected>Select server</option>
         <option
@@ -135,36 +135,36 @@
 </template>
 
 <script setup lang="ts">
-import type Server from "~/types/Server";
+  import type Server from "~/types/Server";
 
-definePageMeta({
-  middleware: ["1-protected"],
-});
-const discordCdn = useDiscordCdn();
-const user = useUser();
-const syncing = ref<boolean>(false);
+  definePageMeta({
+    middleware: ["1-protected"],
+  });
+  const discordCdn = useDiscordCdn();
+  const user = useUser();
+  const syncing = ref<boolean>(false);
 
-const {
-  data: servers,
-  pending: servers_pending,
-  refresh: refreshServers,
-} = useFetch<{ message: string | null; result: Server[] | null }>(
-  "/api/v1/servers/fetch/all",
-  { retry: false }
-);
+  const {
+    data: servers,
+    pending: servers_pending,
+    refresh: refreshServers,
+  } = useFetch<{ message: string | null; result: Server[] | null }>(
+    "/api/v1/servers/fetch/all",
+    { retry: false }
+  );
 
-const syncDiscordServers = async () => {
-  syncing.value = true;
-  const response = await fetch("/api/v1/servers/sync");
-  if (response.status === 401) {
-    await $fetch("/api/v1/auth/logout", {
-      method: "POST",
-      retry: false,
-    });
-    user.value = null;
-    await navigateTo("/");
-  }
-  refreshServers();
-  syncing.value = false;
-};
+  const syncDiscordServers = async () => {
+    syncing.value = true;
+    const response = await fetch("/api/v1/servers/sync");
+    if (response.status === 401) {
+      await $fetch("/api/v1/auth/logout", {
+        method: "POST",
+        retry: false,
+      });
+      user.value = null;
+      await navigateTo("/");
+    }
+    refreshServers();
+    syncing.value = false;
+  };
 </script>

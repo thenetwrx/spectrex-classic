@@ -99,7 +99,7 @@
           </div>
 
           <button
-            @click="edit"
+            v-on:click="edit"
             class="btn btn-primary ml-auto mr-auto md:min-w-48 max-md:w-full"
           >
             <i class="fa-solid fa-pen-to-square"></i> Save
@@ -111,50 +111,50 @@
 </template>
 
 <script setup lang="ts">
-import type { User } from "lucia";
+  import type { User } from "lucia";
 
-const user = useUser();
-const discordCdn = useDiscordCdn();
+  const user = useUser();
+  const discordCdn = useDiscordCdn();
 
-const is_public = ref<boolean>();
-const description = ref<string>("");
+  const is_public = ref<boolean>();
+  const description = ref<string>("");
 
-const edit = async () => {
-  const response = await fetch(`/api/v1/users/edit/me`, {
-    method: "POST",
-    headers: new Headers({ "content-type": "application/json" }),
-    body: JSON.stringify({
-      public: is_public.value,
-      description: description.value,
-    }),
-  });
-  if (response.status === 401) {
-    await $fetch("/api/v1/auth/logout", {
+  const edit = async () => {
+    const response = await fetch(`/api/v1/users/edit/me`, {
       method: "POST",
-      retry: false,
+      headers: new Headers({ "content-type": "application/json" }),
+      body: JSON.stringify({
+        public: is_public.value,
+        description: description.value,
+      }),
     });
-    user.value = null;
-    await navigateTo("/");
-  }
+    if (response.status === 401) {
+      await $fetch("/api/v1/auth/logout", {
+        method: "POST",
+        retry: false,
+      });
+      user.value = null;
+      await navigateTo("/");
+    }
 
-  const json = await response.json();
-  if (response.status !== 200) return alert(json.message);
-  else navigateTo("/users/" + user.value?.discord_id);
-};
+    const json = await response.json();
+    if (response.status !== 200) return alert(json.message);
+    else navigateTo("/users/" + user.value?.discord_id);
+  };
 
-const {
-  data: profile,
-  refresh: refreshProfile,
-  pending: profile_pending,
-} = useFetch<{ message: string | null; result: User | null }>(
-  `/api/v1/users/fetch/${user.value?.discord_id}`,
-  {
-    retry: false,
-  }
-);
+  const {
+    data: profile,
+    refresh: refreshProfile,
+    pending: profile_pending,
+  } = useFetch<{ message: string | null; result: User | null }>(
+    `/api/v1/users/fetch/${user.value?.discord_id}`,
+    {
+      retry: false,
+    }
+  );
 
-watch(profile, () => {
-  is_public.value = profile.value?.result?.public;
-  description.value = profile.value?.result?.description!;
-});
+  watch(profile, () => {
+    is_public.value = profile.value?.result?.public;
+    description.value = profile.value?.result?.description!;
+  });
 </script>

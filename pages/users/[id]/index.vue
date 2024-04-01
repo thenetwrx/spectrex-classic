@@ -22,7 +22,7 @@
             class="btn btn-ghost btn-sm"
             :class="syncing ? 'btn-disabled' : ''"
             v-if="profile.result.discord_id === user?.discord_id"
-            @click.stop="syncProfile"
+            v-on:click="syncProfile"
           >
             <span v-if="syncing">Syncing...</span>
             <span v-else>Sync</span>
@@ -31,7 +31,7 @@
               :class="syncing ? 'fa-spin' : ''"
             ></i>
           </button>
-          <button class="btn btn-ghost btn-sm" @click="copy_current_url">
+          <button class="btn btn-ghost btn-sm" v-on:click="copy_current_url">
             Copy <i class="fa-solid fa-link"></i>
           </button>
         </div>
@@ -100,39 +100,39 @@
 </template>
 
 <script setup lang="ts">
-import useClipboard from "~/composables/useClipboard";
+  import useClipboard from "~/composables/useClipboard";
 
-const user = useUser();
-const discordCdn = useDiscordCdn();
+  const user = useUser();
+  const discordCdn = useDiscordCdn();
 
-const route = useRoute();
-const user_discord_id = route.params.id;
+  const route = useRoute();
+  const user_discord_id = route.params.id;
 
-const syncing = ref<boolean>(false);
+  const syncing = ref<boolean>(false);
 
-const {
-  data: profile,
-  refresh: refreshProfile,
-  pending: profile_pending,
-} = useFetch(`/api/v1/users/fetch/${user_discord_id}`, { retry: false });
+  const {
+    data: profile,
+    refresh: refreshProfile,
+    pending: profile_pending,
+  } = useFetch(`/api/v1/users/fetch/${user_discord_id}`, { retry: false });
 
-const copy_current_url = async () => {
-  const { toClipboard } = useClipboard();
-  toClipboard(window.location.href);
-};
+  const copy_current_url = async () => {
+    const { toClipboard } = useClipboard();
+    toClipboard(window.location.href);
+  };
 
-const syncProfile = async () => {
-  syncing.value = true;
-  const response = await fetch("/api/v1/users/sync/me");
-  if (response.status === 401) {
-    await $fetch("/api/v1/auth/logout", {
-      method: "POST",
-      retry: false,
-    });
-    user.value = null;
-    await navigateTo("/");
-  }
-  refreshProfile();
-  syncing.value = false;
-};
+  const syncProfile = async () => {
+    syncing.value = true;
+    const response = await fetch("/api/v1/users/sync/me");
+    if (response.status === 401) {
+      await $fetch("/api/v1/auth/logout", {
+        method: "POST",
+        retry: false,
+      });
+      user.value = null;
+      await navigateTo("/");
+    }
+    refreshProfile();
+    syncing.value = false;
+  };
 </script>

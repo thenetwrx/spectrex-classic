@@ -39,7 +39,7 @@
             ></textarea>
           </div>
           <button
-            @click="report"
+            v-on:click="report"
             class="btn btn-accent ml-auto mr-auto md:min-w-48 max-md:w-full"
           >
             <i class="fa-solid fa-inbox-out"></i> Submit
@@ -51,51 +51,54 @@
 </template>
 
 <script setup lang="ts">
-import type Server from "~/types/Server";
+  import type Server from "~/types/Server";
 
-definePageMeta({
-  middleware: ["1-protected"],
-});
-const user = useUser();
-const route = useRoute();
-const server_discord_id = route.params.id;
-
-enum IssueType {
-  Server,
-  Listing,
-}
-const issue_type = ref<string>("");
-const description = ref<string>("");
-
-const {
-  data: server,
-  refresh: refreshServer,
-  pending: server_pending,
-} = useFetch<{ message: string | null; result: Server | null }>(
-  `/api/v1/servers/fetch/${server_discord_id}`,
-  { retry: false }
-);
-
-const report = async () => {
-  const response = await fetch(`/api/v1/servers/report/${server_discord_id}`, {
-    method: "POST",
-    headers: new Headers({ "content-type": "application/json" }),
-    body: JSON.stringify({
-      issue_type: issue_type.value,
-      description: description.value,
-    }),
+  definePageMeta({
+    middleware: ["1-protected"],
   });
-  if (response.status === 401) {
-    await $fetch("/api/v1/auth/logout", {
-      method: "POST",
-      retry: false,
-    });
-    user.value = null;
-    navigateTo("/login");
-  }
+  const user = useUser();
+  const route = useRoute();
+  const server_discord_id = route.params.id;
 
-  const json = await response.json();
-  if (response.status !== 200) return alert(json.message);
-  else navigateTo("/thank-you-safety");
-};
+  enum IssueType {
+    Server,
+    Listing,
+  }
+  const issue_type = ref<string>("");
+  const description = ref<string>("");
+
+  const {
+    data: server,
+    refresh: refreshServer,
+    pending: server_pending,
+  } = useFetch<{ message: string | null; result: Server | null }>(
+    `/api/v1/servers/fetch/${server_discord_id}`,
+    { retry: false }
+  );
+
+  const report = async () => {
+    const response = await fetch(
+      `/api/v1/servers/report/${server_discord_id}`,
+      {
+        method: "POST",
+        headers: new Headers({ "content-type": "application/json" }),
+        body: JSON.stringify({
+          issue_type: issue_type.value,
+          description: description.value,
+        }),
+      }
+    );
+    if (response.status === 401) {
+      await $fetch("/api/v1/auth/logout", {
+        method: "POST",
+        retry: false,
+      });
+      user.value = null;
+      navigateTo("/login");
+    }
+
+    const json = await response.json();
+    if (response.status !== 200) return alert(json.message);
+    else navigateTo("/thank-you-safety");
+  };
 </script>

@@ -1,5 +1,6 @@
 import Cryptr from "cryptr";
 import { generateId } from "lucia";
+import pool from "~/server/utils/database";
 import type Server from "~/types/Server";
 
 export default defineEventHandler(async (event) => {
@@ -18,6 +19,7 @@ export default defineEventHandler(async (event) => {
   }
 
   // 2. Fetch guilds using raw HTTP
+  const client = await pool.connect();
   try {
     const cryptr = new Cryptr(process.env.ENCRYPTION_KEY!);
 
@@ -33,6 +35,8 @@ export default defineEventHandler(async (event) => {
     );
 
     if (!response.ok) {
+      client.release();
+
       setResponseStatus(event, 500);
       return {
         message: "An unknown Discord API error occurred, try again later",
@@ -41,6 +45,8 @@ export default defineEventHandler(async (event) => {
     const raw_guilds = await response.json();
 
     if (!raw_guilds.length) {
+      client.release();
+
       setResponseStatus(event, 404);
       return {
         message: "No servers found from Discord",
@@ -49,7 +55,7 @@ export default defineEventHandler(async (event) => {
 
     for (let i = 0; i < raw_guilds.length; i++) {
       if (raw_guilds[i].owner && raw_guilds[i].id === server_discord_id) {
-        const { rows: servers } = await database.query<Server>(
+        const { rows: servers } = await client.query<Server>(
           `
             SELECT * FROM servers
             WHERE
@@ -63,11 +69,13 @@ export default defineEventHandler(async (event) => {
         );
         if (server) {
           if (server.banned) {
+            client.release();
+
             setResponseStatus(event, 403);
             return { message: "Server is banned", result: null };
           }
 
-          await database.query(
+          await client.query(
             `
             UPDATE servers 
               SET updated_at = $1, approximate_member_count = $2, approximate_presence_count = $3, name = $4, icon = $5
@@ -86,7 +94,7 @@ export default defineEventHandler(async (event) => {
         } else {
           const now = Date.now();
 
-          await database.query(
+          await client.query(
             `
           INSERT INTO servers
             (id, discord_id, approximate_member_count, approximate_presence_count, created_at, updated_at, owner_discord_id, owner_id, name, icon)
@@ -107,15 +115,21 @@ export default defineEventHandler(async (event) => {
           );
         }
 
+        client.release();
+
         setResponseStatus(event, 200);
         return { message: "Synced server with Discord" };
       }
     }
 
+    client.release();
+
     setResponseStatus(event, 403);
     return { message: "You must own that server" };
   } catch (err) {
     console.log(err);
+
+    client.release();
 
     setResponseStatus(event, 500);
     return { message: "An unknown error occurred, try again later" };

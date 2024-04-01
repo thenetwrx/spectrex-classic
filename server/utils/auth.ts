@@ -1,8 +1,8 @@
 import { Lucia, TimeSpan } from "lucia";
 import { NodePostgresAdapter } from "@lucia-auth/adapter-postgresql";
-import database from "./database";
+import pool from "./database";
 
-const adapter = new NodePostgresAdapter(database, {
+const adapter = new NodePostgresAdapter(pool, {
   user: "users",
   session: "sessions",
 });

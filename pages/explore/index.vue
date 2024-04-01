@@ -122,7 +122,7 @@
       <button
         class="btn btn-accent btn-sm"
         :class="page === 0 ? 'btn-disabled' : ''"
-        @click="go_to_page(page - 1)"
+        v-on:click="go_to_page(page - 1)"
       >
         <i class="fa-solid fa-arrow-left"></i>
       </button>
@@ -136,7 +136,7 @@
             ? 'btn-disabled'
             : ''
         "
-        @click="go_to_page(page + 1)"
+        v-on:click="go_to_page(page + 1)"
       >
         <i class="fa-solid fa-arrow-right"></i>
       </button>
@@ -145,35 +145,35 @@
 </template>
 
 <script setup lang="ts">
-import type Server from "~/types/Server";
+  import type Server from "~/types/Server";
 
-const discordCdn = useDiscordCdn();
+  const discordCdn = useDiscordCdn();
 
-const route = useRoute();
-const popular_categories = ref<Array<string>>([
-  "Community",
-  "Music",
-  "Gaming",
-  "Anime",
-  "Technology",
-  "Movies",
-  "Other",
-]);
-const category = computed(() => route.query.category);
+  const route = useRoute();
+  const popular_categories = ref<Array<string>>([
+    "Community",
+    "Music",
+    "Gaming",
+    "Anime",
+    "Technology",
+    "Movies",
+    "Other",
+  ]);
+  const category = computed(() => route.query.category);
 
-const go_to_page = async (num: number) => {
-  page.value = num;
-};
+  const go_to_page = async (num: number) => {
+    page.value = num;
+  };
 
-const page = ref<number>(0);
-const max_per_page = ref<number>(10);
-const max_pages = ref<number>(50);
+  const page = ref<number>(0);
+  const max_per_page = ref<number>(10);
+  const max_pages = ref<number>(50);
 
-const { data: servers, pending: servers_pending } = useFetch<{
-  message: string | null;
-  result: Server[] | null;
-}>("/api/v1/servers/fetch/feed", {
-  query: { page, category },
-  retry: false,
-});
+  const { data: servers, pending: servers_pending } = useFetch<{
+    message: string | null;
+    result: Server[] | null;
+  }>("/api/v1/servers/fetch/feed", {
+    query: { page, category },
+    retry: false,
+  });
 </script>

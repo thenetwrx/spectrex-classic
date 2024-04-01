@@ -1,3 +1,4 @@
+import pool from "~/server/utils/database";
 import type Server from "~/types/Server";
 
 export default defineEventHandler(async (event) => {
@@ -16,8 +17,9 @@ export default defineEventHandler(async (event) => {
   }
 
   // 2. Edit server
+  const client = await pool.connect();
   try {
-    const { rows: servers } = await database.query<Server>(
+    const { rows: servers } = await client.query<Server>(
       `
       SELECT * FROM servers
       WHERE
@@ -27,26 +29,34 @@ export default defineEventHandler(async (event) => {
     );
 
     if (!servers.length) {
+      client.release();
+
       setResponseStatus(event, 404);
       return { message: "Server not found" };
     }
 
     if (servers[0].owner_id !== event.context.user.id) {
+      client.release();
+
       setResponseStatus(event, 404);
       return { message: "Server not found" };
     }
     if (!servers[0].approved_at) {
+      client.release();
+
       setResponseStatus(event, 404);
       return { message: "Server not found" };
     }
     if (servers[0].banned) {
+      client.release();
+
       setResponseStatus(event, 403);
       return { message: "Server is banned" };
     }
 
     const now = Date.now();
 
-    await database.query(
+    await client.query(
       `
         UPDATE servers
         SET approved_at = NULL, public = FALSE, language = NULL, category = NULL, tags = '{}', description = NULL, invite_link = NULL, nsfw = FALSE, updated_at = $1
@@ -56,10 +66,14 @@ export default defineEventHandler(async (event) => {
       [now.toString(), server_discord_id]
     );
 
+    client.release();
+
     setResponseStatus(event, 200);
     return { message: "Deleted" };
   } catch (err) {
     console.log(err);
+
+    client.release();
 
     setResponseStatus(event, 500);
     return {

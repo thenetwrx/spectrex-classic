@@ -1,6 +1,6 @@
 import Postgres from "pg";
 
-const client = new Postgres.Client({
+const pool = new Postgres.Pool({
   host: "aws-0-us-east-1.pooler.supabase.com",
   database: "postgres",
   port: 5432,
@@ -36,6 +36,4 @@ o/bKiIz+Fq8=
   },
 });
 
-client.connect();
-
-export default client;
+export default pool;

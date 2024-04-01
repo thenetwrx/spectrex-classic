@@ -1,4 +1,5 @@
 import { generateId } from "lucia";
+import pool from "~/server/utils/database";
 import type Server from "~/types/Server";
 
 export default defineEventHandler(async (event) => {
@@ -48,8 +49,9 @@ export default defineEventHandler(async (event) => {
   }
 
   // 4. Insert server report
+  const client = await pool.connect();
   try {
-    const { rows: servers } = await database.query<Server>(
+    const { rows: servers } = await client.query<Server>(
       `
       SELECT * FROM servers
       WHERE
@@ -59,24 +61,32 @@ export default defineEventHandler(async (event) => {
     );
 
     if (!servers.length) {
+      client.release();
+
       setResponseStatus(event, 404);
       return { message: "Server not found" };
     }
     if (servers[0].approved_at === null) {
+      client.release();
+
       // refuse existence if it's not approved
       setResponseStatus(event, 404);
       return { message: "Server not found" };
     }
     if (servers[0].owner_id === event.context.user.id) {
+      client.release();
+
       setResponseStatus(event, 403);
       return { message: "You can't report your own server" };
     }
     if (servers[0].banned) {
+      client.release();
+
       setResponseStatus(event, 403);
       return { message: "Server is banned" };
     }
 
-    await database.query(
+    await client.query(
       `
       INSERT INTO server_reports
         (id, from_id, from_discord_id, suspect_id, suspect_discord_id, suspect_server_id, suspect_server_discord_id, type, description)
@@ -96,10 +106,14 @@ export default defineEventHandler(async (event) => {
       ]
     );
 
+    client.release();
+
     setResponseStatus(event, 200);
     return { message: "Report recorded" };
   } catch (err) {
     console.log(err);
+
+    client.release();
 
     setResponseStatus(event, 500);
     return {

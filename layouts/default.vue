@@ -137,14 +137,14 @@ body {
     <!-- Mobile Sidebar -->
     <div class="md:hidden fixed top-0 left-4 z-[9999]">
       <button
-        @click="isMobileSidebarOpen = !isMobileSidebarOpen"
+        v-on:click="isMobileSidebarOpen = !isMobileSidebarOpen"
         class="bg-base-200 p-4 mt-4 btn"
       >
         <i class="fas fa-bars"></i>
       </button>
       <div
         v-show="isMobileSidebarOpen"
-        @click="isMobileSidebarOpen = false"
+        v-on:click="isMobileSidebarOpen = false"
         class="fixed inset-0 bg-black bg-opacity-50 z-[9999]"
       ></div>
       <div
@@ -182,7 +182,7 @@ body {
               <span>Dashboard</span>
             </NuxtLink>
             <button
-              @click="logout"
+              v-on:click="logout"
               class="btn btn-secondary btn-sm join-item"
               data-theme="dark"
             >
@@ -252,7 +252,7 @@ body {
                 <NuxtLink href="/dashboard">Dashboard</NuxtLink>
               </li>
               <span class="divider w-full py-2 px-4 m-0"></span>
-              <li><button @click="logout">Logout</button></li>
+              <li><button v-on:click="logout">Logout</button></li>
             </ul>
           </div>
 

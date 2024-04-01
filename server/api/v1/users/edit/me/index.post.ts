@@ -1,4 +1,5 @@
 import type { User } from "lucia";
+import pool from "~/server/utils/database";
 
 export default defineEventHandler(async (event) => {
   // Parameters
@@ -25,8 +26,9 @@ export default defineEventHandler(async (event) => {
   }
 
   // 3. Edit server
+  const client = await pool.connect();
   try {
-    const { rows: users } = await database.query<User>(
+    const { rows: users } = await client.query<User>(
       `
       SELECT * FROM users
       WHERE
@@ -36,20 +38,26 @@ export default defineEventHandler(async (event) => {
     );
 
     if (!users.length) {
+      client.release();
+
       setResponseStatus(event, 404);
       return { message: "User not found" };
     }
 
     if (users[0].id !== event.context.user.id) {
+      client.release();
+
       setResponseStatus(event, 404);
       return { message: "User not found" };
     }
     if (users[0].banned) {
+      client.release();
+
       setResponseStatus(event, 403);
       return { message: "User is banned" };
     }
 
-    await database.query(
+    await client.query(
       `
         UPDATE users 
         SET public = $1, description = $2, updated_at = $3
@@ -64,12 +72,16 @@ export default defineEventHandler(async (event) => {
       ]
     );
 
+    client.release();
+
     setResponseStatus(event, 200);
     return {
       message: null,
     };
   } catch (err) {
     console.log(err);
+
+    client.release();
 
     setResponseStatus(event, 500);
     return {

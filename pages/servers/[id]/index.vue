@@ -22,7 +22,7 @@
             class="btn btn-ghost btn-sm"
             :class="syncing ? 'btn-disabled' : ''"
             v-if="server.result.owner_discord_id === user?.discord_id"
-            @click.stop="syncDiscordServers"
+            v-on:click="syncDiscordServers"
           >
             <span v-if="syncing">Syncing...</span>
             <span v-else>Sync</span>
@@ -39,7 +39,7 @@
                 : ''
             "
             v-if="server.result.owner_discord_id === user?.discord_id"
-            @click.stop="bump_server"
+            v-on:click="bump_server"
           >
             <span v-if="server_metadata.on_cooldown">
               {{ formatRemainingTime(Number(server.result.bumped_at || 0)) }}
@@ -57,7 +57,7 @@
           >
             Report <i class="fa-solid fa-flag"></i>
           </NuxtLink>
-          <button class="btn btn-ghost btn-sm" @click="copy_current_url">
+          <button class="btn btn-ghost btn-sm" v-on:click="copy_current_url">
             Copy <i class="fa-solid fa-link"></i>
           </button>
         </div>
@@ -172,75 +172,57 @@
 </template>
 
 <script setup lang="ts">
-import useClipboard from "~/composables/useClipboard";
-import type Server from "~/types/Server";
+  import useClipboard from "~/composables/useClipboard";
+  import type Server from "~/types/Server";
 
-const discordCdn = useDiscordCdn();
-const user = useUser();
-const route = useRoute();
-const server_discord_id = route.params.id;
+  const discordCdn = useDiscordCdn();
+  const user = useUser();
+  const route = useRoute();
+  const server_discord_id = route.params.id;
 
-const syncing = ref<boolean>(false);
-const server_metadata = ref<{
-  on_cooldown: boolean;
-  bumping: boolean;
-}>({ on_cooldown: false, bumping: false });
+  const syncing = ref<boolean>(false);
+  const server_metadata = ref<{
+    on_cooldown: boolean;
+    bumping: boolean;
+  }>({ on_cooldown: false, bumping: false });
 
-const {
-  data: server,
-  refresh: refreshServer,
-  pending: server_pending,
-} = useFetch<{ message: string | null; result: Server | null }>(
-  `/api/v1/servers/fetch/${server_discord_id}`,
-  { retry: false }
-);
+  const {
+    data: server,
+    refresh: refreshServer,
+    pending: server_pending,
+  } = useFetch<{ message: string | null; result: Server | null }>(
+    `/api/v1/servers/fetch/${server_discord_id}`,
+    { retry: false }
+  );
 
-const copy_current_url = async () => {
-  const { toClipboard } = useClipboard();
-  toClipboard(window.location.href);
-};
+  const copy_current_url = async () => {
+    const { toClipboard } = useClipboard();
+    toClipboard(window.location.href);
+  };
 
-onMounted(async () => refreshServerMetadata());
-watch(server, () => {
-  refreshServerMetadata();
-});
+  onMounted(async () => refreshServerMetadata());
+  watch(server, () => {
+    refreshServerMetadata();
+  });
 
-const refreshServerMetadata = () => {
-  if (server.value !== null) {
-    const premium = user?.value?.premium_since !== null ? true : false;
+  const refreshServerMetadata = () => {
+    if (server.value !== null) {
+      const premium = user?.value?.premium_since !== null ? true : false;
 
-    const cooldown = premium ? 3600000 : 7200000;
-    const on_cooldown =
-      Number(server.value.result?.bumped_at || 0) + cooldown <= Date.now()
-        ? false
-        : true;
+      const cooldown = premium ? 3600000 : 7200000;
+      const on_cooldown =
+        Number(server.value.result?.bumped_at || 0) + cooldown <= Date.now()
+          ? false
+          : true;
 
-    server_metadata.value.bumping = false;
-    server_metadata.value.on_cooldown = on_cooldown;
-  }
-};
+      server_metadata.value.bumping = false;
+      server_metadata.value.on_cooldown = on_cooldown;
+    }
+  };
 
-const syncDiscordServers = async () => {
-  syncing.value = true;
-  const response = await fetch("/api/v1/servers/sync/" + server_discord_id);
-  if (response.status === 401) {
-    await $fetch("/api/v1/auth/logout", {
-      method: "POST",
-      retry: false,
-    });
-    user.value = null;
-    navigateTo("/login");
-  }
-  refreshServer();
-  syncing.value = false;
-};
-
-const bump_server = async () => {
-  if (server.value !== null) {
-    server_metadata.value.bumping = true;
-    const response = await fetch("/api/v1/servers/bump/" + server_discord_id, {
-      method: "POST",
-    });
+  const syncDiscordServers = async () => {
+    syncing.value = true;
+    const response = await fetch("/api/v1/servers/sync/" + server_discord_id);
     if (response.status === 401) {
       await $fetch("/api/v1/auth/logout", {
         method: "POST",
@@ -249,30 +231,51 @@ const bump_server = async () => {
       user.value = null;
       navigateTo("/login");
     }
-    server_metadata.value.bumping = false;
+    refreshServer();
+    syncing.value = false;
+  };
 
-    await syncDiscordServers();
+  const bump_server = async () => {
+    if (server.value !== null) {
+      server_metadata.value.bumping = true;
+      const response = await fetch(
+        "/api/v1/servers/bump/" + server_discord_id,
+        {
+          method: "POST",
+        }
+      );
+      if (response.status === 401) {
+        await $fetch("/api/v1/auth/logout", {
+          method: "POST",
+          retry: false,
+        });
+        user.value = null;
+        navigateTo("/login");
+      }
+      server_metadata.value.bumping = false;
+
+      await syncDiscordServers();
+    }
+  };
+
+  function formatRemainingTime(bumped_at: number) {
+    const premium = user?.value?.premium_since ? true : false;
+
+    const cooldownDuration = premium ? 3600000 : 7200000;
+    const targetTime = new Date(bumped_at + cooldownDuration);
+    const timeDifference = targetTime.getTime() - Date.now();
+
+    if (timeDifference <= 0) {
+      return "00:00:00"; // Cooldown ended
+    }
+
+    const totalSeconds = Math.floor(timeDifference / 1000);
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+
+    return `${hours.toString().padStart(2, "0")}:${minutes
+      .toString()
+      .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
   }
-};
-
-function formatRemainingTime(bumped_at: number) {
-  const premium = user?.value?.premium_since ? true : false;
-
-  const cooldownDuration = premium ? 3600000 : 7200000;
-  const targetTime = new Date(bumped_at + cooldownDuration);
-  const timeDifference = targetTime.getTime() - Date.now();
-
-  if (timeDifference <= 0) {
-    return "00:00:00"; // Cooldown ended
-  }
-
-  const totalSeconds = Math.floor(timeDifference / 1000);
-  const hours = Math.floor(totalSeconds / 3600);
-  const minutes = Math.floor((totalSeconds % 3600) / 60);
-  const seconds = totalSeconds % 60;
-
-  return `${hours.toString().padStart(2, "0")}:${minutes
-    .toString()
-    .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
-}
 </script>

@@ -1,3 +1,4 @@
+import pool from "~/server/utils/database";
 import type Server from "~/types/Server";
 
 export default defineEventHandler(async (event) => {
@@ -100,8 +101,9 @@ export default defineEventHandler(async (event) => {
   }
 
   // 3. Edit server
+  const client = await pool.connect();
   try {
-    const { rows: servers } = await database.query<Server>(
+    const { rows: servers } = await client.query<Server>(
       `
       SELECT * FROM servers
       WHERE
@@ -111,24 +113,32 @@ export default defineEventHandler(async (event) => {
     );
 
     if (!servers.length) {
+      client.release();
+
       setResponseStatus(event, 404);
       return { message: "Server not found" };
     }
 
     if (servers[0].owner_id !== event.context.user.id) {
+      client.release();
+
       setResponseStatus(event, 404);
       return { message: "Server not found" };
     }
     if (servers[0].banned) {
+      client.release();
+
       setResponseStatus(event, 403);
       return { message: "Server is banned" };
     }
     if (servers[0].approved_at === null) {
+      client.release();
+
       setResponseStatus(event, 403);
       return { message: "Server is not approved" };
     }
 
-    await database.query(
+    await client.query(
       `
         UPDATE servers 
         SET public = $1, language = $2, category = $3, tags = $4, description = $5, invite_link = $6, nsfw = $7, updated_at = $8
@@ -148,12 +158,16 @@ export default defineEventHandler(async (event) => {
       ]
     );
 
+    client.release();
+
     setResponseStatus(event, 200);
     return {
       message: null,
     };
   } catch (err) {
     console.log(err);
+
+    client.release();
 
     setResponseStatus(event, 500);
     return {

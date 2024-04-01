@@ -1,6 +1,6 @@
 import { OAuth2RequestError, Discord } from "arctic";
 import { User, generateId } from "lucia";
-import database from "~/server/utils/database";
+import pool from "~/server/utils/database";
 import Cryptr from "cryptr";
 import DiscordUser from "~/types/DiscordUser";
 
@@ -20,6 +20,7 @@ export default defineEventHandler(async (event) => {
     return sendRedirect(event, "/");
   }
 
+  const client = await pool.connect();
   try {
     const cryptr = new Cryptr(process.env.ENCRYPTION_KEY!);
 
@@ -34,8 +35,7 @@ export default defineEventHandler(async (event) => {
     );
     const discordUser: DiscordUser = await discordUserResponse.json();
 
-    // Replace this with your own DB client.
-    const { rows: existingUser } = await database.query<User>(
+    const { rows: existingUser } = await client.query<User>(
       `
       SELECT id FROM users
       WHERE
@@ -50,12 +50,15 @@ export default defineEventHandler(async (event) => {
       });
       const cookie = lucia.createSessionCookie(session.id);
       setCookie(event, cookie.name, cookie.value, cookie.attributes);
+
+      client.release();
+
       return sendRedirect(event, "/");
     }
 
     const userId = generateId(15);
 
-    const { rows: createdUser } = await database.query(
+    const { rows: createdUser } = await client.query(
       `
       INSERT INTO users
         (id, discord_id, username, avatar, global_name, email, created_at, updated_at)
@@ -75,6 +78,8 @@ export default defineEventHandler(async (event) => {
     );
 
     if (!createdUser.length) {
+      client.release();
+
       setResponseStatus(event, 500);
       return sendRedirect(event, "/");
     }
@@ -85,9 +90,14 @@ export default defineEventHandler(async (event) => {
     const cookie = lucia.createSessionCookie(session.id);
 
     setCookie(event, cookie.name, cookie.value, cookie.attributes);
+
+    client.release();
+
     return sendRedirect(event, "/");
   } catch (err) {
     console.log(err);
+
+    client.release();
     // the specific error message depends on the provider
     if (err instanceof OAuth2RequestError) {
       // invalid code

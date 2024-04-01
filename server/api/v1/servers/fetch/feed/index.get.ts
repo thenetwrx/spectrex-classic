@@ -1,3 +1,4 @@
+import pool from "~/server/utils/database";
 import type Server from "~/types/Server";
 
 export default defineEventHandler(async (event) => {
@@ -7,7 +8,6 @@ export default defineEventHandler(async (event) => {
   }
 
   // Parameters
-
   const query = getQuery(event);
   const page = query.page;
 
@@ -28,6 +28,7 @@ export default defineEventHandler(async (event) => {
   }
 
   // 2. Fetch guilds
+  const client = await pool.connect();
   try {
     const max_per_page = 10;
     const category: string | null = query.category?.toString() || null;
@@ -45,10 +46,12 @@ export default defineEventHandler(async (event) => {
       OFFSET ${max_per_page * Number(page)}`;
 
     if (category?.length) {
-      servers = await database.query<Server>(sqlQuery, [category]);
+      servers = await client.query<Server>(sqlQuery, [category]);
     } else {
-      servers = await database.query<Server>(sqlQuery);
+      servers = await client.query<Server>(sqlQuery);
     }
+
+    client.release();
 
     if (servers.rows.length) {
       setResponseStatus(event, 200);
@@ -62,6 +65,8 @@ export default defineEventHandler(async (event) => {
     return { message: "No servers found", result: null };
   } catch (err) {
     console.log(err);
+
+    client.release();
 
     setResponseStatus(event, 500);
     return {

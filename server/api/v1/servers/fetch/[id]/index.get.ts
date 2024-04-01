@@ -1,3 +1,4 @@
+import pool from "~/server/utils/database";
 import type Server from "~/types/Server";
 
 export default defineEventHandler(async (event) => {
@@ -11,8 +12,9 @@ export default defineEventHandler(async (event) => {
   const server_discord_id = params.id;
 
   // 2. Sync guild
+  const client = await pool.connect();
   try {
-    const { rows: servers } = await database.query<Server>(
+    const { rows: servers } = await client.query<Server>(
       `
       SELECT * FROM servers
       WHERE
@@ -20,6 +22,8 @@ export default defineEventHandler(async (event) => {
     `,
       [server_discord_id]
     );
+
+    client.release();
 
     if (!servers.length) {
       setResponseStatus(event, 404);
@@ -58,6 +62,8 @@ export default defineEventHandler(async (event) => {
     };
   } catch (err) {
     console.log(err);
+
+    client.release();
 
     setResponseStatus(event, 500);
     return {

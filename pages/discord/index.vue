@@ -5,8 +5,8 @@
 </template>
 
 <script setup lang="ts">
-onMounted(async () => {
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-  navigateTo("https://discord.gg/wQPkC5aq", { external: true });
-});
+  onMounted(async () => {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    navigateTo("https://discord.gg/wQPkC5aq", { external: true });
+  });
 </script>
