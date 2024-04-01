@@ -20,7 +20,7 @@ export default defineEventHandler(async (event) => {
     const response = await fetch("https://discord.com/api/users/@me", {
       headers: {
         Authorization: `Bearer ${cryptr.decrypt(
-          event.context.session?.discord_access_token || ""
+          event.context.session?.discord_access_token!
         )}`,
       },
     });
@@ -56,7 +56,7 @@ export default defineEventHandler(async (event) => {
       };
     }
 
-    await database.query<any>(
+    await database.query(
       `
       UPDATE users
         SET discord_id = $1, username = $2, avatar = $3, global_name = $4, email = $5, updated_at = $6
@@ -69,7 +69,7 @@ export default defineEventHandler(async (event) => {
         discord_user.avatar!,
         discord_user.global_name!,
         discord_user.email!,
-        Date.now(),
+        Date.now().toString(),
       ]
     );
 

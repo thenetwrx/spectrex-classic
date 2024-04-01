@@ -37,9 +37,7 @@
       <div
         v-for="server in servers?.result
           ?.filter((_server) => _server.approved_at !== null)
-          .sort(
-            (a, b) => (Number(b.bumped_at) || 0) - (Number(a.bumped_at) || 0)
-          )"
+          .sort((a, b) => Number(b.bumped_at || 0) - Number(a.bumped_at || 0))"
         class="flex flex-col"
       >
         <div class="bg-base-200 rounded-t-md">

@@ -42,7 +42,7 @@
             @click.stop="bump_server"
           >
             <span v-if="server_metadata.on_cooldown">
-              {{ formatRemainingTime(Number(server.result.bumped_at) || 0) }}
+              {{ formatRemainingTime(Number(server.result.bumped_at || 0)) }}
             </span>
             <div v-if="!server_metadata.on_cooldown">
               <span v-if="!server_metadata.bumping">Bump </span>
@@ -211,7 +211,7 @@ const refreshServerMetadata = () => {
 
     const cooldown = premium ? 3600000 : 7200000;
     const on_cooldown =
-      (Number(server.value.result?.bumped_at) || 0) + cooldown <= Date.now()
+      Number(server.value.result?.bumped_at || 0) + cooldown <= Date.now()
         ? false
         : true;
 

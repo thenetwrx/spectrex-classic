@@ -4,7 +4,7 @@
       <div class="flex items-center">
         <img
           :src="
-            discordCdn.user_avatar(user?.discord_id || '', user?.avatar || '')
+            discordCdn.user_avatar(user?.discord_id!, user?.avatar!)
           "
           alt="User Avatar"
           class="w-12 h-12 rounded-full mr-4"

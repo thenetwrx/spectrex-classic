@@ -9,17 +9,7 @@ export default defineEventHandler(async (event) => {
     setResponseStatus(event, 400);
     return { message: "A public selection must be made" };
   }
-  if (!body.description?.length) {
-    setResponseStatus(event, 400);
-    return { message: "Description must not be empty" };
-  }
-  if (body.description.length <= 16) {
-    setResponseStatus(event, 400);
-    return {
-      message: "Description does not have enough characters (minimum of 16)",
-    };
-  }
-  if (body.description.length >= 128) {
+  if (body.description?.length >= 128) {
     setResponseStatus(event, 400);
     return { message: "Description has too many characters (max of 128)" };
   }
@@ -66,7 +56,12 @@ export default defineEventHandler(async (event) => {
         WHERE
             discord_id = $4
     `,
-      [body.public, body.description, Date.now(), event.context.user.discord_id]
+      [
+        body.public,
+        body.description || "",
+        Date.now().toString(),
+        event.context.user.discord_id,
+      ]
     );
 
     setResponseStatus(event, 200);

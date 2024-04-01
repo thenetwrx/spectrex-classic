@@ -26,7 +26,7 @@ export default defineEventHandler(async (event) => {
       {
         headers: {
           Authorization: `Bearer ${cryptr.decrypt(
-            event.context.session?.discord_access_token || ""
+            event.context.session?.discord_access_token!
           )}`,
         },
       }

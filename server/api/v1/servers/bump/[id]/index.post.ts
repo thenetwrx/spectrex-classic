@@ -48,7 +48,7 @@ export default defineEventHandler(async (event) => {
     const now = Date.now();
     const cooldown =
       event.context.user.premium_since !== null ? 3600000 : 7200000;
-    if ((Number(servers[0].bumped_at) || 0) + cooldown <= now) {
+    if (Number(servers[0].bumped_at || 0) + cooldown <= now) {
       await database.query(
         `
         UPDATE servers
@@ -64,7 +64,7 @@ export default defineEventHandler(async (event) => {
     }
 
     const timeLeftMilliseconds =
-      now - (Number(servers[0].bumped_at) || 0) - cooldown;
+      now - Number(servers[0].bumped_at || 0) - cooldown;
     const timeLeftMessage = `Bump is on cooldown`;
 
     setResponseStatus(event, 403);

@@ -68,7 +68,7 @@
                   class="fa-solid fa-crown text-accent"
                   v-if="profile.result.premium_since !== null ? true : false"
                 ></i>
-                {{ profile.result.global_name }}
+                {{ profile.result.global_name || profile.result.username }}
               </p>
 
               <p class="opacity-50">@{{ profile.result.username }}</p>

@@ -4,7 +4,7 @@
       <div class="flex items-center">
         <img
           :src="
-            discordCdn.user_avatar(user?.discord_id || '', user?.avatar || '')
+            discordCdn.user_avatar(user?.discord_id!, user?.avatar!)
           "
           alt="User Avatar"
           class="w-12 h-12 rounded-full mr-4"
@@ -18,9 +18,9 @@
               class="fa-solid fa-crown"
               v-if="user?.premium_since !== null ? true : false"
             ></i>
-            {{ user?.global_name || user?.username || "Unknown" }}
+            {{ user?.global_name || user?.username }}
           </h2>
-          <p class="text-gray-500">@{{ user?.username || "unknown" }}</p>
+          <p class="text-gray-500">@{{ user?.username }}</p>
         </div>
       </div>
     </div>
@@ -50,9 +50,7 @@
         v-for="(server, index) in servers?.result
           ?.filter((server) => server.approved_at !== null)
           .sort((a, b) => a.name.localeCompare(b.name))
-          .sort(
-            (c, d) => (Number(c.bumped_at) || 0) - (Number(d.bumped_at) || 0)
-          )"
+          .sort((c, d) => Number(c.bumped_at || 0) - Number(d.bumped_at || 0))"
         :key="index"
         class="flex flex-row bg-base-200 hover:bg-base-300 rounded-md cursor-pointer transition-colors duration-200 p-4"
         @click="navigateTo('/servers/' + server.discord_id)"

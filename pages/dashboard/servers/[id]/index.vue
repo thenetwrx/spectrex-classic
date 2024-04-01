@@ -333,11 +333,11 @@ const {
 watch(server, () => {
   if (server.value?.result) {
     is_public.value = server.value.result.public;
-    language.value = server.value.result.language || "";
-    category.value = server.value.result.category || "";
-    invite_link.value = server.value.result.invite_link || "";
-    description.value = server.value.result.description || "";
-    tags.value = server.value.result.tags || [];
+    language.value = server.value.result.language!;
+    category.value = server.value.result.category!;
+    invite_link.value = server.value.result.invite_link!;
+    description.value = server.value.result.description!;
+    tags.value = server.value.result.tags;
     nsfw.value = server.value.result.nsfw;
   }
 });

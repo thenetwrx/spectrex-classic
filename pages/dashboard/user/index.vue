@@ -155,6 +155,6 @@ const {
 
 watch(profile, () => {
   is_public.value = profile.value?.result?.public;
-  description.value = profile.value?.result?.description || "";
+  description.value = profile.value?.result?.description!;
 });
 </script>
