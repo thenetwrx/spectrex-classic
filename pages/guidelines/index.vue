@@ -5,8 +5,8 @@
     <div class="text-start flex flex-col gap-2 py-10">
       <p class="text-4xl">Introduction</p>
       <p class="opacity-75">
-        This document covers proper etiquette when you submit your Discord
-        server to Spectrex.
+        This document covers proper etiquette when you submit content to
+        Spectrex.
       </p>
 
       <p class="text-3xl">1. Inappropriate content</p>
@@ -49,7 +49,7 @@
 
       <p class="text-3xl">6. Rewarding users</p>
       <p class="opacity-75">
-        You may not reward or force users to do actions in Spectrex. For
+        You may not reward or force users to do actions on Spectrex. For
         instance, you may not reward your users for posting a nice review on a
         server or force them to bump a server.
       </p>
