@@ -1,4 +1,4 @@
-import { type Server } from "~/types/Server";
+import type Server from "~/types/Server";
 
 export default defineEventHandler(async (event) => {
   if (event.context.user?.banned) {

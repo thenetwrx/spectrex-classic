@@ -1,7 +1,8 @@
 import { OAuth2RequestError, Discord } from "arctic";
-import { generateId } from "lucia";
+import { User, generateId } from "lucia";
 import database from "~/server/utils/database";
 import Cryptr from "cryptr";
+import DiscordUser from "~/types/DiscordUser";
 
 export const discord = new Discord(
   process.env.DISCORD_CLIENT_ID!,
@@ -34,7 +35,7 @@ export default defineEventHandler(async (event) => {
     const discordUser: DiscordUser = await discordUserResponse.json();
 
     // Replace this with your own DB client.
-    const existingUser = await database.query(
+    const { rows: existingUser } = await database.query<User>(
       `
       SELECT id FROM users
       WHERE
@@ -43,8 +44,8 @@ export default defineEventHandler(async (event) => {
       [discordUser.id]
     );
 
-    if (existingUser.rows.length) {
-      const session = await lucia.createSession(existingUser.rows[0].id, {
+    if (existingUser.length) {
+      const session = await lucia.createSession(existingUser[0].id, {
         discord_access_token: cryptr.encrypt(tokens.accessToken),
       });
       const cookie = lucia.createSessionCookie(session.id);
@@ -54,12 +55,12 @@ export default defineEventHandler(async (event) => {
 
     const userId = generateId(15);
 
-    const createdUser = await database.query(
+    const { rows: createdUser } = await database.query(
       `
       INSERT INTO users
-        (id, discord_id, username, avatar, global_name, email)
+        (id, discord_id, username, avatar, global_name, email, created_at, updated_at)
       VALUES
-        ($1, $2, $3, $4, $5, $6)
+        ($1, $2, $3, $4, $5, $6, $7, $7)
       RETURNING id
     `,
       [
@@ -69,15 +70,16 @@ export default defineEventHandler(async (event) => {
         discordUser.avatar!,
         discordUser.global_name!,
         discordUser.email!,
+        Date.now().toString(),
       ]
     );
 
-    if (!createdUser.rows.length) {
+    if (!createdUser.length) {
       setResponseStatus(event, 500);
       return sendRedirect(event, "/");
     }
 
-    const session = await lucia.createSession(createdUser.rows[0].id, {
+    const session = await lucia.createSession(createdUser[0].id, {
       discord_access_token: cryptr.encrypt(tokens.accessToken),
     });
     const cookie = lucia.createSessionCookie(session.id);
@@ -96,11 +98,3 @@ export default defineEventHandler(async (event) => {
     return sendRedirect(event, "/");
   }
 });
-
-interface DiscordUser {
-  id: string;
-  username: string;
-  avatar: string | null;
-  global_name: string | null;
-  email: string | null;
-}

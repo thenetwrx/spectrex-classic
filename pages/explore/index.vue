@@ -25,7 +25,7 @@
       Showing ({{ servers?.result?.length || 0 }} / {{ max_per_page }}) results
     </p>
     <div class="w-full text-center my-16" v-if="servers_pending">
-      <i class="fa-solid fa-2xl fa-spinner-third fa-spin"></i>
+      <span class="loading loading-spinner loading-lg"></span>
     </div>
     <p
       class="w-full text-center opacity-50 my-16"
@@ -37,7 +37,9 @@
       <div
         v-for="server in servers?.result
           ?.filter((_server) => _server.approved_at !== null)
-          .sort((a, b) => Number(b.bumped_at) - Number(a.bumped_at))"
+          .sort(
+            (a, b) => (Number(b.bumped_at) || 0) - (Number(a.bumped_at) || 0)
+          )"
         class="flex flex-col"
       >
         <div class="bg-base-200 rounded-t-md">
@@ -145,7 +147,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Server } from "~/types/Server";
+import type Server from "~/types/Server";
 
 const discordCdn = useDiscordCdn();
 

@@ -1,4 +1,4 @@
-import { type Server } from "~/types/Server";
+import type Server from "~/types/Server";
 
 export default defineEventHandler(async (event) => {
   // Parameters
@@ -49,14 +49,14 @@ export default defineEventHandler(async (event) => {
     const cooldown =
       event.context.user.premium_since !== null ? 3600000 : 7200000;
     if ((Number(servers[0].bumped_at) || 0) + cooldown <= now) {
-      await database.query<any>(
+      await database.query(
         `
         UPDATE servers
-        SET bumped_at = $1, updated_at = $2
+        SET bumped_at = $1, updated_at = $1
         WHERE
-            discord_id = $3
+            discord_id = $2
     `,
-        [now, now, server_discord_id]
+        [now.toString(), server_discord_id]
       );
 
       setResponseStatus(event, 200);

@@ -28,7 +28,7 @@
     <div class="divider"></div>
     <div class="flex flex-row max-md:flex-col gap-2 w-full">
       <div
-        @click="navigateTo('/profiles/' + user?.discord_id)"
+        @click="navigateTo('/users/' + user?.discord_id)"
         class="bg-base-200 max-md:w-full md:w-1/2 h-20 rounded-md flex flex-row gap-3 p-4 hover:bg-base-300 transition-colors duration-200 cursor-pointer"
       >
         <div class="p-4 rounded-lg w-full flex flex-row gap-4 items-center">

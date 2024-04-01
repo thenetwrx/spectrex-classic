@@ -1,7 +1,7 @@
 <template>
   <div class="container max-w-4xl mx-auto px-4 pt-32 min-h-screen text-center">
     <div class="w-full text-center my-16" v-if="server_pending">
-      <i class="fa-solid fa-2xl fa-spinner-third fa-spin"></i>
+      <span class="loading loading-spinner loading-lg"></span>
     </div>
     <p class="text-4xl" v-else-if="!server?.result">
       Hm... That server doesn't seem to exist!
@@ -13,8 +13,8 @@
         <NuxtLink href="/guidelines" class="text-accent">Guidelines</NuxtLink>.
       </p>
       <div class="flex flex-col py-4">
-        <div class="bg-base-200 w-full h-fit p-4 rounded-t-md">
-          <div class="flex flex-row gap-4 items-center">
+        <div class="bg-base-200 w-full h-fit p-2 rounded-t-md">
+          <div class="flex flex-wrap gap-2 items-center">
             <div class="w-16 h-16 overflow-hidden rounded-full">
               <img
                 v-if="server.result.icon"
@@ -38,7 +38,7 @@
               </div>
             </div>
             <div class="flex flex-col items-start">
-              <span class="font-medium text-lg">{{ server.result.name }}</span>
+              <p class="font-medium text-lg">{{ server.result.name }}</p>
               <div class="flex flex-row gap-1 items-center">
                 <div class="bg-[#23A55A] h-4 w-4 rounded-full"></div>
                 <p class="opacity-50">
@@ -190,7 +190,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Server } from "~/types/Server";
+import type Server from "~/types/Server";
 
 definePageMeta({
   middleware: ["1-protected"],

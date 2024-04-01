@@ -1,7 +1,7 @@
 <template>
   <div class="container max-w-4xl mx-auto px-4 pt-32 min-h-screen text-center">
     <div class="w-full text-center my-16" v-if="server_pending">
-      <i class="fa-solid fa-2xl fa-spinner-third fa-spin"></i>
+      <span class="loading loading-spinner loading-lg"></span>
     </div>
     <p class="text-4xl" v-else-if="!server?.result">
       Hm... That server doesn't seem to exist!
@@ -51,7 +51,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Server } from "~/types/Server";
+import type Server from "~/types/Server";
 
 definePageMeta({
   middleware: ["1-protected"],

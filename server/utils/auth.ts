@@ -13,7 +13,7 @@ export const lucia = new Lucia(adapter, {
       secure: !import.meta.dev,
     },
   },
-  sessionExpiresIn: new TimeSpan(1, "h"),
+  sessionExpiresIn: new TimeSpan(1, "d"),
   getUserAttributes: (attributes) => {
     return attributes;
   },
@@ -38,6 +38,11 @@ interface DatabaseUserAttributes {
   email: string | null;
   premium_since: string | null;
   banned: boolean;
+  description: string | null;
+  public: boolean;
+  admin: boolean;
+  created_at: string;
+  updated_at: string;
 }
 
 interface DatabaseSessionAttributes {

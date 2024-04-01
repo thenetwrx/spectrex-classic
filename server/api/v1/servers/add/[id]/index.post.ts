@@ -1,4 +1,4 @@
-import { type Server } from "~/types/Server";
+import type Server from "~/types/Server";
 
 export default defineEventHandler(async (event) => {
   // Parameters
@@ -129,12 +129,12 @@ export default defineEventHandler(async (event) => {
     await database.query(
       `
         UPDATE servers
-        SET approved_at = $1, bumped_at = $2, public = false, language = $3, category = $4, tags = $5, description = $6, invite_link = $7, nsfw = $8, updated_at = $9
+        SET approved_at = $1, bumped_at = $2, public = false, language = $3, category = $4, tags = $5, description = $6, invite_link = $7, nsfw = $8, updated_at = $1
         WHERE
-            discord_id = $10
+            discord_id = $9
     `,
       [
-        now,
+        now.toString(),
         servers[0].bumped_at === null ? now : servers[0].bumped_at,
         body.language,
         body.category,
@@ -142,7 +142,6 @@ export default defineEventHandler(async (event) => {
         body.description,
         body.invite_link,
         body.nsfw,
-        now,
         server_discord_id,
       ]
     );

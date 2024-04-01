@@ -1,5 +1,5 @@
 import { generateId } from "lucia";
-import { type Server } from "~/types/Server";
+import type Server from "~/types/Server";
 
 export default defineEventHandler(async (event) => {
   // Parameters
@@ -79,19 +79,20 @@ export default defineEventHandler(async (event) => {
     await database.query(
       `
       INSERT INTO server_reports
-        (id, from_id, type, discord_id, server_discord_id, server_owner_discord_id, server_owner_id, description, from_discord_id)
+        (id, from_id, from_discord_id, suspect_id, suspect_discord_id, suspect_server_id, suspect_server_discord_id, type, description)
       VALUES
-        ($1, $2, $3, $4, $5, $6, $7, $8)
+        ($1, $2, $3, $4, $5, $6, $7, $8, $9)
     `,
       [
         generateId(15),
         event.context.user.id,
-        body.issue_type,
-        servers[0].discord_id,
-        servers[0].owner_discord_id,
-        servers[0].owner_id,
-        body.description,
         event.context.user.discord_id,
+        servers[0].owner_id,
+        servers[0].owner_discord_id,
+        servers[0].id,
+        servers[0].discord_id,
+        body.issue_type,
+        body.description,
       ]
     );
 

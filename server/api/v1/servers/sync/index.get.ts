@@ -1,6 +1,6 @@
 import Cryptr from "cryptr";
 import { generateId } from "lucia";
-import { Server } from "~/types/Server";
+import type Server from "~/types/Server";
 
 export default defineEventHandler(async (event) => {
   // 1. Check logged in status to prevent spam
@@ -66,7 +66,7 @@ export default defineEventHandler(async (event) => {
                 discord_id = $6
             `,
             [
-              Date.now(),
+              Date.now().toString(),
               raw_guilds[i].approximate_member_count,
               raw_guilds[i].approximate_presence_count,
               raw_guilds[i].name,
@@ -82,15 +82,14 @@ export default defineEventHandler(async (event) => {
           INSERT INTO servers
             (id, discord_id, approximate_member_count, approximate_presence_count, created_at, updated_at, owner_discord_id, owner_id, name, icon)
           VALUES
-            ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+            ($1, $2, $3, $4, $5, $5, $6, $7, $8, $9)
         `,
             [
               generateId(15),
               raw_guilds[i].id,
               raw_guilds[i].approximate_member_count,
               raw_guilds[i].approximate_presence_count,
-              now,
-              now,
+              now.toString(),
               event.context.user.discord_id,
               event.context.user.id,
               raw_guilds[i].name,

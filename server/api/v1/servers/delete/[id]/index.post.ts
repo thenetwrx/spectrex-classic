@@ -1,4 +1,4 @@
-import { type Server } from "~/types/Server";
+import type Server from "~/types/Server";
 
 export default defineEventHandler(async (event) => {
   // Parameters
@@ -46,14 +46,14 @@ export default defineEventHandler(async (event) => {
 
     const now = Date.now();
 
-    await database.query<any>(
+    await database.query(
       `
         UPDATE servers
         SET approved_at = NULL, public = FALSE, language = NULL, category = NULL, tags = '{}', description = NULL, invite_link = NULL, nsfw = FALSE, updated_at = $1
         where
             discord_id = $2
     `,
-      [now, server_discord_id]
+      [now.toString(), server_discord_id]
     );
 
     setResponseStatus(event, 200);

@@ -1,8 +1,8 @@
-export type Server = {
+export default interface Server {
   id: string;
-  created_at: number;
+  created_at: string;
   owner_id: string;
-  approved_at: number | null;
+  approved_at: string | null;
   discord_id: string;
   approximate_member_count: string;
   nsfw: boolean;
@@ -12,11 +12,11 @@ export type Server = {
   name: string;
   icon: string | null;
   approximate_presence_count: string;
-  bumped_at: number;
+  bumped_at: string | null;
   language: string | null;
   description: string | null;
   tags: string[];
   public: boolean;
   category: string | null;
-  updated_at: number | null;
-};
+  updated_at: string;
+}

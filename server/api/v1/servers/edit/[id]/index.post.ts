@@ -1,4 +1,4 @@
-import { type Server } from "~/types/Server";
+import type Server from "~/types/Server";
 
 export default defineEventHandler(async (event) => {
   // Parameters
@@ -143,7 +143,7 @@ export default defineEventHandler(async (event) => {
         body.description,
         body.invite_link,
         body.nsfw,
-        Date.now(),
+        Date.now().toString(),
         server_discord_id,
       ]
     );

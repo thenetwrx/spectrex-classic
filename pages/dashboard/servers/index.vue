@@ -43,14 +43,16 @@
     </div>
     <div class="divider"></div>
     <div class="w-full text-center my-16" v-if="servers_pending">
-      <i class="fa-solid fa-2xl fa-spinner-third fa-spin"></i>
+      <span class="loading loading-spinner loading-lg"></span>
     </div>
     <ul class="grid md:grid-cols-1 lg:grid-cols-2 gap-3" v-else>
       <li
         v-for="(server, index) in servers?.result
           ?.filter((server) => server.approved_at !== null)
           .sort((a, b) => a.name.localeCompare(b.name))
-          .sort((a, b) => Number(a.bumped_at) - Number(b.bumped_at))"
+          .sort(
+            (c, d) => (Number(c.bumped_at) || 0) - (Number(d.bumped_at) || 0)
+          )"
         :key="index"
         class="flex flex-row bg-base-200 hover:bg-base-300 rounded-md cursor-pointer transition-colors duration-200 p-4"
         @click="navigateTo('/servers/' + server.discord_id)"
@@ -135,7 +137,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Server } from "~/types/Server";
+import type Server from "~/types/Server";
 
 definePageMeta({
   middleware: ["1-protected"],
@@ -167,43 +169,4 @@ const syncDiscordServers = async () => {
   refreshServers();
   syncing.value = false;
 };
-
-function formatDateString(dynamicString: string) {
-  // Parse the string into a Date object
-  const date = new Date(dynamicString);
-
-  // Months array for month names
-  const months = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
-
-  // Format the date
-  const formattedDate = `${
-    months[date.getMonth()]
-  } ${date.getDate()} at ${formatAMPM(
-    date.getHours(),
-    date.getMinutes()
-  )}, ${date.getFullYear()}`;
-
-  // Function to format hours in AM/PM format
-  function formatAMPM(hours: number, minutes: number) {
-    const ampm = hours >= 12 ? "pm" : "am";
-    const formattedHours = hours % 12 || 12; // Convert to 12-hour format
-    const formattedMinutes = minutes < 10 ? "0" + minutes : minutes; // Add leading zero if minutes < 10
-    return `${formattedHours}:${formattedMinutes}${ampm}`;
-  }
-
-  return formattedDate;
-}
 </script>

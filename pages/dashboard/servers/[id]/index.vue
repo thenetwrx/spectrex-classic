@@ -1,7 +1,7 @@
 <template>
   <div class="container max-w-4xl mx-auto px-4 pt-32 min-h-screen text-center">
     <div class="w-full text-center my-16" v-if="server_pending">
-      <i class="fa-solid fa-2xl fa-spinner-third fa-spin"></i>
+      <span class="loading loading-spinner loading-lg"></span>
     </div>
     <p class="text-4xl" v-else-if="!server?.result">
       Hm... That server doesn't seem to exist!
@@ -114,6 +114,7 @@
               </div>
             </div>
           </div>
+
           <div>
             <p class="text-2xl pb-2">
               Language<span class="text-error">*</span>
@@ -132,6 +133,7 @@
               <option value="ru">русский</option>
             </select>
           </div>
+
           <div>
             <p class="text-2xl pb-2">
               Category<span class="text-error">*</span>
@@ -151,6 +153,7 @@
               <option value="Other">Other</option>
             </select>
           </div>
+
           <div>
             <p class="text-2xl pb-2">Tags</p>
 
@@ -180,6 +183,7 @@
               v-model="newTag"
             />
           </div>
+
           <div>
             <p class="text-2xl pb-2">
               Description<span class="text-error">*</span>
@@ -192,6 +196,7 @@
               class="textarea textarea-bordered rounded-none w-full"
             ></textarea>
           </div>
+
           <div>
             <p class="text-2xl pb-2">
               Invite Link<span class="text-error">*</span>
@@ -240,6 +245,7 @@
               </div>
             </div>
           </div>
+
           <button
             @click="edit"
             class="btn btn-accent ml-auto mr-auto md:min-w-48 max-md:w-full"
@@ -253,7 +259,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Server } from "~/types/Server";
+import type Server from "~/types/Server";
 
 definePageMeta({
   middleware: ["1-protected"],

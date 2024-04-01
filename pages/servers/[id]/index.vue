@@ -1,7 +1,7 @@
 <template>
   <div class="container max-w-4xl mx-auto px-4 pt-32 min-h-screen text-center">
     <div class="w-full text-center my-16" v-if="server_pending">
-      <i class="fa-solid fa-2xl fa-spinner-third fa-spin"></i>
+      <span class="loading loading-spinner loading-lg"></span>
     </div>
     <p class="text-4xl" v-else-if="!server?.result">
       Hm... That server doesn't seem to exist!
@@ -42,7 +42,7 @@
             @click.stop="bump_server"
           >
             <span v-if="server_metadata.on_cooldown">
-              {{ formatRemainingTime(Number(server.result.bumped_at)) }}
+              {{ formatRemainingTime(Number(server.result.bumped_at) || 0) }}
             </span>
             <div v-if="!server_metadata.on_cooldown">
               <span v-if="!server_metadata.bumping">Bump </span>
@@ -173,7 +173,7 @@
 
 <script setup lang="ts">
 import useClipboard from "~/composables/useClipboard";
-import type { Server } from "~/types/Server";
+import type Server from "~/types/Server";
 
 const discordCdn = useDiscordCdn();
 const user = useUser();
@@ -211,11 +211,7 @@ const refreshServerMetadata = () => {
 
     const cooldown = premium ? 3600000 : 7200000;
     const on_cooldown =
-      ((server.value.result !== null &&
-        Number(server.value.result.bumped_at)) ||
-        0) +
-        cooldown <=
-      Date.now()
+      (Number(server.value.result?.bumped_at) || 0) + cooldown <= Date.now()
         ? false
         : true;
 

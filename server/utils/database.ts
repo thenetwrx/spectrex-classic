@@ -1,5 +1,4 @@
 import Postgres from "pg";
-import fs from "fs";
 
 const client = new Postgres.Client({
   host: "aws-0-us-east-1.pooler.supabase.com",
