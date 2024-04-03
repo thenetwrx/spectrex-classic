@@ -4,17 +4,12 @@ import pool from "~/server/utils/database";
 import Cryptr from "cryptr";
 import DiscordUser from "~/types/DiscordUser";
 
-export const discord = new Discord(
-  process.env.DISCORD_CLIENT_ID!,
-  process.env.DISCORD_CLIENT_SECRET!,
-  process.env.BASE_URL! + "/api/v1/auth/discord/callback"
-);
-
 export default defineEventHandler(async (event) => {
   const query = getQuery(event);
   const code = query.code?.toString() ?? null;
   const state = query.state?.toString() ?? null;
   const storedState = getCookie(event, "discord_oauth_state") ?? null;
+  const storedRedirectUri = getCookie(event, "redirect_to") ?? null;
   if (!code || !state || !storedState || state !== storedState) {
     setResponseStatus(event, 400);
     return sendRedirect(event, "/");
@@ -23,6 +18,12 @@ export default defineEventHandler(async (event) => {
   const client = await pool.connect();
   try {
     const cryptr = new Cryptr(process.env.ENCRYPTION_KEY!);
+
+    const discord = new Discord(
+      process.env.DISCORD_CLIENT_ID!,
+      process.env.DISCORD_CLIENT_SECRET!,
+      process.env.BASE_URL! + "/api/v1/auth/discord/callback"
+    );
 
     const tokens = await discord.validateAuthorizationCode(code);
     const discordUserResponse = await fetch(
@@ -50,8 +51,15 @@ export default defineEventHandler(async (event) => {
       });
       const cookie = lucia.createSessionCookie(session.id);
       setCookie(event, cookie.name, cookie.value, cookie.attributes);
+      deleteCookie(event, "redirect_to");
 
       client.release();
+
+      console.log(storedRedirectUri);
+
+      if (storedRedirectUri && storedRedirectUri.startsWith("/")) {
+        return sendRedirect(event, storedRedirectUri);
+      }
 
       return sendRedirect(event, "/");
     }
