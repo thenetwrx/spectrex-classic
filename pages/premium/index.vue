@@ -26,7 +26,7 @@
               <i
                 class="fa-solid fa-check bg-accent p-2 rounded-full bg-opacity-50"
               ></i>
-              A super special role in our discord server
+              A super special role in our Discord server
             </p>
           </div>
           <button class="btn btn-primary" onclick="my_modal_1.showModal()">

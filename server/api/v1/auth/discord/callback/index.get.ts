@@ -48,6 +48,10 @@ export default defineEventHandler(async (event) => {
     if (existingUser.length) {
       const session = await lucia.createSession(existingUser[0].id, {
         discord_access_token: cryptr.encrypt(tokens.accessToken),
+        discord_access_token_expires_at: cryptr.encrypt(
+          tokens.accessTokenExpiresAt.getTime().toString()
+        ),
+        discord_refresh_token: cryptr.encrypt(tokens.refreshToken),
       });
       const cookie = lucia.createSessionCookie(session.id);
       setCookie(event, cookie.name, cookie.value, cookie.attributes);
@@ -94,6 +98,10 @@ export default defineEventHandler(async (event) => {
 
     const session = await lucia.createSession(createdUser[0].id, {
       discord_access_token: cryptr.encrypt(tokens.accessToken),
+      discord_access_token_expires_at: cryptr.encrypt(
+        tokens.accessTokenExpiresAt.getTime().toString()
+      ),
+      discord_refresh_token: cryptr.encrypt(tokens.refreshToken),
     });
     const cookie = lucia.createSessionCookie(session.id);
 
