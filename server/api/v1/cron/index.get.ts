@@ -13,7 +13,10 @@ export default defineEventHandler(async (event) => {
 
     client.release();
 
-    return;
+    setResponseStatus(event, 200);
+    return {
+      message: null,
+    };
   } catch (err) {
     console.log(err);
 
@@ -23,6 +26,5 @@ export default defineEventHandler(async (event) => {
     return {
       message: "An unknown error occurred, try again later",
     };
-  } finally {
   }
 });
