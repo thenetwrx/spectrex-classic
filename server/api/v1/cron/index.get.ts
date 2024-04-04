@@ -18,11 +18,14 @@ export default defineEventHandler(async (event) => {
 
     sessions.forEach(async (session) => {
       const cryptr = new Cryptr(process.env.ENCRYPTION_KEY!);
+
+      const twoDaysInMilliseconds = 2 * 24 * 60 * 60 * 1000; // 2 days in milliseconds
+      const expirationThreshold = Date.now() + twoDaysInMilliseconds;
       if (
         Number(cryptr.decrypt(session.discord_access_token_expires_at)) <
-        Date.now()
+        expirationThreshold
       ) {
-        // discord access token is expired, refresh it and update shit
+        // discord access token expires in 2 days, stay ahead and refresh it
 
         const discord = new Discord(
           process.env.DISCORD_CLIENT_ID!,
