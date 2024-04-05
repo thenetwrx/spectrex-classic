@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
 
   // Parameters
   const query = getQuery(event);
-  const page = query.page;
+  const page = query.page?.toString() || "0";
 
   if (Number.isNaN(page)) {
     setResponseStatus(event, 400);

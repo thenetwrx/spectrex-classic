@@ -1,10 +1,10 @@
 <template>
-  <div class="max-w-5xl mx-auto px-4 pt-32 min-h-screen">
+  <div class="max-w-4xl mx-auto px-4 pt-32 min-h-screen">
     <div class="flex flex-col">
       <h1 class="text-5xl text-center">
-        Find <span class="font-bold">your</span> Discord server
+        Find <span class="font-bold underline">your</span> Discord server
       </h1>
-      <p class="py-2 text-xl max-w-2xl mx-auto text-center">
+      <p class="py-2 text-xl max-w-2xl mx-auto text-center opacity-80">
         Unleash a world of niche communities, passionate gamers, and endless
         possibilities. Curated listings, tailored just for you.
       </p>
@@ -21,13 +21,16 @@
           {{ category }}
         </NuxtLink>
       </div>
+      <p class="ml-auto opacity-75">
+        <i class="fa-solid fa-up-left"></i> select a category
+      </p>
 
-      <div class="flex flex-row gap-2 mx-auto py-8">
+      <div class="flex flex-row gap-2 mx-auto py-12">
         <NuxtLink class="btn btn-primary btn-sm" href="/explore">
           Find a server
         </NuxtLink>
         <NuxtLink class="btn btn-secondary btn-sm" href="/dashboard/servers">
-          Add your server
+          Add a server
         </NuxtLink>
       </div>
     </div>

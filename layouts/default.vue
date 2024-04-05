@@ -1,135 +1,135 @@
 <script setup lang="ts">
-useHead({
-  link: [
-    {
-      rel: "preconnect",
-      href: "https://fonts.googleapis.com",
-    },
-    {
-      rel: "preconnect",
-      href: "https://fonts.gstatic.com",
-    },
-    {
-      rel: "stylesheet",
-      href: "https://site-assets.fontawesome.com/releases/v6.4.2/css/all.css",
-    },
-    {
-      rel: "stylesheet",
-      href: "https://site-assets.fontawesome.com/releases/v6.4.2/css/sharp-regular.css",
-    },
-    {
-      rel: "stylesheet",
-      href: "https://fonts.googleapis.com/css2?family=Cairo&family=REM&display=swap",
-    },
-    {
-      rel: "stylesheet",
-      href: "https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap",
-    },
-  ],
-  title: "Spectrex",
-  meta: [
-    {
-      name: "description",
-      content:
-        "Join awesome Discord communities. Find gamers, hobbyists, and like-minded people on Spectrex. Explore now!",
-    },
-    {
-      name: "og:title",
-      content: "Spectrex - Find YOUR Discord server",
-    },
-    {
-      name: "og:description",
-      content:
-        "Join awesome Discord communities. Find gamers, hobbyists, and like-minded people on Spectrex. Explore now!",
-    },
-    {
-      name: "og:image",
-      content: "https://spectrex.app/images/logo_spectrex.png",
-    },
-    {
-      name: "og:site_name",
-      content: "Spectrex",
-    },
-    {
-      name: "og:type",
-      content: "website",
-    },
-    {
-      name: "og:url",
-      content: "https://spectrex.app",
-    },
-    {
-      name: "og:locale",
-      content: "en_US",
-    },
-    {
-      name: "twitter:card",
-      content: "summary",
-    },
-    {
-      name: "twitter:site",
-      content: "@joebiden",
-    },
-    {
-      name: "twitter:creator",
-      content: "@joebiden",
-    },
-    {
-      name: "twitter:title",
-      content: "Spectrex - Find YOUR Discord server",
-    },
-    {
-      name: "twitter:description",
-      content:
-        "Join awesome Discord communities. Find gamers, hobbyists, and like-minded people on Spectrex. Explore now!",
-    },
-    {
-      name: "twitter:image",
-      content: "https://spectrex.app/images/logo.png",
-    },
-    {
-      name: "keywords",
-      content:
-        "Discord servers, find Discord, Discord communities, gaming Discord",
-    },
-  ],
-});
-
-// useSeoMeta({
-//   title: "Spectrex",
-//   ogTitle: "Spectrex - Find your Discord server",
-//   description:
-//     "Unleash a world of niche communities, passionate gamers, and endless possibilities. Curated listings, tailored just for you.",
-//   ogDescription:
-//     "Unleash a world of niche communities, passionate gamers, and endless possibilities. Curated listings, tailored just for you.",
-//   ogImage: "https://spectrex.app/images/logo_spectrex_white.png",
-//   twitterCard: "summary_large_image",
-// });
-
-const logout = async () => {
-  await $fetch("/api/v1/auth/logout", {
-    method: "POST",
-    retry: false,
+  useHead({
+    link: [
+      {
+        rel: "preconnect",
+        href: "https://fonts.googleapis.com",
+      },
+      {
+        rel: "preconnect",
+        href: "https://fonts.gstatic.com",
+      },
+      {
+        rel: "stylesheet",
+        href: "https://site-assets.fontawesome.com/releases/v6.5.2/css/all.css",
+      },
+      {
+        rel: "stylesheet",
+        href: "https://site-assets.fontawesome.com/releases/v6.5.2/css/solid-regular.css",
+      },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Cairo&family=REM&display=swap",
+      },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap",
+      },
+    ],
+    title: "Spectrex",
+    meta: [
+      {
+        name: "description",
+        content:
+          "Join awesome Discord communities. Find gamers, hobbyists, and like-minded people on Spectrex. Explore now!",
+      },
+      {
+        name: "og:title",
+        content: "Spectrex - Find YOUR Discord server",
+      },
+      {
+        name: "og:description",
+        content:
+          "Join awesome Discord communities. Find gamers, hobbyists, and like-minded people on Spectrex. Explore now!",
+      },
+      {
+        name: "og:image",
+        content: "https://spectrex.app/images/logo_spectrex.png",
+      },
+      {
+        name: "og:site_name",
+        content: "Spectrex",
+      },
+      {
+        name: "og:type",
+        content: "website",
+      },
+      {
+        name: "og:url",
+        content: "https://spectrex.app",
+      },
+      {
+        name: "og:locale",
+        content: "en_US",
+      },
+      {
+        name: "twitter:card",
+        content: "summary",
+      },
+      {
+        name: "twitter:site",
+        content: "@joebiden",
+      },
+      {
+        name: "twitter:creator",
+        content: "@joebiden",
+      },
+      {
+        name: "twitter:title",
+        content: "Spectrex - Find YOUR Discord server",
+      },
+      {
+        name: "twitter:description",
+        content:
+          "Join awesome Discord communities. Find gamers, hobbyists, and like-minded people on Spectrex. Explore now!",
+      },
+      {
+        name: "twitter:image",
+        content: "https://spectrex.app/images/logo.png",
+      },
+      {
+        name: "keywords",
+        content:
+          "Discord servers, find Discord, Discord communities, gaming Discord",
+      },
+    ],
   });
-  user.value = null;
-  navigateTo("/");
-};
 
-const isMobileSidebarOpen = ref<boolean>(false);
+  // useSeoMeta({
+  //   title: "Spectrex",
+  //   ogTitle: "Spectrex - Find your Discord server",
+  //   description:
+  //     "Unleash a world of niche communities, passionate gamers, and endless possibilities. Curated listings, tailored just for you.",
+  //   ogDescription:
+  //     "Unleash a world of niche communities, passionate gamers, and endless possibilities. Curated listings, tailored just for you.",
+  //   ogImage: "https://spectrex.app/images/logo_spectrex_white.png",
+  //   twitterCard: "summary_large_image",
+  // });
 
-const user = useUser();
-const discordCdn = useDiscordCdn();
+  const logout = async () => {
+    await $fetch("/api/v1/auth/logout", {
+      method: "POST",
+      retry: false,
+    });
+    user.value = null;
+    navigateTo("/");
+  };
+
+  const isMobileSidebarOpen = ref<boolean>(false);
+
+  const user = useUser();
+  const discordCdn = useDiscordCdn();
 </script>
 
 <style>
-body {
-  font-family: Cairo;
-}
-.mono {
-  font-family: "Share Tech Mono", monospace;
-  font-weight: 400;
-  font-style: normal;
-}
+  body {
+    font-family: Cairo;
+  }
+  .mono {
+    font-family: "Share Tech Mono", monospace;
+    font-weight: 400;
+    font-style: normal;
+  }
 </style>
 
 <template>

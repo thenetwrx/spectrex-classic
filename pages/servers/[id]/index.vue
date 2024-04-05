@@ -46,7 +46,7 @@
             </span>
             <div v-if="!server_metadata.on_cooldown">
               <span v-if="!server_metadata.bumping">Bump </span>
-              <span v-else>Bumping... </span>
+              <span v-else>Bumping </span>
             </div>
             <i class="fa-solid fa-up-from-line"></i>
           </button>
