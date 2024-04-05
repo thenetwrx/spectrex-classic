@@ -246,11 +246,8 @@
             </div>
           </div>
 
-          <button
-            v-on:click="edit"
-            class="btn btn-accent ml-auto mr-auto md:min-w-48 max-md:w-full"
-          >
-            <i class="fa-solid fa-pen-to-square"></i> Save
+          <button v-on:click="edit" class="btn btn-primary btn-sm ml-auto">
+            Save
           </button>
         </div>
       </div>

@@ -1,6 +1,6 @@
 <template>
-  <div class="container max-w-4xl mx-auto px-4 pt-32 min-h-screen">
-    <div class="w-full text-center mt-12" v-if="profile_pending">
+  <div class="container max-w-4xl mx-auto px-4 pt-32 min-h-screen text-center">
+    <div class="w-full mt-12" v-if="profile_pending">
       <span class="loading loading-spinner loading-lg"></span>
     </div>
     <p class="text-4xl" v-else-if="!profile?.result">
@@ -55,7 +55,7 @@
             <p class="text-2xl">
               Public<span class="text-error">*</span>
               <span class="text-sm opacity-75">
-                (whether or not this server will be publicly listed)
+                (whether or not this profile will be publicly listed)
               </span>
             </p>
 
@@ -98,11 +98,8 @@
             ></textarea>
           </div>
 
-          <button
-            v-on:click="edit"
-            class="btn btn-primary ml-auto mr-auto md:min-w-48 max-md:w-full"
-          >
-            <i class="fa-solid fa-pen-to-square"></i> Save
+          <button v-on:click="edit" class="btn btn-primary btn-sm ml-auto">
+            Save
           </button>
         </div>
       </div>
@@ -113,6 +110,9 @@
 <script setup lang="ts">
   import type { User } from "lucia";
 
+  definePageMeta({
+    middleware: ["1-protected"],
+  });
   const user = useUser();
   const discordCdn = useDiscordCdn();
 

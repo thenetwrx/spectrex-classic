@@ -24,7 +24,7 @@
             v-if="profile.result.discord_id === user?.discord_id"
             v-on:click="syncProfile"
           >
-            <span v-if="syncing">Syncing...</span>
+            <span v-if="syncing">Syncing</span>
             <span v-else>Sync</span>
             <i
               class="fa-solid fa-arrows-rotate"

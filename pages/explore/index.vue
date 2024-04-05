@@ -120,7 +120,7 @@
 
     <div class="flex flex-row items-center place-self-center mt-8">
       <button
-        class="btn btn-accent btn-sm"
+        class="btn btn-primary btn-sm"
         :class="page === 0 ? 'btn-disabled' : ''"
         v-on:click="go_to_page(page - 1)"
       >
@@ -130,7 +130,7 @@
         >Page {{ page + 1 }}</span
       >
       <button
-        class="btn btn-accent btn-sm"
+        class="btn btn-primary btn-sm"
         :class="
           page === max_pages || (servers?.result?.length || 0) < max_per_page
             ? 'btn-disabled'

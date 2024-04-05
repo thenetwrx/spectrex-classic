@@ -33,7 +33,7 @@
         :class="syncing ? 'btn-disabled' : ''"
         v-on:click="syncDiscordServers"
       >
-        <span v-if="syncing">Syncing...</span>
+        <span v-if="syncing">Syncing</span>
         <span v-else>Sync</span>
         <i
           class="fa-solid fa-arrows-rotate"
@@ -105,7 +105,7 @@
           :class="syncing ? 'btn-disabled' : ''"
           v-on:click="syncDiscordServers"
         >
-          <span v-if="syncing">Syncing...</span>
+          <span v-if="syncing">Syncing</span>
           <span v-else>Sync</span>
           <i
             class="fa-solid fa-arrows-rotate"

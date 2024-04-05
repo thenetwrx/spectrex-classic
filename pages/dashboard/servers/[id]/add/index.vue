@@ -177,11 +177,8 @@
               </div>
             </div>
           </div>
-          <button
-            v-on:click="apply"
-            class="btn btn-accent ml-auto mr-auto md:min-w-48 max-md:w-full"
-          >
-            <i class="fa-solid fa-inbox-out"></i> Submit
+          <button v-on:click="apply" class="btn btn-primary btn-sm ml-auto">
+            Submit
           </button>
         </div>
       </div>
