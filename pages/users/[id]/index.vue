@@ -89,8 +89,8 @@
         </div>
       </div>
       <div class="divider"></div>
-      <div>
-        <p class="text-2xl pt-10">Reviews</p>
+      <div class="py-12">
+        <p class="text-2xl">Reviews</p>
         <p class="opacity-50">
           No reviews yet...
           <NuxtLink href="#" class="text-accent">Create one!</NuxtLink>
