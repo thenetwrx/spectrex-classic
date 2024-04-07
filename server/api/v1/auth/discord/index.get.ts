@@ -10,7 +10,7 @@ export default defineEventHandler(async (event) => {
     scopes: ["identify", "email", "guilds"],
   });
 
-  setCookie(event, "discord_oauth_state", state, {
+  setCookie(event, "state", state, {
     path: "/",
     secure: process.env.NODE_ENV === "production",
     httpOnly: true,

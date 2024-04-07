@@ -15,21 +15,20 @@ export default defineEventHandler(async (event) => {
     }
   }
 
-  const encryptedSessionId = getCookie(event, lucia.sessionCookieName) ?? null;
-  if (!encryptedSessionId) {
+  const sessionId = getCookie(event, lucia.sessionCookieName) ?? null;
+  if (!sessionId) {
     event.context.session = null;
     event.context.user = null;
 
     return;
   }
-  const sessionId = cryptr.decrypt(encryptedSessionId);
 
   const { session, user } = await lucia.validateSession(sessionId);
   if (session && session.fresh) {
     appendResponseHeader(
       event,
       "Set-Cookie",
-      lucia.createSessionCookie(cryptr.encrypt(session.id)).serialize()
+      lucia.createSessionCookie(session.id).serialize()
     );
   }
   if (!session) {

@@ -8,7 +8,7 @@ export default defineEventHandler(async (event) => {
   const query = getQuery(event);
   const code = query.code?.toString() ?? null;
   const state = query.state?.toString() ?? null;
-  const storedState = getCookie(event, "discord_oauth_state") ?? null;
+  const storedState = getCookie(event, "state") ?? null;
   const storedRedirectUri = getCookie(event, "redirect_to") ?? null;
   if (!code || !state || !storedState || state !== storedState) {
     setResponseStatus(event, 400);
@@ -46,7 +46,7 @@ export default defineEventHandler(async (event) => {
         discord_refresh_token: cryptr.encrypt(tokens.refreshToken),
         created_at: Date.now().toString(),
       });
-      const cookie = lucia.createSessionCookie(cryptr.encrypt(session.id));
+      const cookie = lucia.createSessionCookie(session.id);
       setCookie(event, cookie.name, cookie.value, cookie.attributes);
       deleteCookie(event, "redirect_to");
 
@@ -97,7 +97,7 @@ export default defineEventHandler(async (event) => {
       discord_refresh_token: cryptr.encrypt(tokens.refreshToken),
       created_at: Date.now().toString(),
     });
-    const cookie = lucia.createSessionCookie(cryptr.encrypt(session.id));
+    const cookie = lucia.createSessionCookie(session.id);
 
     setCookie(event, cookie.name, cookie.value, cookie.attributes);
 
