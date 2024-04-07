@@ -1,7 +1,6 @@
 export default eventHandler(async (event) => {
   if (!event.context.session) {
-    setResponseStatus(event, 401);
-    return sendRedirect(event, "/");
+    return;
   }
 
   // TODO: invalidate discord access token (when arctic supports it)
@@ -13,6 +12,5 @@ export default eventHandler(async (event) => {
     lucia.createBlankSessionCookie().serialize()
   );
 
-  setResponseStatus(event, 200);
-  return sendRedirect(event, "/");
+  return;
 });

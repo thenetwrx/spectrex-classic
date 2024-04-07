@@ -3,7 +3,7 @@
     <div class="bg-base-200 rounded-t-md">
       <div class="flex flex-row items-center gap-2 w-full p-2 relative">
         <div class="w-16 h-16 overflow-hidden rounded-lg">
-          <NuxtLink :href="'/servers/' + server.discord_id">
+          <NuxtLink :href="'/servers/' + server.id">
             <div class="avatar" v-if="server.icon">
               <div class="rounded-full w-full">
                 <NuxtImg
@@ -12,17 +12,19 @@
                 />
               </div>
             </div>
-            <div class="avatar placeholder" v-else>
-              <div class="bg-secondary rounded-full w-full">
-                <span class="text-xl opacity-50">{{
-                  server.name.slice(0, 1).toUpperCase()
+            <div class="h-full" v-else>
+              <div
+                class="rounded-full w-full h-full bg-secondary flex flex-col"
+              >
+                <span class="text-xl opacity-50 m-auto">{{
+                  server.name.slice(0, 2).toUpperCase()
                 }}</span>
               </div>
             </div>
           </NuxtLink>
         </div>
         <div class="flex flex-col">
-          <NuxtLink :href="'/servers/' + server.discord_id">
+          <NuxtLink :href="'/servers/' + server.id">
             <span class="font-medium text-lg">{{ server.name }}</span>
           </NuxtLink>
           <div class="flex flex-wrap gap-1 items-center">
@@ -47,7 +49,7 @@
           class="absolute top-1 right-1 flex flex-row gap-1 items-center justify-start"
         >
           <NuxtLink
-            :href="'/servers/' + server.discord_id + '/report'"
+            :href="'/servers/' + server.id + '/report'"
             class="btn btn-ghost max-sm:btn-sm"
           >
             <i class="fa-solid md:fa-lg fa-flag"></i>

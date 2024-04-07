@@ -93,7 +93,7 @@
   const { data: servers, pending: servers_pending } = useFetch<{
     message: string | null;
     result: Server[] | null;
-  }>("/api/v1/servers/fetch/feed", {
+  }>("/api/v1/servers/all/feed", {
     query: { page, category },
     retry: false,
   });

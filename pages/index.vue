@@ -29,7 +29,7 @@
         <NuxtLink class="btn btn-primary btn-sm" href="/explore">
           Find a server
         </NuxtLink>
-        <NuxtLink class="btn btn-secondary btn-sm" href="/dashboard/servers">
+        <NuxtLink class="btn btn-secondary btn-sm" href="/dashboard">
           Add a server
         </NuxtLink>
       </div>

@@ -1,113 +1,226 @@
 <template>
-  <div class="container max-w-4xl mx-auto px-4 pt-32 min-h-screen">
+  <div class="container max-w-6xl mx-auto pt-32 min-h-screen px-4">
     <div class="flex items-center justify-between mb-8">
       <div class="flex flex-row items-center gap-2">
         <div class="w-16 h-16 overflow-hidden rounded-full">
-          <div class="avatar" v-if="user?.avatar">
+          <div class="avatar" v-if="lucia?.user?.avatar">
             <div class="rounded-full w-full">
               <NuxtImg
                 alt="User Image"
-                :src="discordCdn.user_avatar(user.discord_id, user.avatar)"
+                :src="
+                  discordCdn.user_avatar(
+                    lucia.user.discord_id,
+                    lucia.user.avatar
+                  )
+                "
               />
             </div>
           </div>
-          <div class="avatar placeholder" v-else>
-            <div class="rounded-full w-full bg-secondary">
-              <span class="text-xl opacity-50">{{
-                user?.global_name?.slice(0, 1).toUpperCase() || "?"
+          <div class="h-full" v-else>
+            <div class="rounded-full w-full h-full bg-secondary flex flex-col">
+              <span class="text-xl opacity-50 m-auto">{{
+                lucia?.user?.global_name?.slice(0, 2).toUpperCase() || "?"
               }}</span>
             </div>
           </div>
         </div>
         <div>
-          <h2
-            class="text-lg"
-            :class="user?.premium_since !== null ? 'text-[#ffbf28]' : ''"
-          >
-            <i
-              class="fa-solid fa-crown"
-              v-if="user?.premium_since !== null ? true : false"
-            ></i>
-            {{ user?.global_name || user?.username || "Unknown" }}
+          <h2 class="text-lg">
+            Welcome back,
+            <span
+              :class="
+                lucia?.user?.premium_since !== null ? 'text-[#ffbf28]' : ''
+              "
+            >
+              <i
+                class="fa-solid fa-crown"
+                v-if="lucia?.user?.premium_since !== null ? true : false"
+              ></i>
+              {{
+                lucia?.user?.global_name || lucia?.user?.username || "Unknown"
+              }}
+            </span>
           </h2>
-          <p class="text-gray-500">@{{ user?.username || "unknown" }}</p>
+          <p class="opacity-30">
+            Logged in at: {{ formatDateString(lucia?.session?.created_at!) }}
+          </p>
         </div>
       </div>
     </div>
     <h2 class="text-lg font-semibold">Dashboard</h2>
     <div class="divider"></div>
-    <div class="flex flex-row max-md:flex-col gap-2 w-full">
-      <div
-        v-on:click="navigateTo('/users/' + user?.discord_id)"
-        class="bg-base-200 max-md:w-full md:w-1/2 h-20 rounded-md flex flex-row gap-3 p-4 hover:bg-base-300 transition-colors duration-200 cursor-pointer"
-      >
-        <div class="p-4 rounded-lg w-full flex flex-row gap-4 items-center">
-          <i class="fa-solid fa-address-card fa-2xl"></i>
-          <p class="text-2xl">Profile</p>
-        </div>
-        <div class="p-2 mb-auto mt-auto ml-auto">
-          <i class="fa-solid fa-arrow-up-right-from-square"></i>
-        </div>
+    <div class="flex flex-row max-md:flex-col gap-2 w-full py-4">
+      <div class="flex flex-col gap-1 w-full md:max-w-xs">
+        <NuxtLink class="bg-base-200 rounded-md p-2" href="/dashboard">
+          Servers
+        </NuxtLink>
+        <NuxtLink
+          class="hover:bg-base-200 rounded-md p-2 opacity-75"
+          href="/dashboard/account"
+        >
+          Account
+        </NuxtLink>
       </div>
-      <div
-        v-on:click="navigateTo('/dashboard/servers')"
-        class="bg-base-200 max-md:w-full md:w-1/2 h-20 rounded-md flex flex-row gap-3 p-4 hover:bg-base-300 transition-colors duration-200 cursor-pointer"
-      >
-        <div class="p-4 rounded-lg w-full flex flex-row gap-4 items-center">
-          <i class="fa-solid fa-server fa-2xl"></i>
-          <p class="text-2xl">Servers</p>
+      <div class="w-full px-2">
+        <div class="flex flex-row items-center pb-6">
+          <h2 class="text-lg font-semibold">Manage Servers</h2>
+          <button
+            class="btn btn-ghost btn-sm ml-auto"
+            :class="syncing ? 'btn-disabled' : ''"
+            v-on:click="syncDiscordServers"
+          >
+            <span v-if="syncing">Syncing</span>
+            <span v-else>Sync</span>
+            <i
+              class="fa-solid fa-arrows-rotate"
+              :class="syncing ? 'fa-spin' : ''"
+            ></i>
+          </button>
         </div>
-        <div class="p-2 mb-auto mt-auto ml-auto">
-          <i class="fa-solid fa-arrow-up-right-from-square"></i>
+
+        <div class="w-full text-center my-16" v-if="servers_pending">
+          <span class="loading loading-spinner loading-lg"></span>
         </div>
+        <ul class="grid md:grid-cols-1 lg:grid-cols-2 gap-3" v-else>
+          <li
+            v-for="(server, index) in servers?.result
+              ?.filter((server) => server.approved_at !== null)
+              .sort((a, b) => a.name.localeCompare(b.name))
+              .sort(
+                (c, d) => Number(c.bumped_at || 0) - Number(d.bumped_at || 0)
+              )"
+            :key="index"
+            class="flex flex-row bg-base-200 hover:bg-base-300 rounded-md cursor-pointer transition-colors duration-200 p-4"
+            v-on:click="navigateTo('/servers/' + server.id)"
+          >
+            <div class="flex flex-row items-center w-full">
+              <!-- Added relative positioning -->
+              <!-- Server Image -->
+              <div class="flex flex-col w-full">
+                <div class="w-16 h-16 overflow-hidden rounded-lg">
+                  <NuxtLink :href="'/servers/' + server.id">
+                    <div class="avatar" v-if="server.icon">
+                      <div class="rounded-full w-full">
+                        <NuxtImg
+                          alt="Server Image"
+                          :src="
+                            discordCdn.server_icon(
+                              server.discord_id,
+                              server.icon
+                            )
+                          "
+                        />
+                      </div>
+                    </div>
+                    <div class="h-full" v-else>
+                      <div
+                        class="rounded-full w-full h-full bg-secondary flex flex-col"
+                      >
+                        <span class="text-xl opacity-50 m-auto">{{
+                          server.name.slice(0, 2).toUpperCase()
+                        }}</span>
+                      </div>
+                    </div>
+                  </NuxtLink>
+                </div>
+                <span class="font-medium text-lg">{{ server.name }}</span>
+              </div>
+
+              <div>
+                <i class="fa-solid fa-arrow-up-right-from-square ml-auto"></i>
+              </div>
+              <!-- Server Details -->
+            </div>
+          </li>
+          <li
+            class="flex flex-row bg-base-200 hover:bg-base-300 rounded-md cursor-pointer transition-colors duration-200 p-4"
+            v-on:click="syncDiscordServers"
+            onclick="my_modal_1.showModal()"
+          >
+            <div class="w-full h-full flex justify-center items-center py-10">
+              <i class="fa-solid fa-plus fa-2xl"></i>
+            </div>
+          </li>
+        </ul>
       </div>
     </div>
+    <dialog class="modal" id="my_modal_1">
+      <div class="modal-box bg-base-200">
+        <div class="flex flex-row gap-1 items-center w-full pb-4">
+          <h3 class="text-lg font-bold">Add server</h3>
+          <button
+            class="btn btn-ghost btn-sm ml-auto"
+            :class="syncing ? 'btn-disabled' : ''"
+            v-on:click="syncDiscordServers"
+          >
+            <span v-if="syncing">Syncing</span>
+            <span v-else>Sync</span>
+            <i
+              class="fa-solid fa-arrows-rotate"
+              :class="syncing ? 'fa-spin' : ''"
+            ></i>
+          </button>
+          <button class="btn btn-ghost btn-sm" onclick="my_modal_1.close()">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+        <select
+          class="select select-bordered rounded-none w-full"
+          v-on:change="((event:any) => navigateTo(event?.target?.value || '/'))"
+        >
+          <option disabled selected>Select server</option>
+          <option
+            v-for="server in servers?.result
+              ?.filter((server) => server.approved_at === null)
+              .sort((a, b) => a.name.localeCompare(b.name))"
+            :value="'/servers/' + server.id + '/add'"
+          >
+            {{ server.name }}
+          </option>
+        </select>
+      </div>
+    </dialog>
   </div>
 </template>
 
 <script setup lang="ts">
+  import type Server from "~/types/Server";
+
   definePageMeta({
     middleware: ["1-protected"],
   });
-  const user = useUser();
+  const lucia = useLucia();
   const discordCdn = useDiscordCdn();
+  const syncing = ref<boolean>(false);
 
-  function formatDateString(dynamicString: string) {
-    // Parse the string into a Date object
-    const date = new Date(dynamicString);
+  const {
+    data: servers,
+    pending: servers_pending,
+    refresh: refreshServers,
+  } = useFetch<{ message: string | null; result: Server[] | null }>(
+    "/api/v1/servers/all/fetch",
+    { retry: false }
+  );
 
-    // Months array for month names
-    const months = [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
-    ];
-
-    // Format the date
-    const formattedDate = `${
-      months[date.getMonth()]
-    } ${date.getDate()} at ${formatAMPM(
-      date.getHours(),
-      date.getMinutes()
-    )}, ${date.getFullYear()}`;
-
-    // Function to format hours in AM/PM format
-    function formatAMPM(hours: number, minutes: number) {
-      const ampm = hours >= 12 ? "pm" : "am";
-      const formattedHours = hours % 12 || 12; // Convert to 12-hour format
-      const formattedMinutes = minutes < 10 ? "0" + minutes : minutes; // Add leading zero if minutes < 10
-      return `${formattedHours}:${formattedMinutes}${ampm}`;
+  const syncDiscordServers = async () => {
+    syncing.value = true;
+    const response = await fetch("/api/v1/servers/all/sync");
+    if (response.status === 401) {
+      await $fetch("/api/v1/auth/logout", {
+        method: "POST",
+        retry: false,
+      });
+      lucia.value = null;
+      navigateTo("/");
     }
 
-    return formattedDate;
+    refreshServers();
+    syncing.value = false;
+  };
+
+  function formatDateString(dynamicString: string) {
+    const date = new Date(Number(dynamicString));
+
+    return date ? date.toString() : "Unknown";
   }
 </script>

@@ -53,9 +53,9 @@
   definePageMeta({
     middleware: ["1-protected"],
   });
-  const user = useUser();
+  const lucia = useLucia();
   const route = useRoute();
-  const server_discord_id = route.params.id;
+  const server_id = route.params.id;
 
   enum IssueType {
     Server,
@@ -69,33 +69,32 @@
     refresh: refreshServer,
     pending: server_pending,
   } = useFetch<{ message: string | null; result: Server | null }>(
-    `/api/v1/servers/fetch/${server_discord_id}`,
+    `/api/v1/servers/${server_id}/fetch`,
     { retry: false }
   );
 
   const report = async () => {
-    const response = await fetch(
-      `/api/v1/servers/report/${server_discord_id}`,
-      {
-        method: "POST",
-        headers: new Headers({ "content-type": "application/json" }),
-        body: JSON.stringify({
-          issue_type: issue_type.value,
-          description: description.value,
-        }),
-      }
-    );
+    const response = await fetch(`/api/v1/servers/${server_id}/report`, {
+      method: "POST",
+      headers: new Headers({ "content-type": "application/json" }),
+      body: JSON.stringify({
+        issue_type: issue_type.value,
+        description: description.value,
+      }),
+    });
     if (response.status === 401) {
       await $fetch("/api/v1/auth/logout", {
         method: "POST",
         retry: false,
       });
-      user.value = null;
-      navigateTo("/login");
+      lucia.value = null;
+      navigateTo("/");
     }
 
-    const json = await response.json();
-    if (response.status !== 200) return alert(json.message);
-    else navigateTo("/thank-you-safety");
+    if (response.ok) navigateTo("/thank-you-safety");
+    else {
+      const json = await response.json();
+      alert(json.message);
+    }
   };
 </script>

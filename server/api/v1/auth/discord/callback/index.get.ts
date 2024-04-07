@@ -1,8 +1,8 @@
-import { OAuth2RequestError, Discord } from "arctic";
+import { OAuth2RequestError } from "arctic";
 import { User, generateId } from "lucia";
 import pool from "~/server/utils/database";
-import Cryptr from "cryptr";
 import DiscordUser from "~/types/DiscordUser";
+import { cryptr, discord } from "~/server/utils/auth";
 
 export default defineEventHandler(async (event) => {
   const query = getQuery(event);
@@ -17,14 +17,6 @@ export default defineEventHandler(async (event) => {
 
   const client = await pool.connect();
   try {
-    const cryptr = new Cryptr(process.env.ENCRYPTION_KEY!);
-
-    const discord = new Discord(
-      process.env.DISCORD_CLIENT_ID!,
-      process.env.DISCORD_CLIENT_SECRET!,
-      process.env.BASE_URL! + "/api/v1/auth/discord/callback"
-    );
-
     const tokens = await discord.validateAuthorizationCode(code);
     const discordUserResponse = await fetch(
       "https://discord.com/api/users/@me",
@@ -52,6 +44,7 @@ export default defineEventHandler(async (event) => {
           tokens.accessTokenExpiresAt.getTime().toString()
         ),
         discord_refresh_token: cryptr.encrypt(tokens.refreshToken),
+        created_at: Date.now().toString(),
       });
       const cookie = lucia.createSessionCookie(session.id);
       setCookie(event, cookie.name, cookie.value, cookie.attributes);
@@ -68,7 +61,7 @@ export default defineEventHandler(async (event) => {
       return sendRedirect(event, "/");
     }
 
-    const userId = generateId(15);
+    const userId = generateId(32);
 
     const { rows: createdUser } = await client.query(
       `
@@ -102,6 +95,7 @@ export default defineEventHandler(async (event) => {
         tokens.accessTokenExpiresAt.getTime().toString()
       ),
       discord_refresh_token: cryptr.encrypt(tokens.refreshToken),
+      created_at: Date.now().toString(),
     });
     const cookie = lucia.createSessionCookie(session.id);
 

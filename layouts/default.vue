@@ -106,19 +106,19 @@
   //   twitterCard: "summary_large_image",
   // });
 
+  const isMobileSidebarOpen = ref<boolean>(false);
+
+  const lucia = useLucia();
+  const discordCdn = useDiscordCdn();
+
   const logout = async () => {
     await $fetch("/api/v1/auth/logout", {
       method: "POST",
       retry: false,
     });
-    user.value = null;
+    lucia.value = null;
     navigateTo("/");
   };
-
-  const isMobileSidebarOpen = ref<boolean>(false);
-
-  const user = useUser();
-  const discordCdn = useDiscordCdn();
 </script>
 
 <style>
@@ -162,18 +162,18 @@
           <NuxtLink href="/explore" class="p-2 bg-secondary rounded-md">
             <span>Explore</span>
           </NuxtLink>
-          <NuxtLink
-            href="/dashboard/servers"
-            class="p-2 bg-secondary rounded-md"
-          >
-            <span>Add server</span>
+          <NuxtLink href="/guidelines" class="p-2 bg-secondary rounded-md">
+            <span>Guidelines</span>
           </NuxtLink>
           <NuxtLink href="/premium" class="p-2 bg-secondary rounded-md">
             <span>Premium</span>
           </NuxtLink>
         </div>
         <div class="flex flex-col items-start gap-2 p-4 w-full">
-          <div class="join flex flex-row w-full items-center gap-1" v-if="user">
+          <div
+            class="join flex flex-row w-full items-center gap-1"
+            v-if="lucia?.user"
+          >
             <NuxtLink
               href="/dashboard"
               data-theme="dark"
@@ -221,10 +221,10 @@
           Explore
         </NuxtLink>
         <NuxtLink
-          href="/dashboard/servers"
+          href="/guidelines"
           class="text-[#a1a1a1] hover:text-[#fff] transition-all duration-300"
         >
-          Add server
+          Guidelines
         </NuxtLink>
         <NuxtLink
           href="/premium"
@@ -233,23 +233,28 @@
         </NuxtLink>
 
         <div class="flex items-center gap-1 ml-auto">
-          <div class="dropdown dropdown-end" v-if="user">
+          <div class="dropdown dropdown-end" v-if="lucia?.user">
             <div tabindex="0" class="btn btn-ghost avatar">
               <div class="w-8 h-8 overflow-hidden rounded-full">
-                <div class="avatar" v-if="user?.avatar">
+                <div class="avatar" v-if="lucia.user.avatar">
                   <div class="rounded-full w-full">
                     <NuxtImg
                       alt="User Image"
                       :src="
-                        discordCdn.user_avatar(user.discord_id, user.avatar)
+                        discordCdn.user_avatar(
+                          lucia.user.discord_id,
+                          lucia.user.avatar
+                        )
                       "
                     />
                   </div>
                 </div>
-                <div class="avatar placeholder" v-else>
-                  <div class="rounded-full w-full bg-secondary">
-                    <span class="text-xl opacity-50">{{
-                      user?.global_name?.slice(0, 1).toUpperCase() || "?"
+                <div class="h-full" v-else>
+                  <div
+                    class="rounded-full w-full h-full bg-secondary flex flex-col"
+                  >
+                    <span class="text-xl opacity-50 m-auto">{{
+                      lucia?.user?.global_name?.slice(0, 2).toUpperCase() || "?"
                     }}</span>
                   </div>
                 </div>
@@ -264,7 +269,9 @@
                 <NuxtLink href="/dashboard">Dashboard</NuxtLink>
               </li>
               <span class="divider w-full py-2 px-4 m-0"></span>
-              <li><button v-on:click="logout">Logout</button></li>
+              <li>
+                <span v-on:click="logout">Logout</span>
+              </li>
             </ul>
           </div>
 
@@ -297,7 +304,7 @@
         <div class="flex flex-col gap-2">
           <p class="opacity-75 text-md whitespace-break-spaces">SERVICE</p>
           <NuxtLink href="/explore">Find a server</NuxtLink>
-          <NuxtLink href="/dashboard/servers">Add your server</NuxtLink>
+          <NuxtLink href="/dashboard">Add your server</NuxtLink>
           <NuxtLink href="/premium">Premium</NuxtLink>
         </div>
         <div class="flex flex-col gap-2">

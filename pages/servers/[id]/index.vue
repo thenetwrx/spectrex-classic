@@ -13,15 +13,15 @@
         >
           <NuxtLink
             class="btn btn-ghost btn-sm"
-            :href="'/dashboard/servers/' + server.result.discord_id"
-            v-if="server.result.owner_discord_id === user?.discord_id"
+            :href="'/servers/' + server.result.id + '/manage'"
+            v-if="server.result.owner_id === lucia?.user?.id"
           >
             Manage <i class="fa-solid fa-gear"></i>
           </NuxtLink>
           <button
             class="btn btn-ghost btn-sm"
             :class="syncing ? 'btn-disabled' : ''"
-            v-if="server.result.owner_discord_id === user?.discord_id"
+            v-if="server.result.owner_id === lucia?.user?.id"
             v-on:click="syncDiscordServers"
           >
             <span v-if="syncing">Syncing</span>
@@ -38,7 +38,7 @@
                 ? 'btn-disabled'
                 : ''
             "
-            v-if="server.result.owner_discord_id === user?.discord_id"
+            v-if="server.result.owner_id === lucia?.user?.id"
             v-on:click="bump_server"
           >
             <span v-if="server_metadata.on_cooldown">
@@ -51,9 +51,9 @@
             <i class="fa-solid fa-up-from-line"></i>
           </button>
           <NuxtLink
-            :href="'/servers/' + server.result.discord_id + '/report'"
+            :href="'/servers/' + server.result.id + '/report'"
             class="btn btn-ghost btn-sm"
-            v-if="server.result.owner_discord_id !== user?.discord_id"
+            v-if="server.result.owner_id !== lucia?.user?.id"
           >
             Report <i class="fa-solid fa-flag"></i>
           </NuxtLink>
@@ -79,10 +79,12 @@
                   />
                 </div>
               </div>
-              <div class="avatar placeholder" v-else>
-                <div class="rounded-full w-full bg-secondary">
-                  <span class="text-xl opacity-50">{{
-                    server.result.name.slice(0, 1).toUpperCase()
+              <div class="h-full" v-else>
+                <div
+                  class="rounded-full w-full h-full bg-secondary flex flex-col"
+                >
+                  <span class="text-xl opacity-50 m-auto">{{
+                    server.result.name.slice(0, 2).toUpperCase()
                   }}</span>
                 </div>
               </div>
@@ -176,9 +178,9 @@
   import type Server from "~/types/Server";
 
   const discordCdn = useDiscordCdn();
-  const user = useUser();
+  const lucia = useLucia();
   const route = useRoute();
-  const server_discord_id = route.params.id;
+  const server_id = route.params.id;
 
   const syncing = ref<boolean>(false);
   const server_metadata = ref<{
@@ -191,7 +193,7 @@
     refresh: refreshServer,
     pending: server_pending,
   } = useFetch<{ message: string | null; result: Server | null }>(
-    `/api/v1/servers/fetch/${server_discord_id}`,
+    `/api/v1/servers/${server_id}/fetch`,
     { retry: false }
   );
 
@@ -207,7 +209,7 @@
 
   const refreshServerMetadata = () => {
     if (server.value !== null) {
-      const premium = user?.value?.premium_since !== null ? true : false;
+      const premium = lucia.value?.user.premium_since !== null ? true : false;
 
       const cooldown = premium ? 3600000 : 7200000;
       const on_cooldown =
@@ -222,15 +224,16 @@
 
   const syncDiscordServers = async () => {
     syncing.value = true;
-    const response = await fetch("/api/v1/servers/sync/" + server_discord_id);
+    const response = await fetch(`/api/v1/servers/${server_id}/sync`);
     if (response.status === 401) {
       await $fetch("/api/v1/auth/logout", {
         method: "POST",
         retry: false,
       });
-      user.value = null;
-      navigateTo("/login");
+      lucia.value = null;
+      navigateTo("/");
     }
+
     refreshServer();
     syncing.value = false;
   };
@@ -238,20 +241,18 @@
   const bump_server = async () => {
     if (server.value !== null) {
       server_metadata.value.bumping = true;
-      const response = await fetch(
-        "/api/v1/servers/bump/" + server_discord_id,
-        {
-          method: "POST",
-        }
-      );
+      const response = await fetch(`/api/v1/servers/${server_id}/bump`, {
+        method: "POST",
+      });
       if (response.status === 401) {
         await $fetch("/api/v1/auth/logout", {
           method: "POST",
           retry: false,
         });
-        user.value = null;
-        navigateTo("/login");
+        lucia.value = null;
+        navigateTo("/");
       }
+
       server_metadata.value.bumping = false;
 
       await syncDiscordServers();
@@ -259,7 +260,7 @@
   };
 
   function formatRemainingTime(bumped_at: number) {
-    const premium = user?.value?.premium_since ? true : false;
+    const premium = lucia.value?.user.premium_since ? true : false;
 
     const cooldownDuration = premium ? 3600000 : 7200000;
     const targetTime = new Date(bumped_at + cooldownDuration);

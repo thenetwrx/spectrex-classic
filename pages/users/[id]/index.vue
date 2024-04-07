@@ -13,15 +13,15 @@
         >
           <NuxtLink
             class="btn btn-ghost btn-sm"
-            href="/dashboard/user"
-            v-if="profile.result.discord_id === user?.discord_id"
+            href="/dashboard/users/me"
+            v-if="profile.result.id === lucia?.user?.id"
           >
             Edit <i class="fa-solid fa-pen-to-square"></i>
           </NuxtLink>
           <button
             class="btn btn-ghost btn-sm"
             :class="syncing ? 'btn-disabled' : ''"
-            v-if="profile.result.discord_id === user?.discord_id"
+            v-if="profile.result.id === lucia?.user?.id"
             v-on:click="syncProfile"
           >
             <span v-if="syncing">Syncing</span>
@@ -53,10 +53,12 @@
                   />
                 </div>
               </div>
-              <div class="avatar placeholder" v-else>
-                <div class="rounded-full w-full bg-secondary">
-                  <span class="text-xl opacity-50">{{
-                    profile.result.global_name?.slice(0, 1).toUpperCase() || "?"
+              <div class="h-full" v-else>
+                <div
+                  class="rounded-full w-full h-full bg-secondary flex flex-col"
+                >
+                  <span class="text-xl opacity-50 m-auto">{{
+                    profile.result.global_name?.slice(0, 2).toUpperCase() || "?"
                   }}</span>
                 </div>
               </div>
@@ -101,11 +103,11 @@
 <script setup lang="ts">
   import useClipboard from "~/composables/useClipboard";
 
-  const user = useUser();
+  const lucia = useLucia();
   const discordCdn = useDiscordCdn();
 
   const route = useRoute();
-  const user_discord_id = route.params.id;
+  const user_id = route.params.id;
 
   const syncing = ref<boolean>(false);
 
@@ -113,7 +115,7 @@
     data: profile,
     refresh: refreshProfile,
     pending: profile_pending,
-  } = useFetch(`/api/v1/users/fetch/${user_discord_id}`, { retry: false });
+  } = useFetch(`/api/v1/users/fetch/${user_id}`, { retry: false });
 
   const copy_current_url = async () => {
     const { toClipboard } = useClipboard();
@@ -128,9 +130,10 @@
         method: "POST",
         retry: false,
       });
-      user.value = null;
-      await navigateTo("/");
+      lucia.value = null;
+      navigateTo("/");
     }
+
     refreshProfile();
     syncing.value = false;
   };
