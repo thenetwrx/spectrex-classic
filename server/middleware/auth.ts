@@ -1,5 +1,6 @@
 import { verifyRequestOrigin } from "lucia";
 import type { Session, User } from "lucia";
+import { cryptr } from "../utils/auth";
 
 export default defineEventHandler(async (event) => {
   if (event.method !== "GET") {
@@ -14,20 +15,21 @@ export default defineEventHandler(async (event) => {
     }
   }
 
-  const sessionId = getCookie(event, lucia.sessionCookieName) ?? null;
-  if (!sessionId) {
+  const encryptedSessionId = getCookie(event, lucia.sessionCookieName) ?? null;
+  if (!encryptedSessionId) {
     event.context.session = null;
     event.context.user = null;
 
     return;
   }
+  const sessionId = cryptr.decrypt(encryptedSessionId);
 
   const { session, user } = await lucia.validateSession(sessionId);
   if (session && session.fresh) {
     appendResponseHeader(
       event,
       "Set-Cookie",
-      lucia.createSessionCookie(session.id).serialize()
+      lucia.createSessionCookie(cryptr.encrypt(session.id)).serialize()
     );
   }
   if (!session) {

@@ -46,7 +46,7 @@ export default defineEventHandler(async (event) => {
         discord_refresh_token: cryptr.encrypt(tokens.refreshToken),
         created_at: Date.now().toString(),
       });
-      const cookie = lucia.createSessionCookie(session.id);
+      const cookie = lucia.createSessionCookie(cryptr.encrypt(session.id));
       setCookie(event, cookie.name, cookie.value, cookie.attributes);
       deleteCookie(event, "redirect_to");
 
@@ -97,7 +97,7 @@ export default defineEventHandler(async (event) => {
       discord_refresh_token: cryptr.encrypt(tokens.refreshToken),
       created_at: Date.now().toString(),
     });
-    const cookie = lucia.createSessionCookie(session.id);
+    const cookie = lucia.createSessionCookie(cryptr.encrypt(session.id));
 
     setCookie(event, cookie.name, cookie.value, cookie.attributes);
 

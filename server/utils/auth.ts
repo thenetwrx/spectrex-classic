@@ -22,6 +22,7 @@ export const lucia = new Lucia(adapter, {
     attributes: {
       secure: !import.meta.dev,
     },
+    name: "session",
   },
   sessionExpiresIn: new TimeSpan(1, "d"),
   getUserAttributes: (attributes) => {
