@@ -66,25 +66,25 @@
         <div class="bg-base-200 w-full h-fit p-2 rounded-t-md">
           <div class="flex flex-wrap gap-2 items-center">
             <div class="w-16 h-16 overflow-hidden rounded-full">
-              <img
-                v-if="server.result.icon"
-                :src="
-                  discordCdn.server_icon(
-                    server.result.discord_id,
-                    server.result.icon
-                  )
-                "
-                alt="Server Image"
-                class="object-cover w-full h-full"
-                :class="server.result.nsfw ? 'blur-sm' : ''"
-              />
-              <div
-                v-else
-                class="h-full flex flex-col items-center rounded-full bg-base-100"
-              >
-                <p class="text-zinc-500 mt-auto mb-auto text-3xl">
-                  {{ server.result.name?.slice(0, 1).toUpperCase() || "?" }}
-                </p>
+              <div class="avatar" v-if="server.result.icon">
+                <div class="rounded-full w-full">
+                  <NuxtImg
+                    alt="Server Image"
+                    :src="
+                      discordCdn.server_icon(
+                        server.result.discord_id,
+                        server.result.icon
+                      )
+                    "
+                  />
+                </div>
+              </div>
+              <div class="avatar placeholder" v-else>
+                <div class="rounded-full w-full bg-secondary">
+                  <span class="text-xl opacity-50">{{
+                    server.result.name.slice(0, 1).toUpperCase()
+                  }}</span>
+                </div>
               </div>
             </div>
             <div class="flex flex-col items-start">

@@ -4,20 +4,20 @@
       <div class="flex flex-row items-center gap-2 w-full p-2 relative">
         <div class="w-16 h-16 overflow-hidden rounded-lg">
           <NuxtLink :href="'/servers/' + server.discord_id">
-            <img
-              v-if="server.icon"
-              :src="discordCdn.server_icon(server.discord_id, server.icon)"
-              alt="Server Image"
-              class="object-cover rounded-full w-full h-full"
-              :class="server.nsfw ? 'blur-sm' : ''"
-            />
-            <div
-              v-else
-              class="h-full flex flex-col items-center rounded-full bg-base-100"
-            >
-              <p class="opacity-50 mt-auto mb-auto text-3xl">
-                {{ server.name.slice(0, 1).toUpperCase() || "?" }}
-              </p>
+            <div class="avatar" v-if="server.icon">
+              <div class="rounded-full w-full">
+                <NuxtImg
+                  alt="Server Image"
+                  :src="discordCdn.server_icon(server.discord_id, server.icon)"
+                />
+              </div>
+            </div>
+            <div class="avatar placeholder" v-else>
+              <div class="bg-secondary rounded-full w-full">
+                <span class="text-xl opacity-50">{{
+                  server.name.slice(0, 1).toUpperCase()
+                }}</span>
+              </div>
             </div>
           </NuxtLink>
         </div>

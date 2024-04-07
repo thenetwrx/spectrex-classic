@@ -40,26 +40,25 @@
         <div class="bg-base-200 w-full h-fit p-2 rounded-t-md">
           <div class="flex flex-wrap gap-2 items-center">
             <div class="w-16 h-16 overflow-hidden rounded-full">
-              <img
-                v-if="profile.result.avatar !== null"
-                :src="
-                  discordCdn.user_avatar(
-                    profile.result.discord_id,
-                    profile.result.avatar
-                  )
-                "
-                alt="Server Image"
-                class="object-cover w-full h-full"
-              />
-              <div
-                v-else
-                class="h-full flex flex-col items-center rounded-full bg-base-100"
-              >
-                <p class="text-zinc-500 mt-auto mb-auto text-3xl">
-                  {{
+              <div class="avatar" v-if="profile.result.avatar">
+                <div class="rounded-full w-full">
+                  <NuxtImg
+                    alt="User Image"
+                    :src="
+                      discordCdn.user_avatar(
+                        profile.result.discord_id,
+                        profile.result.avatar
+                      )
+                    "
+                  />
+                </div>
+              </div>
+              <div class="avatar placeholder" v-else>
+                <div class="rounded-full w-full bg-secondary">
+                  <span class="text-xl opacity-50">{{
                     profile.result.global_name?.slice(0, 1).toUpperCase() || "?"
-                  }}
-                </p>
+                  }}</span>
+                </div>
               </div>
             </div>
             <div class="flex flex-col items-start">

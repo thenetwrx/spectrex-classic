@@ -235,12 +235,24 @@
         <div class="flex items-center gap-1 ml-auto">
           <div class="dropdown dropdown-end" v-if="user">
             <div tabindex="0" class="btn btn-ghost avatar">
-              <div class="w-8 rounded-full">
-                <NuxtImg
-                  v-if="user.avatar"
-                  :src="discordCdn.user_avatar(user.discord_id, user.avatar)"
-                />
-                <p v-else>{{ user.username }}</p>
+              <div class="w-8 h-8 overflow-hidden rounded-full">
+                <div class="avatar" v-if="user?.avatar">
+                  <div class="rounded-full w-full">
+                    <NuxtImg
+                      alt="User Image"
+                      :src="
+                        discordCdn.user_avatar(user.discord_id, user.avatar)
+                      "
+                    />
+                  </div>
+                </div>
+                <div class="avatar placeholder" v-else>
+                  <div class="rounded-full w-full bg-secondary">
+                    <span class="text-xl opacity-50">{{
+                      user?.global_name?.slice(0, 1).toUpperCase() || "?"
+                    }}</span>
+                  </div>
+                </div>
               </div>
               <i class="fa-solid fa-caret-down"></i>
             </div>

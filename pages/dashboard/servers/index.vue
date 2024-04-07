@@ -1,14 +1,24 @@
 <template>
   <div class="container max-w-4xl mx-auto px-4 pt-32 min-h-screen">
     <div class="flex items-center justify-between mb-8">
-      <div class="flex items-center">
-        <img
-          :src="
-            discordCdn.user_avatar(user?.discord_id!, user?.avatar!)
-          "
-          alt="User Avatar"
-          class="w-12 h-12 rounded-full mr-4"
-        />
+      <div class="flex flex-row items-center gap-2">
+        <div class="w-16 h-16 overflow-hidden rounded-full">
+          <div class="avatar" v-if="user?.avatar">
+            <div class="rounded-full w-full">
+              <NuxtImg
+                alt="User Image"
+                :src="discordCdn.user_avatar(user.discord_id, user.avatar)"
+              />
+            </div>
+          </div>
+          <div class="avatar placeholder" v-else>
+            <div class="rounded-full w-full bg-secondary">
+              <span class="text-xl opacity-50">{{
+                user?.global_name?.slice(0, 1).toUpperCase() || "?"
+              }}</span>
+            </div>
+          </div>
+        </div>
         <div>
           <h2
             class="text-lg"
@@ -60,21 +70,25 @@
           <!-- Server Image -->
           <div class="flex flex-col w-full">
             <div class="w-16 h-16 overflow-hidden rounded-lg">
-              <img
-                v-if="server.icon"
-                :src="discordCdn.server_icon(server.discord_id, server.icon)"
-                alt="Server Image"
-                class="object-cover rounded-full w-full h-full"
-                :class="server.nsfw ? 'blur-sm' : ''"
-              />
-              <div
-                v-else
-                class="h-full flex flex-col items-center rounded-full bg-base-100"
-              >
-                <p class="text-zinc-500 mt-auto mb-auto text-3xl">
-                  {{ server.name.slice(0, 1).toUpperCase() || "?" }}
-                </p>
-              </div>
+              <NuxtLink :href="'/servers/' + server.discord_id">
+                <div class="avatar" v-if="server.icon">
+                  <div class="rounded-full w-full">
+                    <NuxtImg
+                      alt="Server Image"
+                      :src="
+                        discordCdn.server_icon(server.discord_id, server.icon)
+                      "
+                    />
+                  </div>
+                </div>
+                <div class="avatar placeholder" v-else>
+                  <div class="bg-secondary rounded-full w-full">
+                    <span class="text-xl opacity-50">{{
+                      server.name.slice(0, 1).toUpperCase()
+                    }}</span>
+                  </div>
+                </div>
+              </NuxtLink>
             </div>
             <span class="font-medium text-lg">{{ server.name }}</span>
           </div>
