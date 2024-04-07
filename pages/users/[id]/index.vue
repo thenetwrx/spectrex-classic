@@ -13,7 +13,7 @@
         >
           <NuxtLink
             class="btn btn-ghost btn-sm"
-            href="/dashboard/users/me"
+            href="/dashboard/account"
             v-if="profile.result.id === lucia?.user?.id"
           >
             Edit <i class="fa-solid fa-pen-to-square"></i>
@@ -64,9 +64,14 @@
               </div>
             </div>
             <div class="flex flex-col items-start">
-              <p class="font-medium text-lg">
+              <p
+                class="font-medium text-lg"
+                :class="
+                  profile.result.premium_since !== null ? 'text-[#ffbf28]' : ''
+                "
+              >
                 <i
-                  class="fa-solid fa-crown text-accent"
+                  class="fa-solid fa-crown"
                   v-if="profile.result.premium_since !== null ? true : false"
                 ></i>
                 {{ profile.result.global_name || profile.result.username }}
@@ -115,7 +120,7 @@
     data: profile,
     refresh: refreshProfile,
     pending: profile_pending,
-  } = useFetch(`/api/v1/users/fetch/${user_id}`, { retry: false });
+  } = useFetch(`/api/v1/users/${user_id}/fetch`, { retry: false });
 
   const copy_current_url = async () => {
     const { toClipboard } = useClipboard();
@@ -124,7 +129,7 @@
 
   const syncProfile = async () => {
     syncing.value = true;
-    const response = await fetch("/api/v1/users/sync/me");
+    const response = await fetch("/api/v1/users/me/sync");
     if (response.status === 401) {
       await $fetch("/api/v1/auth/logout", {
         method: "POST",
