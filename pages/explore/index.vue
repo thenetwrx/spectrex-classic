@@ -24,22 +24,19 @@
     <p class="opacity-75 text-md mb-3">
       Showing ({{ servers?.result?.length || 0 }} / {{ max_per_page }}) results
     </p>
-    <div class="w-full text-center my-16" v-if="servers_pending">
+    <FallbackContainer v-if="servers_pending">
       <span class="loading loading-spinner loading-lg"></span>
-    </div>
-    <p
-      class="w-full text-center opacity-50 my-16"
-      v-else-if="!servers?.result?.length"
-    >
-      No servers found
-    </p>
+    </FallbackContainer>
+    <FallbackContainer v-else-if="!servers?.result?.length">
+      <span>No servers found</span>
+    </FallbackContainer>
     <div class="w-fit mx-auto" v-else>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <ServerCard v-for="server in servers.result" :server="server" />
       </div>
     </div>
 
-    <div class="flex flex-row items-center place-self-center mt-8">
+    <div class="flex flex-row items-center place-self-center my-8">
       <button
         class="btn btn-primary btn-sm"
         :class="page === 0 ? 'btn-disabled' : ''"

@@ -1,11 +1,11 @@
 <template>
   <div class="container max-w-4xl mx-auto px-4 pt-32 min-h-screen text-center">
-    <div class="w-full text-center my-16" v-if="profile_pending">
+    <FallbackContainer v-if="profile_pending">
       <span class="loading loading-spinner loading-lg"></span>
-    </div>
-    <p class="text-4xl" v-else-if="!profile?.result">
-      Hm... That profile doesn't seem to exist!
-    </p>
+    </FallbackContainer>
+    <FallbackContainer v-else-if="!profile?.result">
+      <span>Resource not found</span>
+    </FallbackContainer>
     <template v-else>
       <div class="w-full flex flex-row gap-2 items-center">
         <div

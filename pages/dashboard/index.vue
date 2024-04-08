@@ -1,67 +1,9 @@
 <template>
   <div class="container max-w-6xl mx-auto pt-32 min-h-screen px-4">
-    <div class="flex items-center justify-between mb-8">
-      <div class="flex flex-row items-center gap-2">
-        <div class="w-16 h-16 overflow-hidden rounded-full">
-          <div class="avatar" v-if="lucia?.user?.avatar">
-            <div class="rounded-full w-full">
-              <NuxtImg
-                alt="User Image"
-                :src="
-                  discordCdn.user_avatar(
-                    lucia.user.discord_id,
-                    lucia.user.avatar
-                  )
-                "
-              />
-            </div>
-          </div>
-          <div class="h-full" v-else>
-            <div class="rounded-full w-full h-full bg-secondary flex flex-col">
-              <span class="text-xl opacity-50 m-auto">{{
-                lucia?.user?.global_name?.slice(0, 2).toUpperCase() || "?"
-              }}</span>
-            </div>
-          </div>
-        </div>
-        <div>
-          <h2 class="text-lg">
-            Welcome back,
-            <span
-              :class="
-                lucia?.user?.premium_since !== null ? 'text-[#ffbf28]' : ''
-              "
-            >
-              <i
-                class="fa-solid fa-crown"
-                v-if="lucia?.user?.premium_since !== null ? true : false"
-              ></i>
-              {{
-                lucia?.user?.global_name || lucia?.user?.username || "Unknown"
-              }}
-            </span>
-          </h2>
-          <p class="opacity-30">
-            Logged in at: {{ formatDateString(lucia?.session?.created_at!) }}
-          </p>
-        </div>
-      </div>
-    </div>
-    <h2 class="text-lg font-semibold">Dashboard</h2>
-    <div class="divider"></div>
-    <div class="flex flex-row max-md:flex-col gap-2 w-full py-4">
-      <div class="flex flex-col gap-1 w-full md:max-w-xs">
-        <NuxtLink class="bg-base-200 rounded-md p-2" href="/dashboard">
-          Servers
-        </NuxtLink>
-        <NuxtLink
-          class="hover:bg-base-200 rounded-md p-2 opacity-75"
-          href="/dashboard/account"
-        >
-          Account
-        </NuxtLink>
-      </div>
-      <div class="w-full px-2">
+    <DashboardMainHeader />
+    <DashboardMainContainer>
+      <DashboardMainSidebar active="servers" />
+      <DashboardMainContent>
         <div class="flex flex-row items-center pb-6">
           <h2 class="text-lg font-semibold">Manage Servers</h2>
           <button
@@ -78,9 +20,9 @@
           </button>
         </div>
 
-        <div class="w-full text-center my-16" v-if="servers_pending">
+        <FallbackContainer v-if="servers_pending">
           <span class="loading loading-spinner loading-lg"></span>
-        </div>
+        </FallbackContainer>
         <div class="grid md:grid-cols-1 lg:grid-cols-2 gap-3" v-else>
           <NuxtLink
             v-for="(server, index) in servers?.result
@@ -94,8 +36,6 @@
             :href="'/dashboard/servers/' + server.id"
           >
             <div class="flex flex-row items-center w-full">
-              <!-- Added relative positioning -->
-              <!-- Server Image -->
               <div class="flex flex-col w-full">
                 <div class="w-16 h-16 overflow-hidden rounded-lg">
                   <div class="avatar" v-if="server.icon">
@@ -141,8 +81,8 @@
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      </DashboardMainContent>
+    </DashboardMainContainer>
     <dialog class="modal" id="my_modal_1">
       <div class="modal-box bg-base-200">
         <div class="flex flex-row gap-1 items-center w-full pb-4">
