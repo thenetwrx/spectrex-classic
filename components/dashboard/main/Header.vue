@@ -5,7 +5,6 @@
         <div class="avatar" v-if="lucia?.user?.avatar">
           <div class="rounded-full w-full">
             <NuxtImg
-              provider="cloudflare"
               alt="User Image"
               :src="
                 discordCdn.user_avatar(lucia.user.discord_id, lucia.user.avatar)

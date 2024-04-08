@@ -43,7 +43,6 @@
               <div class="avatar" v-if="profile.result.avatar">
                 <div class="rounded-full w-full">
                   <NuxtImg
-                    provider="cloudflare"
                     alt="User Image"
                     :src="
                       discordCdn.user_avatar(
