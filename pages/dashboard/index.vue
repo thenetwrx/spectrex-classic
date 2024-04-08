@@ -81,8 +81,8 @@
         <div class="w-full text-center my-16" v-if="servers_pending">
           <span class="loading loading-spinner loading-lg"></span>
         </div>
-        <ul class="grid md:grid-cols-1 lg:grid-cols-2 gap-3" v-else>
-          <li
+        <div class="grid md:grid-cols-1 lg:grid-cols-2 gap-3" v-else>
+          <NuxtLink
             v-for="(server, index) in servers?.result
               ?.filter((server) => server.approved_at !== null)
               .sort((a, b) => a.name.localeCompare(b.name))
@@ -91,37 +91,32 @@
               )"
             :key="index"
             class="flex flex-row bg-base-200 hover:bg-base-300 rounded-md cursor-pointer transition-colors duration-200 p-4"
-            v-on:click="navigateTo('/servers/' + server.id)"
+            :href="'/dashboard/servers/' + server.id"
           >
             <div class="flex flex-row items-center w-full">
               <!-- Added relative positioning -->
               <!-- Server Image -->
               <div class="flex flex-col w-full">
                 <div class="w-16 h-16 overflow-hidden rounded-lg">
-                  <NuxtLink :href="'/servers/' + server.id">
-                    <div class="avatar" v-if="server.icon">
-                      <div class="rounded-full w-full">
-                        <NuxtImg
-                          alt="Server Image"
-                          :src="
-                            discordCdn.server_icon(
-                              server.discord_id,
-                              server.icon
-                            )
-                          "
-                        />
-                      </div>
+                  <div class="avatar" v-if="server.icon">
+                    <div class="rounded-full w-full">
+                      <NuxtImg
+                        alt="Server Image"
+                        :src="
+                          discordCdn.server_icon(server.discord_id, server.icon)
+                        "
+                      />
                     </div>
-                    <div class="h-full" v-else>
-                      <div
-                        class="rounded-full w-full h-full bg-secondary flex flex-col"
-                      >
-                        <span class="text-xl opacity-50 m-auto">{{
-                          server.name.slice(0, 2).toUpperCase()
-                        }}</span>
-                      </div>
+                  </div>
+                  <div class="h-full" v-else>
+                    <div
+                      class="rounded-full w-full h-full bg-secondary flex flex-col"
+                    >
+                      <span class="text-xl opacity-50 m-auto">{{
+                        server.name.slice(0, 2).toUpperCase()
+                      }}</span>
                     </div>
-                  </NuxtLink>
+                  </div>
                 </div>
                 <span class="font-medium text-lg">{{ server.name }}</span>
               </div>
@@ -131,17 +126,21 @@
               </div>
               <!-- Server Details -->
             </div>
-          </li>
-          <li
+          </NuxtLink>
+          <div
             class="flex flex-row bg-base-200 hover:bg-base-300 rounded-md cursor-pointer transition-colors duration-200 p-4"
-            v-on:click="syncDiscordServers"
+            v-on:click="
+              () => {
+                if (!servers?.result?.length) syncDiscordServers();
+              }
+            "
             onclick="my_modal_1.showModal()"
           >
             <div class="w-full h-full flex justify-center items-center py-10">
               <i class="fa-solid fa-plus fa-2xl"></i>
             </div>
-          </li>
-        </ul>
+          </div>
+        </div>
       </div>
     </div>
     <dialog class="modal" id="my_modal_1">
@@ -173,7 +172,7 @@
             v-for="server in servers?.result
               ?.filter((server) => server.approved_at === null)
               .sort((a, b) => a.name.localeCompare(b.name))"
-            :value="'/servers/' + server.id + '/add'"
+            :value="'/dashboard/servers/' + server.id + '/add'"
           >
             {{ server.name }}
           </option>

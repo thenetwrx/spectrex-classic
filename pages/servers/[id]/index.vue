@@ -13,24 +13,11 @@
         >
           <NuxtLink
             class="btn btn-ghost btn-sm"
-            :href="'/servers/' + server.result.id + '/manage'"
+            :href="'/dashboard/servers/' + server.result.id"
             v-if="server.result.owner_id === lucia?.user?.id"
           >
             Manage <i class="fa-solid fa-gear"></i>
           </NuxtLink>
-          <button
-            class="btn btn-ghost btn-sm"
-            :class="syncing ? 'btn-disabled' : ''"
-            v-if="server.result.owner_id === lucia?.user?.id"
-            v-on:click="syncDiscordServers"
-          >
-            <span v-if="syncing">Syncing</span>
-            <span v-else>Sync</span>
-            <i
-              class="fa-solid fa-arrows-rotate"
-              :class="syncing ? 'fa-spin' : ''"
-            ></i>
-          </button>
           <button
             class="btn btn-ghost btn-sm"
             :class="
@@ -182,7 +169,6 @@
   const route = useRoute();
   const server_id = route.params.id;
 
-  const syncing = ref<boolean>(false);
   const server_metadata = ref<{
     on_cooldown: boolean;
     bumping: boolean;
@@ -203,39 +189,19 @@
   };
 
   onMounted(async () => refreshServerMetadata());
-  watch(server, () => {
-    refreshServerMetadata();
-  });
+  watch(server, () => refreshServerMetadata());
 
   const refreshServerMetadata = () => {
-    if (server.value !== null) {
-      const premium = lucia.value?.user.premium_since !== null ? true : false;
+    const premium = lucia.value?.user.premium_since !== null ? true : false;
 
-      const cooldown = premium ? 3600000 : 7200000;
-      const on_cooldown =
-        Number(server.value.result?.bumped_at || 0) + cooldown <= Date.now()
-          ? false
-          : true;
+    const cooldown = premium ? 3600000 : 7200000;
+    const on_cooldown =
+      Number(server.value?.result?.bumped_at || 0) + cooldown <= Date.now()
+        ? false
+        : true;
 
-      server_metadata.value.bumping = false;
-      server_metadata.value.on_cooldown = on_cooldown;
-    }
-  };
-
-  const syncDiscordServers = async () => {
-    syncing.value = true;
-    const response = await fetch(`/api/v1/servers/${server_id}/sync`);
-    if (response.status === 401) {
-      await $fetch("/api/v1/auth/logout", {
-        method: "POST",
-        retry: false,
-      });
-      lucia.value = null;
-      navigateTo("/");
-    }
-
-    refreshServer();
-    syncing.value = false;
+    server_metadata.value.bumping = false;
+    server_metadata.value.on_cooldown = on_cooldown;
   };
 
   const bump_server = async () => {
@@ -255,7 +221,7 @@
 
       server_metadata.value.bumping = false;
 
-      await syncDiscordServers();
+      await refreshServer();
     }
   };
 

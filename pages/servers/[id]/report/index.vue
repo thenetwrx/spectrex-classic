@@ -7,15 +7,16 @@
       Hm... That server doesn't seem to exist!
     </p>
     <template v-else>
-      <p class="text-4xl">Reporting server "{{ server.result.name }}"</p>
-      <div class="flex flex-col py-4">
+      <p class="text-4xl">Report Form</p>
+      <p class="opacity-75">
+        You are reporting the server "{{ server.result.name }}"
+      </p>
+      <div class="flex flex-col py-4 max-w-xl mx-auto">
         <div
           class="bg-base-200 h-fit text-start p-4 rounded-md flex flex-col gap-4"
         >
           <div>
-            <p class="text-2xl pb-2">
-              Issue Type<span class="text-error">*</span>
-            </p>
+            <p class="text-2xl pb-2">Type<span class="text-error">*</span></p>
 
             <select
               v-model="issue_type"
@@ -64,14 +65,10 @@
   const issue_type = ref<string>("");
   const description = ref<string>("");
 
-  const {
-    data: server,
-    refresh: refreshServer,
-    pending: server_pending,
-  } = useFetch<{ message: string | null; result: Server | null }>(
-    `/api/v1/servers/${server_id}/fetch`,
-    { retry: false }
-  );
+  const { data: server, pending: server_pending } = useFetch<{
+    message: string | null;
+    result: Server | null;
+  }>(`/api/v1/servers/${server_id}/fetch`, { retry: false });
 
   const report = async () => {
     const response = await fetch(`/api/v1/servers/${server_id}/report`, {
