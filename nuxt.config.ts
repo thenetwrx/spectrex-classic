@@ -2,6 +2,6 @@
 
 export default defineNuxtConfig({
   devtools: { enabled: true },
-  modules: ["@nuxt/image", "@nuxtjs/tailwindcss", "nuxt-vercel-analytics"],
+  modules: ["@nuxt/image", "@nuxtjs/tailwindcss"],
   ssr: true,
 });

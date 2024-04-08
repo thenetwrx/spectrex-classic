@@ -44,7 +44,7 @@
       },
       {
         name: "og:image",
-        content: "https://spectrex.app/images/logo_spectrex.png",
+        content: "https://spectrex.app/images/logo.png",
       },
       {
         name: "og:site_name",
