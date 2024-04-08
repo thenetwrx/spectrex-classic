@@ -41,6 +41,7 @@
                   <div class="avatar" v-if="server.icon">
                     <div class="rounded-full w-full">
                       <NuxtImg
+                        provider="cloudflare"
                         alt="Server Image"
                         :src="
                           discordCdn.server_icon(server.discord_id, server.icon)

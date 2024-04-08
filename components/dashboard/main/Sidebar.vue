@@ -25,7 +25,7 @@
 <script setup lang="ts">
   const props = defineProps({
     active: {
-      type: Object as PropType<"servers" | "account">,
+      type: String as PropType<"servers" | "account">,
       required: true,
     },
   });
