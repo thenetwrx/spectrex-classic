@@ -4,7 +4,9 @@
     <DashboardMainContainer>
       <DashboardMainSidebar active="servers" />
       <DashboardMainContent>
-        <div class="flex flex-row items-center">
+        <div
+          class="flex flex-row sm:items-center w-full max-sm:flex-col-reverse max-sm:gap-2"
+        >
           <h2 class="text-lg font-semibold">Manage Server</h2>
 
           <div class="flex flex-row gap-1 ml-auto">
