@@ -38,7 +38,7 @@
     ogType: "website",
     ogUrl: "https://spectrex.app",
     ogLocale: "en_US",
-    twitterCard: "summary_large_image",
+    twitterCard: "summary",
     twitterSite: "@joebiden",
     twitterCreator: "@joebiden",
     twitterTitle: "Spectrex - Find YOUR Discord server",

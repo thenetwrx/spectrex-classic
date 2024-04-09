@@ -161,6 +161,10 @@
   useHead({
     title: computed(() => server.value?.result?.name || "Unknown server"),
   });
+  useSeoMeta({
+    ogTitle: computed(() => server.value?.result?.name || "Unknown server"),
+    ogDescription: "Blah blah blah blah",
+  });
 
   const copy_current_url = async () => {
     const { toClipboard } = useClipboard();
