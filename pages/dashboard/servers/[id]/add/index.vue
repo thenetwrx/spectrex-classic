@@ -17,6 +17,10 @@
 
         <ResourcePending v-if="server_pending" />
         <ResourceNotFound v-else-if="!server?.result" />
+        <ResourceNotFound
+          v-else-if="server.result.owner_id !== lucia?.user?.id"
+          message="Unauthorized"
+        />
         <div class="flex flex-col gap-2" v-else>
           <p class="opacity-75 pb-6">
             Submitting a Discord server to Spectrex means you agree to the

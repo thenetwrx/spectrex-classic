@@ -58,8 +58,6 @@ export default defineEventHandler(async (event) => {
 
       client.release();
 
-      console.log(storedRedirectUri);
-
       if (storedRedirectUri && storedRedirectUri.startsWith("/")) {
         return sendRedirect(event, storedRedirectUri);
       }
