@@ -158,6 +158,10 @@
     { retry: false }
   );
 
+  useHead({
+    title: computed(() => server.value?.result?.name || "Unknown server"),
+  });
+
   const copy_current_url = async () => {
     const { toClipboard } = useClipboard();
     toClipboard(window.location.href);

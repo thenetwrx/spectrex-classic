@@ -38,6 +38,10 @@
 </template>
 
 <script setup lang="ts">
+  useHead({
+    title: "Home",
+  });
+
   const categories = ref<Array<string>>([
     "Community",
     "Music",

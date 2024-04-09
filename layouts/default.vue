@@ -22,85 +22,30 @@
         href: "https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap",
       },
     ],
-    title: "Spectrex",
-    meta: [
-      {
-        name: "description",
-        content:
-          "Join awesome Discord communities. Find gamers, hobbyists, and like-minded people on Spectrex. Explore now!",
-      },
-      {
-        name: "og:title",
-        content: "Spectrex - Find YOUR Discord server",
-      },
-      {
-        name: "og:description",
-        content:
-          "Join awesome Discord communities. Find gamers, hobbyists, and like-minded people on Spectrex. Explore now!",
-      },
-      {
-        name: "og:image",
-        content: "https://spectrex.app/images/logo.png",
-      },
-      {
-        name: "og:site_name",
-        content: "Spectrex",
-      },
-      {
-        name: "og:type",
-        content: "website",
-      },
-      {
-        name: "og:url",
-        content: "https://spectrex.app",
-      },
-      {
-        name: "og:locale",
-        content: "en_US",
-      },
-      {
-        name: "twitter:card",
-        content: "summary",
-      },
-      {
-        name: "twitter:site",
-        content: "@joebiden",
-      },
-      {
-        name: "twitter:creator",
-        content: "@joebiden",
-      },
-      {
-        name: "twitter:title",
-        content: "Spectrex - Find YOUR Discord server",
-      },
-      {
-        name: "twitter:description",
-        content:
-          "Join awesome Discord communities. Find gamers, hobbyists, and like-minded people on Spectrex. Explore now!",
-      },
-      {
-        name: "twitter:image",
-        content: "https://spectrex.app/images/logo.png",
-      },
-      {
-        name: "keywords",
-        content:
-          "Discord servers, find Discord, Discord communities, gaming Discord",
-      },
-    ],
+    titleTemplate: (titleChunk) => {
+      return titleChunk ? `${titleChunk} · Spectrex` : "Spectrex";
+    },
   });
 
-  // useSeoMeta({
-  //   title: "Spectrex",
-  //   ogTitle: "Spectrex - Find your Discord server",
-  //   description:
-  //     "Unleash a world of niche communities, passionate gamers, and endless possibilities. Curated listings, tailored just for you.",
-  //   ogDescription:
-  //     "Unleash a world of niche communities, passionate gamers, and endless possibilities. Curated listings, tailored just for you.",
-  //   ogImage: "https://spectrex.app/images/logo_spectrex_white.png",
-  //   twitterCard: "summary_large_image",
-  // });
+  useSeoMeta({
+    description:
+      "Unleash a world of niche communities, passionate gamers, and endless possibilities. Curated listings, tailored just for you.",
+    ogTitle: "Spectrex - Find your Discord server",
+    ogDescription:
+      "Unleash a world of niche communities, passionate gamers, and endless possibilities. Curated listings, tailored just for you.",
+    ogImage: "https://spectrex.app/images/logo.png",
+    ogSiteName: "Spectrex",
+    ogType: "website",
+    ogUrl: "https://spectrex.app",
+    ogLocale: "en_US",
+    twitterCard: "summary_large_image",
+    twitterSite: "@joebiden",
+    twitterCreator: "@joebiden",
+    twitterTitle: "Spectrex - Find YOUR Discord server",
+    twitterDescription:
+      "Join awesome Discord communities. Find gamers, hobbyists, and like-minded people on Spectrex. Explore now!",
+    twitterImage: "https://spectrex.app/images/logo.png",
+  });
 
   const isMobileSidebarOpen = ref<boolean>(false);
 
