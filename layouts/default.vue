@@ -126,10 +126,11 @@
               <i class="fa-solid fa-arrow-right-from-bracket"></i>
             </button>
           </div>
+
           <NuxtLink
             v-else
             href="/api/v1/auth/discord"
-            external
+            :external="true"
             class="btn btn-sm btn-secondary w-full"
             data-theme="dark"
           >
@@ -215,8 +216,8 @@
           <NuxtLink
             v-else
             href="/api/v1/auth/discord"
-            external
-            class="btn btn-sm px-4 btn-secondary"
+            :external="true"
+            class="btn btn-sm btn-secondary px-4"
             data-theme="dark"
           >
             <i class="fa-brands fa-discord"></i>

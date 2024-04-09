@@ -47,7 +47,13 @@ export default defineEventHandler(async (event) => {
         created_at: Date.now().toString(),
       });
       const cookie = lucia.createSessionCookie(session.id);
-      setCookie(event, cookie.name, cookie.value, cookie.attributes);
+
+      setCookie(
+        event,
+        cookie.name,
+        cryptr.encrypt(cookie.value),
+        cookie.attributes
+      );
       deleteCookie(event, "redirect_to");
 
       client.release();
@@ -99,7 +105,12 @@ export default defineEventHandler(async (event) => {
     });
     const cookie = lucia.createSessionCookie(session.id);
 
-    setCookie(event, cookie.name, cookie.value, cookie.attributes);
+    setCookie(
+      event,
+      cookie.name,
+      cryptr.encrypt(cookie.value),
+      cookie.attributes
+    );
 
     client.release();
 

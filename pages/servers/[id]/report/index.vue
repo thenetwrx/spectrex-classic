@@ -70,7 +70,7 @@
     title: computed(() =>
       server.value?.result
         ? `Report ${server.value.result.name}`
-        : "Unknown server"
+        : "Report unknown server"
     ),
   });
 
