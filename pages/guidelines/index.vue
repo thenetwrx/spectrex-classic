@@ -1,5 +1,5 @@
 <template>
-  <div class="container max-w-4xl mx-auto px-4 pt-32 min-h-screen">
+  <Container class="max-w-4xl">
     <h2 class="text-center text-3xl font-bold">Guidelines</h2>
     <p class="text-center text-lg">Last modified: 3/31/2024</p>
     <div class="text-start flex flex-col gap-2 py-10">
@@ -67,5 +67,5 @@
         section 1.
       </p>
     </div>
-  </div>
+  </Container>
 </template>

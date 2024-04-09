@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-5xl mx-auto px-4 pt-32 min-h-screen">
+  <Container class="max-w-5xl">
     <h2 class="text-center text-3xl font-bold">Become a Spectrex supporter</h2>
     <p class="text-center text-lg">And unlock exclusive benefits today!</p>
     <div class="flex flex-col items-center py-6">
@@ -35,7 +35,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </Container>
   <dialog class="modal" id="my_modal_1">
     <div class="modal-box bg-base-200">
       <div class="flex flex-row gap-1 items-center w-full pb-4">

@@ -1,5 +1,5 @@
 <template>
-  <div class="container max-w-4xl mx-auto px-4 pt-32 min-h-screen text-center">
+  <Container class="max-w-4xl text-center">
     <ResourcePending v-if="server_pending" />
     <ResourceNotFound v-else-if="!server?.result" />
     <template v-else>
@@ -41,7 +41,7 @@
         </div>
       </div>
     </template>
-  </div>
+  </Container>
 </template>
 
 <script setup lang="ts">

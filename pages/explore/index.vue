@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="container max-w-6xl mx-auto px-4 pt-32 min-h-screen flex flex-col"
-  >
+  <Container class="max-w-6xl flex flex-col">
     <p class="text-4xl font-bold mb-4">Explore</p>
 
     <div class="flex flex-wrap gap-2 overflow-x-auto mb-6">
@@ -33,14 +31,16 @@
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <ResourceCardContainer v-for="server in servers?.result">
           <ResourceCardHeader class="relative">
-            <ResourceCardHeaderImage
-              :resource="
-                server.icon
-                  ? discordCdn.server_icon(server.discord_id, server.icon)
-                  : null
-              "
-              :abbreviation="server.name.slice(0, 2).toUpperCase()"
-            />
+            <NuxtLink :href="'/servers/' + server.id">
+              <ResourceCardHeaderImage
+                :resource="
+                  server.icon
+                    ? discordCdn.server_icon(server.discord_id, server.icon)
+                    : null
+                "
+                :abbreviation="server.name.slice(0, 2).toUpperCase()"
+              />
+            </NuxtLink>
             <div class="flex flex-col">
               <NuxtLink :href="'/servers/' + server.id">
                 <span class="font-medium text-lg">{{ server.name }}</span>
@@ -127,7 +127,7 @@
         <i class="fa-solid fa-arrow-right"></i>
       </button>
     </div>
-  </div>
+  </Container>
 </template>
 
 <script setup lang="ts">

@@ -1,5 +1,5 @@
 <template>
-  <ResourceContainer>
+  <Container class="max-w-4xl text-center">
     <ResourcePending v-if="profile_pending" />
     <ResourceNotFound v-else-if="!profile?.result" />
     <template v-else>
@@ -79,7 +79,7 @@
         </p>
       </ResourceReviewsContent>
     </template>
-  </ResourceContainer>
+  </Container>
 </template>
 
 <script setup lang="ts">

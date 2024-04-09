@@ -1,5 +1,5 @@
 <template>
-  <div class="container max-w-6xl mx-auto pt-32 min-h-screen px-4">
+  <Container class="max-w-6xl">
     <DashboardMainHeader />
     <DashboardMainContainer>
       <DashboardMainSidebar active="account" />
@@ -112,7 +112,7 @@
         </div>
       </DashboardMainContent>
     </DashboardMainContainer>
-  </div>
+  </Container>
 </template>
 
 <script setup lang="ts">

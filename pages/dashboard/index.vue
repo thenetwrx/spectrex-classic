@@ -1,5 +1,5 @@
 <template>
-  <div class="container max-w-6xl mx-auto pt-32 min-h-screen px-4">
+  <Container class="max-w-6xl">
     <DashboardMainHeader />
     <DashboardMainContainer>
       <DashboardMainSidebar active="servers" />
@@ -81,43 +81,43 @@
         </div>
       </DashboardMainContent>
     </DashboardMainContainer>
-    <dialog class="modal" id="my_modal_1">
-      <div class="modal-box bg-base-200">
-        <div class="flex flex-row gap-1 items-center w-full pb-4">
-          <h3 class="text-lg font-bold">Add server</h3>
-          <button
-            class="btn btn-ghost btn-sm ml-auto"
-            :class="syncing ? 'btn-disabled' : ''"
-            v-on:click="syncDiscordServers"
-          >
-            <span v-if="syncing">Syncing</span>
-            <span v-else>Sync</span>
-            <i
-              class="fa-solid fa-arrows-rotate"
-              :class="syncing ? 'fa-spin' : ''"
-            ></i>
-          </button>
-          <button class="btn btn-ghost btn-sm" onclick="my_modal_1.close()">
-            <i class="fa-solid fa-xmark"></i>
-          </button>
-        </div>
-        <select
-          class="select select-bordered rounded-none w-full"
-          v-on:change="((event:any) => navigateTo(event?.target?.value || '/'))"
+  </Container>
+  <dialog class="modal" id="my_modal_1">
+    <div class="modal-box bg-base-200">
+      <div class="flex flex-row gap-1 items-center w-full pb-4">
+        <h3 class="text-lg font-bold">Add server</h3>
+        <button
+          class="btn btn-ghost btn-sm ml-auto"
+          :class="syncing ? 'btn-disabled' : ''"
+          v-on:click="syncDiscordServers"
         >
-          <option disabled selected>Select server</option>
-          <option
-            v-for="server in servers?.result
-              ?.filter((server) => server.approved_at === null)
-              .sort((a, b) => a.name.localeCompare(b.name))"
-            :value="'/dashboard/servers/' + server.id + '/add'"
-          >
-            {{ server.name }}
-          </option>
-        </select>
+          <span v-if="syncing">Syncing</span>
+          <span v-else>Sync</span>
+          <i
+            class="fa-solid fa-arrows-rotate"
+            :class="syncing ? 'fa-spin' : ''"
+          ></i>
+        </button>
+        <button class="btn btn-ghost btn-sm" onclick="my_modal_1.close()">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
       </div>
-    </dialog>
-  </div>
+      <select
+        class="select select-bordered rounded-none w-full"
+        v-on:change="((event:any) => navigateTo(event?.target?.value || '/'))"
+      >
+        <option disabled selected>Select server</option>
+        <option
+          v-for="server in servers?.result
+            ?.filter((server) => server.approved_at === null)
+            .sort((a, b) => a.name.localeCompare(b.name))"
+          :value="'/dashboard/servers/' + server.id + '/add'"
+        >
+          {{ server.name }}
+        </option>
+      </select>
+    </div>
+  </dialog>
 </template>
 
 <script setup lang="ts">

@@ -1,12 +1,12 @@
 <template>
-  <div class="container max-w-4xl mx-auto px-4 pt-32 min-h-screen text-center">
+  <Container class="max-w-4xl text-center">
     <ResourcePending />
-  </div>
+  </Container>
 </template>
 
 <script setup lang="ts">
   onMounted(async () => {
     await new Promise((resolve) => setTimeout(resolve, 1000));
-    navigateTo("https://discord.gg/wQPkC5aq", { external: true });
+    navigateTo("https://discord.gg/87WuqtZdEy", { external: true });
   });
 </script>
