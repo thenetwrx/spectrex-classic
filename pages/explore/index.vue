@@ -133,6 +133,9 @@
 <script setup lang="ts">
   import type Server from "~/types/Server";
 
+  useHead({
+    title: "Explore",
+  });
   const discordCdn = useDiscordCdn();
 
   const route = useRoute();

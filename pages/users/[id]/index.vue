@@ -99,6 +99,12 @@
     pending: profile_pending,
   } = useFetch(`/api/v1/users/${user_id}/fetch`, { retry: false });
 
+  useHead({
+    title: computed(() =>
+      profile.value?.result ? `@${profile.value.result.username}` : "@unknown"
+    ),
+  });
+
   const copy_current_url = async () => {
     const { toClipboard } = useClipboard();
     toClipboard(window.location.href);

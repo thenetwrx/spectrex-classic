@@ -65,3 +65,9 @@
     </div>
   </dialog>
 </template>
+
+<script setup lang="ts">
+  useHead({
+    title: "Premium",
+  });
+</script>

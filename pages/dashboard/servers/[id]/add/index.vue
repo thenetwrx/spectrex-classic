@@ -186,7 +186,6 @@
     middleware: ["1-protected"],
   });
   const lucia = useLucia();
-  const discordCdn = useDiscordCdn();
   const route = useRoute();
   const server_id = route.params.id;
 
@@ -203,6 +202,14 @@
     message: string | null;
     result: Server | null;
   }>(`/api/v1/servers/${server_id}/fetch`, { retry: false });
+
+  useHead({
+    title: computed(() =>
+      server.value?.result
+        ? `Dashboard - Add ${server.value.result.name}`
+        : "Dashboard - Add unknown server"
+    ),
+  });
 
   const submit = async () => {
     const response = await fetch(`/api/v1/servers/${server_id}/add`, {

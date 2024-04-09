@@ -66,6 +66,14 @@
     result: Server | null;
   }>(`/api/v1/servers/${server_id}/fetch`, { retry: false });
 
+  useHead({
+    title: computed(() =>
+      server.value?.result
+        ? `Report ${server.value.result.name}`
+        : "Unknown server"
+    ),
+  });
+
   const report = async () => {
     const response = await fetch(`/api/v1/servers/${server_id}/report`, {
       method: "POST",

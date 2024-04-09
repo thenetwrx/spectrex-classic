@@ -4,3 +4,9 @@
     <p class="text-center text-lg">Thank you for keeping Spectrex safe!</p>
   </Container>
 </template>
+
+<script setup lang="ts">
+  useHead({
+    title: "Thank You",
+  });
+</script>

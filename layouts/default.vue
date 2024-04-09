@@ -41,10 +41,6 @@
     twitterCard: "summary",
     twitterSite: "@joebiden",
     twitterCreator: "@joebiden",
-    twitterTitle: "Spectrex - Find YOUR Discord server",
-    twitterDescription:
-      "Join awesome Discord communities. Find gamers, hobbyists, and like-minded people on Spectrex. Explore now!",
-    twitterImage: "https://spectrex.app/images/logo.png",
   });
 
   const isMobileSidebarOpen = ref<boolean>(false);

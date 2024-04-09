@@ -126,6 +126,9 @@
   definePageMeta({
     middleware: ["1-protected"],
   });
+  useHead({
+    title: "Dashboard",
+  });
   const lucia = useLucia();
   const discordCdn = useDiscordCdn();
   const syncing = ref<boolean>(false);

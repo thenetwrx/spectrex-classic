@@ -267,6 +267,14 @@
     { retry: false }
   );
 
+  useHead({
+    title: computed(() =>
+      server.value?.result
+        ? `Dashboard - ${server.value.result.name}`
+        : "Unknown server"
+    ),
+  });
+
   watch(
     server,
     () => {

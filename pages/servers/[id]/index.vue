@@ -159,11 +159,9 @@
   );
 
   useHead({
-    title: computed(() => server.value?.result?.name || "Unknown server"),
-  });
-  useSeoMeta({
-    ogTitle: computed(() => server.value?.result?.name || "Unknown server"),
-    ogDescription: "Blah blah blah blah",
+    title: computed(() =>
+      server.value?.result ? `${server.value.result.name}` : "Unknown server"
+    ),
   });
 
   const copy_current_url = async () => {

@@ -69,3 +69,9 @@
     </div>
   </Container>
 </template>
+
+<script setup lang="ts">
+  useHead({
+    title: "Guidelines",
+  });
+</script>

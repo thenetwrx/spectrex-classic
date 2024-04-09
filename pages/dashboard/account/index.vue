@@ -119,6 +119,10 @@
   definePageMeta({
     middleware: ["1-protected"],
   });
+  useHead({
+    title: "Dashboard - Account",
+  });
+
   const lucia = useLucia();
   const syncing = ref<boolean>(false);
   const is_public = ref<boolean | null>(null);
