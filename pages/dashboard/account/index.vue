@@ -6,25 +6,36 @@
       <DashboardMainContent>
         <div class="flex flex-row items-center pb-6">
           <h2 class="text-lg font-semibold">Manage Account</h2>
-          <button
-            class="btn btn-ghost btn-sm ml-auto"
-            :class="syncing ? 'btn-disabled' : ''"
-            v-on:click="syncMe"
-          >
-            <span v-if="syncing">Syncing</span>
-            <span v-else>Sync</span>
-            <i
-              class="fa-solid fa-arrows-rotate"
-              :class="syncing ? 'fa-spin' : ''"
-            ></i>
-          </button>
+
+          <div class="flex flex-row gap-1 ml-auto">
+            <NuxtLink
+              class="btn btn-ghost btn-sm"
+              :class="!lucia?.user ? 'btn-disabled' : ''"
+              :href="'/users/' + lucia?.user.id"
+            >
+              View
+              <i class="fa-solid fa-arrow-up-right-from-square"></i>
+            </NuxtLink>
+            <button
+              class="btn btn-ghost btn-sm"
+              :class="syncing || !lucia?.user ? 'btn-disabled' : ''"
+              v-on:click="sync"
+            >
+              <span v-if="syncing">Syncing</span>
+              <span v-else>Sync</span>
+              <i
+                class="fa-solid fa-arrows-rotate"
+                :class="syncing ? 'fa-spin' : ''"
+              ></i>
+            </button>
+          </div>
         </div>
 
         <div class="flex flex-col gap-2">
           <DashboardCardContainer>
-            <DashboardCardTitle>
+            <DashboardCardHeader>
               <p class="text-xl">Premium</p>
-            </DashboardCardTitle>
+            </DashboardCardHeader>
             <DashboardCardContent>
               <p class="opacity-75" v-if="lucia?.user?.premium_since !== null">
                 Thanks for being a Spectrex Supporter. You have
@@ -48,9 +59,9 @@
           </DashboardCardContainer>
 
           <DashboardCardContainer>
-            <DashboardCardTitle>
+            <DashboardCardHeader>
               <p class="text-xl">Profile Public</p>
-            </DashboardCardTitle>
+            </DashboardCardHeader>
             <DashboardCardContent>
               <div class="flex flex-col">
                 <div class="form-control items-start">
@@ -82,9 +93,9 @@
           </DashboardCardContainer>
 
           <DashboardCardContainer>
-            <DashboardCardTitle>
+            <DashboardCardHeader>
               <p class="text-xl">Profile Description</p>
-            </DashboardCardTitle>
+            </DashboardCardHeader>
             <DashboardCardContent>
               <textarea
                 type="text"
@@ -109,12 +120,11 @@
     middleware: ["1-protected"],
   });
   const lucia = useLucia();
-  const discordCdn = useDiscordCdn();
   const syncing = ref<boolean>(false);
   const is_public = ref<boolean | null>(null);
   const description = ref<string | null>(null);
 
-  const syncMe = async () => {
+  const sync = async () => {
     syncing.value = true;
     const response = await fetch("/api/v1/users/me/sync");
     if (response.status === 401) {

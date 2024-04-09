@@ -15,10 +15,6 @@
       },
       {
         rel: "stylesheet",
-        href: "https://site-assets.fontawesome.com/releases/v6.5.2/css/solid-regular.css",
-      },
-      {
-        rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Cairo&family=REM&display=swap",
       },
       {

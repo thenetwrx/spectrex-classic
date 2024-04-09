@@ -1,127 +1,103 @@
 <template>
-  <div class="container max-w-4xl mx-auto px-4 pt-32 min-h-screen text-center">
-    <FallbackContainer v-if="server_pending">
-      <span class="loading loading-spinner loading-lg"></span>
-    </FallbackContainer>
-    <FallbackContainer v-else-if="!server?.result">
-      <span>Resource not found</span>
-    </FallbackContainer>
+  <ResourceContainer>
+    <ResourcePending v-if="server_pending" />
+    <ResourceNotFound v-else-if="!server?.result" />
     <template v-else>
-      <div class="w-full flex flex-row gap-2 items-center">
-        <div
-          class="ml-auto flex flex-wrap gap-1 w-fit max-sm:max-w-fit overflow-x-auto"
+      <ResourceRow>
+        <NuxtLink
+          class="btn btn-ghost btn-sm"
+          :href="'/dashboard/servers/' + server.result.id"
+          v-if="server.result.owner_id === lucia?.user?.id"
         >
-          <NuxtLink
-            class="btn btn-ghost btn-sm"
-            :href="'/dashboard/servers/' + server.result.id"
-            v-if="server.result.owner_id === lucia?.user?.id"
-          >
-            Manage <i class="fa-solid fa-gear"></i>
-          </NuxtLink>
-          <button
-            class="btn btn-ghost btn-sm"
-            :class="
-              server_metadata.bumping || server_metadata.on_cooldown
-                ? 'btn-disabled'
-                : ''
-            "
-            v-if="server.result.owner_id === lucia?.user?.id"
-            v-on:click="bump_server"
-          >
-            <span v-if="server_metadata.on_cooldown">
-              {{ formatRemainingTime(Number(server.result.bumped_at || 0)) }}
-            </span>
-            <div v-if="!server_metadata.on_cooldown">
-              <span v-if="!server_metadata.bumping">Bump </span>
-              <span v-else>Bumping </span>
-            </div>
-            <i class="fa-solid fa-up-from-line"></i>
-          </button>
-          <NuxtLink
-            :href="'/servers/' + server.result.id + '/report'"
-            class="btn btn-ghost btn-sm"
-            v-if="server.result.owner_id !== lucia?.user?.id"
-          >
-            Report <i class="fa-solid fa-flag"></i>
-          </NuxtLink>
-          <button class="btn btn-ghost btn-sm" v-on:click="copy_current_url">
-            Copy <i class="fa-solid fa-link"></i>
-          </button>
-        </div>
-      </div>
-      <div class="flex flex-col py-4">
-        <div class="bg-base-200 w-full h-fit p-2 rounded-t-md">
-          <div class="flex flex-wrap gap-2 items-center">
-            <div class="w-16 h-16 overflow-hidden rounded-full">
-              <div class="avatar" v-if="server.result.icon">
-                <div class="rounded-full w-full">
-                  <NuxtImg
-                    alt="Server Image"
-                    :src="
-                      discordCdn.server_icon(
-                        server.result.discord_id,
-                        server.result.icon
-                      )
-                    "
-                  />
-                </div>
-              </div>
-              <div class="h-full" v-else>
-                <div
-                  class="rounded-full w-full h-full bg-secondary flex flex-col"
-                >
-                  <span class="text-xl opacity-50 m-auto">{{
-                    server.result.name.slice(0, 2).toUpperCase()
-                  }}</span>
-                </div>
-              </div>
-            </div>
-            <div class="flex flex-col items-start">
-              <span class="font-medium text-lg">{{ server.result.name }}</span>
-              <div class="flex flex-wrap gap-1 items-center">
-                <div
-                  class="bg-accent bg-opacity-50 px-1 rounded-md"
-                  v-if="
-                    server.result.category !== null &&
-                    server.result.approved_at !== null
-                  "
-                >
-                  <span class="opacity-75">{{ server.result.category }}</span>
-                </div>
-                <div class="bg-error bg-opacity-50 px-1 rounded-md" v-else>
-                  <span class="opacity-75">Not Approved</span>
-                </div>
-                <div
-                  class="bg-warning bg-opacity-50 px-1 rounded-md"
-                  v-if="!server.result.public"
-                >
-                  <span class="opacity-75">Private</span>
-                </div>
-                <div
-                  class="bg-error bg-opacity-50 px-1 rounded-md"
-                  v-if="server.result.nsfw"
-                >
-                  <span class="opacity-75">NSFW</span>
-                </div>
-                <div class="flex flex-row gap-1 items-center">
-                  <div class="bg-[#23A55A] h-4 w-4 rounded-full"></div>
-                  <p class="opacity-50">
-                    {{ server.result.approximate_presence_count }}
-                    online
-                  </p>
-                </div>
-              </div>
-            </div>
-            <NuxtLink
-              class="btn btn-success text-white rounded-md px-6 ml-auto"
-              :href="server.result.invite_link || '#'"
-              >Join</NuxtLink
-            >
+          Manage <i class="fa-solid fa-gear"></i>
+        </NuxtLink>
+        <button
+          class="btn btn-ghost btn-sm"
+          :class="
+            server_metadata.bumping || server_metadata.on_cooldown
+              ? 'btn-disabled'
+              : ''
+          "
+          v-if="server.result.owner_id === lucia?.user?.id"
+          v-on:click="bump_server"
+        >
+          <span v-if="server_metadata.on_cooldown">
+            {{ formatRemainingTime(Number(server.result.bumped_at || 0)) }}
+          </span>
+          <div v-if="!server_metadata.on_cooldown">
+            <span v-if="!server_metadata.bumping">Bump </span>
+            <span v-else>Bumping </span>
           </div>
-        </div>
-        <div
-          class="bg-base-300 h-fit text-start p-4 rounded-b-md flex flex-col gap-4"
+          <i class="fa-solid fa-up-from-line"></i>
+        </button>
+        <NuxtLink
+          :href="'/servers/' + server.result.id + '/report'"
+          class="btn btn-ghost btn-sm"
+          v-if="server.result.owner_id !== lucia?.user?.id"
         >
+          Report <i class="fa-solid fa-flag"></i>
+        </NuxtLink>
+        <button class="btn btn-ghost btn-sm" v-on:click="copy_current_url">
+          Copy <i class="fa-solid fa-link"></i>
+        </button>
+      </ResourceRow>
+
+      <ResourceCardContainer>
+        <ResourceCardHeader>
+          <ResourceCardHeaderImage
+            :resource="
+              server.result.icon
+                ? discordCdn.server_icon(
+                    server.result.discord_id,
+                    server.result.icon
+                  )
+                : null
+            "
+            :abbreviation="server.result.name.slice(0, 2).toUpperCase()"
+          />
+          <div class="flex flex-col items-start">
+            <span class="font-medium text-lg">{{ server.result.name }}</span>
+            <div class="flex flex-wrap gap-1 items-center">
+              <div
+                class="bg-accent bg-opacity-50 px-1 rounded-md"
+                v-if="
+                  server.result.category !== null &&
+                  server.result.approved_at !== null
+                "
+              >
+                <span class="opacity-75">{{ server.result.category }}</span>
+              </div>
+              <div class="bg-error bg-opacity-50 px-1 rounded-md" v-else>
+                <span class="opacity-75">Not Approved</span>
+              </div>
+              <div
+                class="bg-warning bg-opacity-50 px-1 rounded-md"
+                v-if="!server.result.public"
+              >
+                <span class="opacity-75">Private</span>
+              </div>
+              <div
+                class="bg-error bg-opacity-50 px-1 rounded-md"
+                v-if="server.result.nsfw"
+              >
+                <span class="opacity-75">NSFW</span>
+              </div>
+              <div class="flex flex-row gap-1 items-center">
+                <div class="bg-[#23A55A] h-4 w-4 rounded-full"></div>
+                <p class="opacity-50">
+                  {{ server.result.approximate_presence_count }}
+                  online
+                </p>
+              </div>
+            </div>
+          </div>
+          <NuxtLink
+            class="btn btn-success text-white rounded-md px-6 ml-auto"
+            :href="server.result.invite_link || '#'"
+            >Join</NuxtLink
+          >
+        </ResourceCardHeader>
+        <ResourceCardContent>
           <div>
             <p class="text-2xl pb-2">Tags</p>
 
@@ -146,18 +122,17 @@
               {{ server.result.description }}
             </p>
           </div>
-        </div>
-      </div>
-      <div class="divider"></div>
-      <div class="py-12">
-        <p class="text-2xl">Reviews</p>
+        </ResourceCardContent>
+      </ResourceCardContainer>
+
+      <ResourceReviewsContent>
         <p class="opacity-50">
           No reviews yet...
           <NuxtLink href="#" class="text-accent">Create one!</NuxtLink>
         </p>
-      </div>
+      </ResourceReviewsContent>
     </template>
-  </div>
+  </ResourceContainer>
 </template>
 
 <script setup lang="ts">

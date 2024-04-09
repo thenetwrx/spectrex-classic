@@ -20,9 +20,7 @@
           </button>
         </div>
 
-        <FallbackContainer v-if="servers_pending">
-          <span class="loading loading-spinner loading-lg"></span>
-        </FallbackContainer>
+        <ResourcePending v-if="servers_pending" />
         <div class="grid md:grid-cols-1 lg:grid-cols-2 gap-3" v-else>
           <NuxtLink
             v-for="(server, index) in servers?.result

@@ -11,12 +11,12 @@
 
       <p class="text-3xl">1. Inappropriate content</p>
       <p class="opacity-75">
-        The inclusion of profanity, vulgar language, or NSFW (Not Safe For Work)
-        content within the meta-information (such as title, description, and
-        image), reviews, or any other visible content on Spectrex is strictly
-        prohibited. Such content will be promptly removed from the platform.
-        However, users are encouraged to repost their content using appropriate
-        and respectful language.
+        The inclusion of profanity, vulgar language, NSFW (Not Safe For Work) or
+        sexual content within the meta-information (such as title, description,
+        and image), reviews, or any other visible content on Spectrex is
+        strictly prohibited. Such content will be promptly removed from the
+        platform. However, users are encouraged to repost their content using
+        appropriate and respectful language.
       </p>
 
       <p class="text-3xl">2. Governing laws</p>

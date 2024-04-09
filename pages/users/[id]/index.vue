@@ -1,89 +1,67 @@
 <template>
-  <div class="container max-w-4xl mx-auto px-4 pt-32 min-h-screen text-center">
-    <FallbackContainer v-if="profile_pending">
-      <span class="loading loading-spinner loading-lg"></span>
-    </FallbackContainer>
-    <FallbackContainer v-else-if="!profile?.result">
-      <span>Resource not found</span>
-    </FallbackContainer>
+  <ResourceContainer>
+    <ResourcePending v-if="profile_pending" />
+    <ResourceNotFound v-else-if="!profile?.result" />
     <template v-else>
-      <div class="w-full flex flex-row gap-2 items-center">
-        <div
-          class="ml-auto flex flex-wrap gap-1 w-fit max-sm:max-w-fit overflow-x-auto"
+      <ResourceRow>
+        <NuxtLink
+          class="btn btn-ghost btn-sm"
+          href="/dashboard/account"
+          v-if="profile.result.id === lucia?.user?.id"
         >
-          <NuxtLink
-            class="btn btn-ghost btn-sm"
-            href="/dashboard/account"
-            v-if="profile.result.id === lucia?.user?.id"
-          >
-            Edit <i class="fa-solid fa-pen-to-square"></i>
-          </NuxtLink>
-          <button
-            class="btn btn-ghost btn-sm"
-            :class="syncing ? 'btn-disabled' : ''"
-            v-if="profile.result.id === lucia?.user?.id"
-            v-on:click="syncProfile"
-          >
-            <span v-if="syncing">Syncing</span>
-            <span v-else>Sync</span>
-            <i
-              class="fa-solid fa-arrows-rotate"
-              :class="syncing ? 'fa-spin' : ''"
-            ></i>
-          </button>
-          <button class="btn btn-ghost btn-sm" v-on:click="copy_current_url">
-            Copy <i class="fa-solid fa-link"></i>
-          </button>
-        </div>
-      </div>
-      <div class="flex flex-col py-4">
-        <div class="bg-base-200 w-full h-fit p-2 rounded-t-md">
-          <div class="flex flex-wrap gap-2 items-center">
-            <div class="w-16 h-16 overflow-hidden rounded-full">
-              <div class="avatar" v-if="profile.result.avatar">
-                <div class="rounded-full w-full">
-                  <NuxtImg
-                    alt="User Image"
-                    :src="
-                      discordCdn.user_avatar(
-                        profile.result.discord_id,
-                        profile.result.avatar
-                      )
-                    "
-                  />
-                </div>
-              </div>
-              <div class="h-full" v-else>
-                <div
-                  class="rounded-full w-full h-full bg-secondary flex flex-col"
-                >
-                  <span class="text-xl opacity-50 m-auto">{{
-                    profile.result.global_name?.slice(0, 2).toUpperCase() || "?"
-                  }}</span>
-                </div>
-              </div>
-            </div>
-            <div class="flex flex-col items-start">
-              <p
-                class="font-medium text-lg"
-                :class="
-                  profile.result.premium_since !== null ? 'text-[#ffbf28]' : ''
-                "
-              >
-                <i
-                  class="fa-solid fa-crown"
-                  v-if="profile.result.premium_since !== null ? true : false"
-                ></i>
-                {{ profile.result.global_name || profile.result.username }}
-              </p>
+          Manage <i class="fa-solid fa-gear"></i>
+        </NuxtLink>
+        <button
+          class="btn btn-ghost btn-sm"
+          :class="syncing ? 'btn-disabled' : ''"
+          v-if="profile.result.id === lucia?.user?.id"
+          v-on:click="sync"
+        >
+          <span v-if="syncing">Syncing</span>
+          <span v-else>Sync</span>
+          <i
+            class="fa-solid fa-arrows-rotate"
+            :class="syncing ? 'fa-spin' : ''"
+          ></i>
+        </button>
+        <button class="btn btn-ghost btn-sm" v-on:click="copy_current_url">
+          Copy <i class="fa-solid fa-link"></i>
+        </button>
+      </ResourceRow>
+      <ResourceCardContainer>
+        <ResourceCardHeader>
+          <ResourceCardHeaderImage
+            :resource="
+              profile.result.avatar
+                ? discordCdn.user_avatar(
+                    profile.result.discord_id,
+                    profile.result.avatar
+                  )
+                : null
+            "
+            :abbreviation="
+              profile.result.global_name?.slice(0, 2).toUpperCase()
+            "
+          />
+          <div class="flex flex-col items-start">
+            <p
+              class="font-medium text-lg"
+              :class="
+                profile.result.premium_since !== null ? 'text-[#ffbf28]' : ''
+              "
+            >
+              <i
+                class="fa-solid fa-crown"
+                v-if="profile.result.premium_since !== null ? true : false"
+              ></i>
+              {{ profile.result.global_name || profile.result.username }}
+            </p>
 
-              <p class="opacity-50">@{{ profile.result.username }}</p>
-            </div>
+            <p class="opacity-50">@{{ profile.result.username }}</p>
           </div>
-        </div>
-        <div
-          class="bg-base-300 h-fit text-start p-4 rounded-b-md flex flex-col"
-        >
+        </ResourceCardHeader>
+
+        <ResourceCardContent>
           <div>
             <p class="text-2xl pb-2">Description</p>
 
@@ -91,18 +69,17 @@
               {{ profile.result.description || "No description provided" }}
             </p>
           </div>
-        </div>
-      </div>
-      <div class="divider"></div>
-      <div class="py-12">
-        <p class="text-2xl">Reviews</p>
+        </ResourceCardContent>
+      </ResourceCardContainer>
+
+      <ResourceReviewsContent>
         <p class="opacity-50">
           No reviews yet...
           <NuxtLink href="#" class="text-accent">Create one!</NuxtLink>
         </p>
-      </div>
+      </ResourceReviewsContent>
     </template>
-  </div>
+  </ResourceContainer>
 </template>
 
 <script setup lang="ts">
@@ -127,7 +104,7 @@
     toClipboard(window.location.href);
   };
 
-  const syncProfile = async () => {
+  const sync = async () => {
     syncing.value = true;
     const response = await fetch("/api/v1/users/me/sync");
     if (response.status === 401) {

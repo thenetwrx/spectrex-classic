@@ -31,26 +31,22 @@
           </div>
         </div>
 
-        <FallbackContainer v-if="server_pending">
-          <span class="loading loading-spinner loading-lg"></span>
-        </FallbackContainer>
-        <FallbackContainer v-else-if="!server?.result">
-          <span>Resource not found</span>
-        </FallbackContainer>
+        <ResourcePending v-if="server_pending" />
+        <ResourceNotFound v-else-if="!server?.result" />
         <div class="flex flex-col gap-2" v-else>
           <p class="opacity-75 pb-6">
             {{ server.result.name }} with
             {{ server.result.approximate_member_count }} members
           </p>
           <DashboardCardContainer>
-            <DashboardCardTitle>
+            <DashboardCardHeader>
               <p class="text-xl">
                 Public<span class="text-error">* </span>
                 <span class="text-sm opacity-75">
                   (whether or not this server will be publicly listed)
                 </span>
               </p>
-            </DashboardCardTitle>
+            </DashboardCardHeader>
             <DashboardCardContent>
               <div class="form-control items-start">
                 <label class="label cursor-pointer gap-2">
@@ -80,9 +76,9 @@
           </DashboardCardContainer>
 
           <DashboardCardContainer>
-            <DashboardCardTitle>
+            <DashboardCardHeader>
               <p class="text-xl">Language<span class="text-error">*</span></p>
-            </DashboardCardTitle>
+            </DashboardCardHeader>
             <DashboardCardContent>
               <select
                 v-model="language"
@@ -100,9 +96,9 @@
           </DashboardCardContainer>
 
           <DashboardCardContainer>
-            <DashboardCardTitle>
+            <DashboardCardHeader>
               <p class="text-xl">Category<span class="text-error">*</span></p>
-            </DashboardCardTitle>
+            </DashboardCardHeader>
             <DashboardCardContent>
               <select
                 v-model="category"
@@ -121,9 +117,9 @@
           </DashboardCardContainer>
 
           <DashboardCardContainer>
-            <DashboardCardTitle>
+            <DashboardCardHeader>
               <p class="text-xl">Tags</p>
-            </DashboardCardTitle>
+            </DashboardCardHeader>
             <DashboardCardContent>
               <div
                 class="flex flex-wrap gap-2 w-fit max-sm:max-w-fit overflow-x-auto"
@@ -153,11 +149,11 @@
           </DashboardCardContainer>
 
           <DashboardCardContainer>
-            <DashboardCardTitle>
+            <DashboardCardHeader>
               <p class="text-xl">
                 Description<span class="text-error">*</span>
               </p>
-            </DashboardCardTitle>
+            </DashboardCardHeader>
             <DashboardCardContent>
               <textarea
                 type="text"
@@ -169,14 +165,14 @@
           </DashboardCardContainer>
 
           <DashboardCardContainer>
-            <DashboardCardTitle>
+            <DashboardCardHeader>
               <p class="text-xl">
                 Invite Link<span class="text-error">* </span>
                 <span class="text-sm opacity-75"
                   >(make sure it's a permanent invite!)
                 </span>
               </p>
-            </DashboardCardTitle>
+            </DashboardCardHeader>
             <DashboardCardContent>
               <input
                 type="text"
@@ -188,11 +184,11 @@
           </DashboardCardContainer>
 
           <DashboardCardContainer>
-            <DashboardCardTitle>
+            <DashboardCardHeader>
               <p class="text-xl">
                 Primarily NSFW<span class="text-error">*</span>
               </p>
-            </DashboardCardTitle>
+            </DashboardCardHeader>
             <DashboardCardContent>
               <div class="form-control items-start">
                 <label class="label cursor-pointer gap-2">

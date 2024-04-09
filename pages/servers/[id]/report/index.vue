@@ -1,11 +1,7 @@
 <template>
   <div class="container max-w-4xl mx-auto px-4 pt-32 min-h-screen text-center">
-    <FallbackContainer v-if="server_pending">
-      <span class="loading loading-spinner loading-lg"></span>
-    </FallbackContainer>
-    <FallbackContainer v-else-if="!server?.result">
-      <span>Resource not found</span>
-    </FallbackContainer>
+    <ResourcePending v-if="server_pending" />
+    <ResourceNotFound v-else-if="!server?.result" />
     <template v-else>
       <p class="text-4xl">Report Form</p>
       <p class="opacity-75">

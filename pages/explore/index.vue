@@ -24,15 +24,83 @@
     <p class="opacity-75 text-md mb-3">
       Showing ({{ servers?.result?.length || 0 }} / {{ max_per_page }}) results
     </p>
-    <FallbackContainer v-if="servers_pending">
-      <span class="loading loading-spinner loading-lg"></span>
-    </FallbackContainer>
-    <FallbackContainer v-else-if="!servers?.result?.length">
-      <span>No servers found</span>
-    </FallbackContainer>
+    <ResourcePending v-if="servers_pending" />
+    <ResourceNotFound
+      v-else-if="!servers?.result?.length"
+      message="No servers found"
+    />
     <div class="w-fit mx-auto" v-else>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <ServerCard v-for="server in servers.result" :server="server" />
+        <ResourceCardContainer v-for="server in servers?.result">
+          <ResourceCardHeader class="relative">
+            <ResourceCardHeaderImage
+              :resource="
+                server.icon
+                  ? discordCdn.server_icon(server.discord_id, server.icon)
+                  : null
+              "
+              :abbreviation="server.name.slice(0, 2).toUpperCase()"
+            />
+            <div class="flex flex-col">
+              <NuxtLink :href="'/servers/' + server.id">
+                <span class="font-medium text-lg">{{ server.name }}</span>
+              </NuxtLink>
+              <div class="flex flex-wrap gap-1 items-center">
+                <div class="bg-accent bg-opacity-50 px-1 rounded-md">
+                  <span class="opacity-75">{{ server.category }}</span>
+                </div>
+                <div
+                  class="bg-error bg-opacity-50 px-1 rounded-md"
+                  v-if="server.nsfw"
+                >
+                  <span class="opacity-75">NSFW</span>
+                </div>
+                <div class="flex flex-row gap-1 items-center">
+                  <div class="bg-[#23A55A] h-4 w-4 rounded-full"></div>
+                  <p class="opacity-50">
+                    {{ server.approximate_presence_count }} online
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div
+              class="absolute top-1 right-1 flex flex-row gap-1 items-center justify-start"
+            >
+              <NuxtLink
+                :href="'/servers/' + server.id + '/report'"
+                class="btn btn-ghost max-sm:btn-sm"
+              >
+                <i class="fa-solid md:fa-lg fa-flag"></i>
+              </NuxtLink>
+            </div>
+          </ResourceCardHeader>
+          <ResourceCardContent>
+            <div>
+              <p class="text-2xl pb-2">Tags</p>
+
+              <div
+                class="flex flex-wrap gap-2 w-fit max-sm:max-w-fit overflow-x-auto"
+                v-if="server.tags?.length"
+              >
+                <span
+                  v-for="tag in server.tags"
+                  class="block max-w-fit px-2 py-1 bg-accent border-none bg-opacity-50 rounded-sm gap-2 hover:bg-opacity-65 hover:cursor-pointer transition-colors duration-200 ease-in-out text-white"
+                >
+                  <span class="text-accent">#</span>
+                  {{ tag.toLowerCase() }}
+                </span>
+              </div>
+              <p class="opacity-50" v-else>No tags provided</p>
+            </div>
+            <div>
+              <p class="text-2xl pb-2">Description</p>
+
+              <p class="break-words opacity-50">
+                {{ server.description }}
+              </p>
+            </div>
+          </ResourceCardContent>
+        </ResourceCardContainer>
       </div>
     </div>
 
