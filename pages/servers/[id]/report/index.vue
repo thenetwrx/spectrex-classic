@@ -64,7 +64,7 @@
   const { data: server, pending: server_pending } = useFetch<{
     message: string | null;
     result: Server | null;
-  }>(`/api/v1/servers/${server_id}/fetch`, { retry: false });
+  }>(`/api/v1/servers/${server_id}`, { retry: false });
 
   useHead({
     title: computed(() =>
@@ -76,7 +76,7 @@
 
   const report = async () => {
     const response = await fetch(`/api/v1/servers/${server_id}/report`, {
-      method: "POST",
+      method: "PUT",
       headers: new Headers({ "content-type": "application/json" }),
       body: JSON.stringify({
         issue_type: issue_type.value,

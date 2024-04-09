@@ -1,9 +1,13 @@
 import { generateId } from "lucia";
-import { cryptr } from "~/server/utils/auth";
 import pool from "~/server/utils/database";
+import { cryptr } from "~/server/utils/auth";
 import type Server from "~/types/Server";
 
 export default defineEventHandler(async (event) => {
+  // Parameters
+  const params = getRouterParams(event);
+  const server_id = params.id;
+
   // 1. Check logged in status to prevent spam
   if (!event.context.user) {
     setResponseStatus(event, 401);
@@ -41,33 +45,41 @@ export default defineEventHandler(async (event) => {
     if (!raw_guilds.length) {
       client.release();
 
-      setResponseStatus(event, 403);
-      return { message: "No servers found from Discord" };
+      setResponseStatus(event, 404);
+      return {
+        message: "No servers found from Discord",
+      };
     }
+
+    const { rows: servers } = await client.query<Server>(
+      `
+            SELECT * FROM servers
+            WHERE
+              owner_id = $1 
+        `,
+      [event.context.user.id]
+    );
 
     for (let i = 0; i < raw_guilds.length; i++) {
       if (raw_guilds[i].owner) {
-        const { rows: servers } = await client.query<Server>(
-          `
-            SELECT * FROM servers
-            WHERE
-              discord_id = $1 
-        `,
-          [raw_guilds[i].id]
-        );
-
         const server = servers.find(
-          (server) => server.discord_id === raw_guilds[i].id
+          (server) =>
+            server.discord_id === raw_guilds[i].id && server.id === server_id
         );
         if (server) {
-          if (server.banned) continue;
+          if (server.banned) {
+            client.release();
+
+            setResponseStatus(event, 403);
+            return { message: "Server is banned", result: null };
+          }
 
           await client.query(
             `
             UPDATE servers 
               SET updated_at = $1, approximate_member_count = $2, approximate_presence_count = $3, name = $4, icon = $5
             WHERE
-                discord_id = $6
+                discord_id = $6 
             `,
             [
               Date.now().toString(),
@@ -78,35 +90,21 @@ export default defineEventHandler(async (event) => {
               raw_guilds[i].id,
             ]
           );
-        } else {
-          const now = Date.now();
 
-          await client.query(
-            `
-          INSERT INTO servers
-            (id, discord_id, approximate_member_count, approximate_presence_count, created_at, updated_at, owner_discord_id, owner_id, name, icon)
-          VALUES
-            ($1, $2, $3, $4, $5, $5, $6, $7, $8, $9)
-        `,
-            [
-              generateId(32),
-              raw_guilds[i].id,
-              raw_guilds[i].approximate_member_count,
-              raw_guilds[i].approximate_presence_count,
-              now.toString(),
-              event.context.user.discord_id,
-              event.context.user.id,
-              raw_guilds[i].name,
-              raw_guilds[i].icon,
-            ]
-          );
+          client.release();
+
+          return;
         }
       }
     }
 
     client.release();
 
-    return;
+    setResponseStatus(event, 403);
+    return {
+      message:
+        "Server doesn't exist or you aren't the owner of it. Try syncing all servers first",
+    };
   } catch (err) {
     console.log(err);
 

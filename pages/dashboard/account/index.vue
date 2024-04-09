@@ -130,7 +130,7 @@
 
   const sync = async () => {
     syncing.value = true;
-    const response = await fetch("/api/v1/users/me/sync");
+    const response = await fetch("/api/v1/users/me/sync", { method: "PATCH" });
     if (response.status === 401) {
       await $fetch("/api/v1/auth/logout", {
         method: "POST",
@@ -145,8 +145,8 @@
   };
 
   const edit = async () => {
-    const response = await fetch(`/api/v1/users/me/edit`, {
-      method: "POST",
+    const response = await fetch(`/api/v1/users/me`, {
+      method: "PATCH",
       headers: new Headers({ "content-type": "application/json" }),
       body: JSON.stringify({
         public: is_public.value,

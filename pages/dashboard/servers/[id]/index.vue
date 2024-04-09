@@ -8,14 +8,28 @@
           <h2 class="text-lg font-semibold">Manage Server</h2>
 
           <div class="flex flex-row gap-1 ml-auto">
-            <NuxtLink
+            <button
               class="btn btn-ghost btn-sm"
-              :class="!server?.result ? 'btn-disabled' : ''"
-              :href="'/servers/' + server?.result?.id"
+              :class="
+                !server?.result ||
+                server_metadata.bumping ||
+                server_metadata.on_cooldown
+                  ? 'btn-disabled'
+                  : ''
+              "
+              v-on:click="bump_server"
             >
-              View
-              <i class="fa-solid fa-arrow-up-right-from-square"></i>
-            </NuxtLink>
+              <span v-if="server_metadata.on_cooldown">
+                {{
+                  formatRemainingTime(Number(server?.result?.bumped_at || 0))
+                }}
+              </span>
+              <div v-if="!server_metadata.on_cooldown">
+                <span v-if="!server_metadata.bumping">Bump </span>
+                <span v-else>Bumping </span>
+              </div>
+              <i class="fa-solid fa-up-from-line"></i>
+            </button>
             <button
               class="btn btn-ghost btn-sm"
               :class="syncing || !server?.result ? 'btn-disabled' : ''"
@@ -28,11 +42,23 @@
                 :class="syncing ? 'fa-spin' : ''"
               ></i>
             </button>
+            <NuxtLink
+              class="btn btn-ghost btn-sm"
+              :class="!server?.result ? 'btn-disabled' : ''"
+              :href="'/servers/' + server?.result?.id"
+            >
+              View
+              <i class="fa-solid fa-arrow-up-right-from-square"></i>
+            </NuxtLink>
           </div>
         </div>
 
         <ResourcePending v-if="server_pending" />
         <ResourceNotFound v-else-if="!server?.result" />
+        <ResourceNotFound
+          v-else-if="server.result.owner_id !== lucia?.user?.id"
+          message="Unauthorized"
+        />
         <div class="flex flex-col gap-2" v-else>
           <p class="opacity-75 pb-6">
             {{ server.result.name }} with
@@ -244,7 +270,6 @@
     middleware: ["1-protected"],
   });
   const lucia = useLucia();
-  const discordCdn = useDiscordCdn();
   const route = useRoute();
   const server_id = route.params.id;
   const syncing = ref<boolean>(false);
@@ -257,13 +282,17 @@
   const nsfw = ref<boolean>();
   const tags = ref<Array<string>>([]);
   const new_tag = ref<string>("");
+  const server_metadata = ref<{
+    on_cooldown: boolean;
+    bumping: boolean;
+  }>({ on_cooldown: false, bumping: false });
 
   const {
     data: server,
     pending: server_pending,
     refresh: refreshServer,
   } = useFetch<{ message: string | null; result: Server | null }>(
-    `/api/v1/servers/${server_id}/fetch`,
+    `/api/v1/servers/${server_id}`,
     { retry: false }
   );
 
@@ -293,7 +322,9 @@
 
   const sync = async () => {
     syncing.value = true;
-    const response = await fetch(`/api/v1/servers/${server_id}/sync`);
+    const response = await fetch(`/api/v1/servers/${server_id}/sync`, {
+      method: "PATCH",
+    });
     if (response.status === 401) {
       await $fetch("/api/v1/auth/logout", {
         method: "POST",
@@ -307,8 +338,8 @@
   };
 
   const edit = async () => {
-    const response = await fetch(`/api/v1/servers/${server_id}/edit`, {
-      method: "POST",
+    const response = await fetch(`/api/v1/servers/${server_id}`, {
+      method: "PATCH",
       headers: new Headers({ "content-type": "application/json" }),
       body: JSON.stringify({
         public: is_public.value,
@@ -336,9 +367,10 @@
     }
     await refreshServer();
   };
+
   const _delete = async () => {
-    const response = await fetch(`/api/v1/servers/${server_id}/delete`, {
-      method: "POST",
+    const response = await fetch(`/api/v1/servers/${server_id}`, {
+      method: "DELETE",
     });
     if (response.status === 401) {
       await $fetch("/api/v1/auth/logout", {
@@ -356,10 +388,62 @@
     }
   };
 
-  function formatDateString(dynamicString: string) {
-    const date = new Date(Number(dynamicString));
+  onMounted(async () => refreshServerMetadata());
+  watch(server, () => refreshServerMetadata());
 
-    return date ? date.toString() : "Unknown";
+  const refreshServerMetadata = () => {
+    const premium = lucia.value?.user.premium_since !== null ? true : false;
+
+    const cooldown = premium ? 3600000 : 7200000;
+    const on_cooldown =
+      Number(server.value?.result?.bumped_at || 0) + cooldown <= Date.now()
+        ? false
+        : true;
+
+    server_metadata.value.bumping = false;
+    server_metadata.value.on_cooldown = on_cooldown;
+  };
+
+  const bump_server = async () => {
+    if (server.value !== null) {
+      server_metadata.value.bumping = true;
+      const response = await fetch(`/api/v1/servers/${server_id}/bump`, {
+        method: "POST",
+      });
+      if (response.status === 401) {
+        await $fetch("/api/v1/auth/logout", {
+          method: "POST",
+          retry: false,
+        });
+        lucia.value = null;
+        navigateTo("/");
+      }
+
+      server_metadata.value.bumping = false;
+
+      await refreshServer();
+    }
+  };
+
+  function formatRemainingTime(bumped_at: number) {
+    const premium = lucia.value?.user.premium_since ? true : false;
+
+    const cooldownDuration = premium ? 3600000 : 7200000;
+    const targetTime = new Date(bumped_at + cooldownDuration);
+    const timeDifference = targetTime.getTime() - Date.now();
+
+    if (timeDifference <= 0) {
+      return "00:00:00"; // Cooldown ended
+    }
+
+    const totalSeconds = Math.floor(timeDifference / 1000);
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+
+    return `${hours.toString().padStart(2, "0")}:${minutes
+      .toString()
+      .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
   }
 
   // Method to add a tag to the array

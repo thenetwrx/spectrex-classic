@@ -35,11 +35,17 @@ export default defineEventHandler(async (event) => {
       return { message: "Server not found" };
     }
 
-    if (servers[0].owner_id !== event.context.user.id) {
+    if (!servers[0].public && servers[0].owner_id !== event.context.user.id) {
       client.release();
 
       setResponseStatus(event, 404);
       return { message: "Server not found" };
+    }
+    if (servers[0].owner_id !== event.context.user.id) {
+      client.release();
+
+      setResponseStatus(event, 403);
+      return { message: "Unauthorized" };
     }
     if (servers[0].banned) {
       client.release();

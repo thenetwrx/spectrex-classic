@@ -11,25 +11,6 @@
         >
           Manage <i class="fa-solid fa-gear"></i>
         </NuxtLink>
-        <button
-          class="btn btn-ghost btn-sm"
-          :class="
-            server_metadata.bumping || server_metadata.on_cooldown
-              ? 'btn-disabled'
-              : ''
-          "
-          v-if="server.result.owner_id === lucia?.user?.id"
-          v-on:click="bump_server"
-        >
-          <span v-if="server_metadata.on_cooldown">
-            {{ formatRemainingTime(Number(server.result.bumped_at || 0)) }}
-          </span>
-          <div v-if="!server_metadata.on_cooldown">
-            <span v-if="!server_metadata.bumping">Bump </span>
-            <span v-else>Bumping </span>
-          </div>
-          <i class="fa-solid fa-up-from-line"></i>
-        </button>
         <NuxtLink
           :href="'/servers/' + server.result.id + '/report'"
           class="btn btn-ghost btn-sm"
@@ -144,19 +125,10 @@
   const route = useRoute();
   const server_id = route.params.id;
 
-  const server_metadata = ref<{
-    on_cooldown: boolean;
-    bumping: boolean;
-  }>({ on_cooldown: false, bumping: false });
-
-  const {
-    data: server,
-    refresh: refreshServer,
-    pending: server_pending,
-  } = useFetch<{ message: string | null; result: Server | null }>(
-    `/api/v1/servers/${server_id}/fetch`,
-    { retry: false }
-  );
+  const { data: server, pending: server_pending } = useFetch<{
+    message: string | null;
+    result: Server | null;
+  }>(`/api/v1/servers/${server_id}`, { retry: false });
 
   useHead({
     title: computed(() =>
@@ -168,62 +140,4 @@
     const { toClipboard } = useClipboard();
     toClipboard(window.location.href);
   };
-
-  onMounted(async () => refreshServerMetadata());
-  watch(server, () => refreshServerMetadata());
-
-  const refreshServerMetadata = () => {
-    const premium = lucia.value?.user.premium_since !== null ? true : false;
-
-    const cooldown = premium ? 3600000 : 7200000;
-    const on_cooldown =
-      Number(server.value?.result?.bumped_at || 0) + cooldown <= Date.now()
-        ? false
-        : true;
-
-    server_metadata.value.bumping = false;
-    server_metadata.value.on_cooldown = on_cooldown;
-  };
-
-  const bump_server = async () => {
-    if (server.value !== null) {
-      server_metadata.value.bumping = true;
-      const response = await fetch(`/api/v1/servers/${server_id}/bump`, {
-        method: "POST",
-      });
-      if (response.status === 401) {
-        await $fetch("/api/v1/auth/logout", {
-          method: "POST",
-          retry: false,
-        });
-        lucia.value = null;
-        navigateTo("/");
-      }
-
-      server_metadata.value.bumping = false;
-
-      await refreshServer();
-    }
-  };
-
-  function formatRemainingTime(bumped_at: number) {
-    const premium = lucia.value?.user.premium_since ? true : false;
-
-    const cooldownDuration = premium ? 3600000 : 7200000;
-    const targetTime = new Date(bumped_at + cooldownDuration);
-    const timeDifference = targetTime.getTime() - Date.now();
-
-    if (timeDifference <= 0) {
-      return "00:00:00"; // Cooldown ended
-    }
-
-    const totalSeconds = Math.floor(timeDifference / 1000);
-    const hours = Math.floor(totalSeconds / 3600);
-    const minutes = Math.floor((totalSeconds % 3600) / 60);
-    const seconds = totalSeconds % 60;
-
-    return `${hours.toString().padStart(2, "0")}:${minutes
-      .toString()
-      .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
-  }
 </script>

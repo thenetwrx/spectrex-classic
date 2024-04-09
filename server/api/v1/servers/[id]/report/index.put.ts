@@ -12,29 +12,29 @@ export default defineEventHandler(async (event) => {
 
   // 2. Check variables on server side to prevent abuse
   if (typeof body.issue_type !== "number") {
-    setResponseStatus(event, 500);
+    setResponseStatus(event, 400);
     return { message: "Issue type must be selected" };
   }
   if (!body.description?.length) {
-    setResponseStatus(event, 500);
+    setResponseStatus(event, 400);
     return { message: "Description must not be empty" };
   }
 
   if (body.issue_type === 0 || body.issue_type === 1) {
   } else {
-    setResponseStatus(event, 500);
+    setResponseStatus(event, 400);
     return { message: "Invalid issue type selection" };
   }
 
   if (body.description.length <= 16) {
-    setResponseStatus(event, 500);
+    setResponseStatus(event, 400);
     return {
       message: "Description does not have enough characters (minimum of 16)",
     };
   }
 
   if (body.description.length >= 128) {
-    setResponseStatus(event, 500);
+    setResponseStatus(event, 400);
     return { message: "Description has too many characters (max of 128)" };
   }
 

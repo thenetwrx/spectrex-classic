@@ -36,7 +36,7 @@ export default defineEventHandler(async (event) => {
       servers[0].owner_id !== event.context.user.id
     ) {
       setResponseStatus(event, 404);
-      return { message: "Server was not found", result: null };
+      return { message: "Unauthorzied", result: null };
     }
     if (
       servers[0].banned &&

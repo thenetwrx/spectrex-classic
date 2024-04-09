@@ -11,19 +11,6 @@
         >
           Manage <i class="fa-solid fa-gear"></i>
         </NuxtLink>
-        <button
-          class="btn btn-ghost btn-sm"
-          :class="syncing ? 'btn-disabled' : ''"
-          v-if="profile.result.id === lucia?.user?.id"
-          v-on:click="sync"
-        >
-          <span v-if="syncing">Syncing</span>
-          <span v-else>Sync</span>
-          <i
-            class="fa-solid fa-arrows-rotate"
-            :class="syncing ? 'fa-spin' : ''"
-          ></i>
-        </button>
         <button class="btn btn-ghost btn-sm" v-on:click="copy_current_url">
           Copy <i class="fa-solid fa-link"></i>
         </button>
@@ -83,6 +70,7 @@
 </template>
 
 <script setup lang="ts">
+  import type { User } from "lucia";
   import useClipboard from "~/composables/useClipboard";
 
   const lucia = useLucia();
@@ -91,13 +79,10 @@
   const route = useRoute();
   const user_id = route.params.id;
 
-  const syncing = ref<boolean>(false);
-
-  const {
-    data: profile,
-    refresh: refreshProfile,
-    pending: profile_pending,
-  } = useFetch(`/api/v1/users/${user_id}/fetch`, { retry: false });
+  const { data: profile, pending: profile_pending } = useFetch<{
+    message: string | null;
+    result: User | null;
+  }>(`/api/v1/users/${user_id}`, { retry: false });
 
   useHead({
     title: computed(() =>
@@ -108,21 +93,5 @@
   const copy_current_url = async () => {
     const { toClipboard } = useClipboard();
     toClipboard(window.location.href);
-  };
-
-  const sync = async () => {
-    syncing.value = true;
-    const response = await fetch("/api/v1/users/me/sync");
-    if (response.status === 401) {
-      await $fetch("/api/v1/auth/logout", {
-        method: "POST",
-        retry: false,
-      });
-      lucia.value = null;
-      navigateTo("/");
-    }
-
-    refreshProfile();
-    syncing.value = false;
   };
 </script>

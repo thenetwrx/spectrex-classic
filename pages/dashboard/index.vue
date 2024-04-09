@@ -138,13 +138,15 @@
     pending: servers_pending,
     refresh: refreshServers,
   } = useFetch<{ message: string | null; result: Server[] | null }>(
-    "/api/v1/servers/all/fetch",
+    "/api/v1/servers/all",
     { retry: false }
   );
 
   const syncDiscordServers = async () => {
     syncing.value = true;
-    const response = await fetch("/api/v1/servers/all/sync");
+    const response = await fetch("/api/v1/servers/all/sync", {
+      method: "PATCH",
+    });
     if (response.status === 401) {
       await $fetch("/api/v1/auth/logout", {
         method: "POST",
