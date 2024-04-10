@@ -26,7 +26,7 @@ export default defineEventHandler(async (event) => {
       {
         headers: {
           Authorization: `Bearer ${cryptr.decrypt(
-            event.context.session?.discord_access_token!
+            event.context.session?.provider_access_token!
           )}`,
         },
       }
@@ -64,7 +64,7 @@ export default defineEventHandler(async (event) => {
       if (raw_guilds[i].owner) {
         const server = servers.find(
           (server) =>
-            server.discord_id === raw_guilds[i].id && server.id === server_id
+            server.provider_id === raw_guilds[i].id && server.id === server_id
         );
         if (server) {
           if (server.banned) {
@@ -79,7 +79,7 @@ export default defineEventHandler(async (event) => {
             UPDATE servers 
               SET updated_at = $1, approximate_member_count = $2, approximate_presence_count = $3, name = $4, icon = $5
             WHERE
-                discord_id = $6 
+                provider_id = $6 
             `,
             [
               Date.now().toString(),

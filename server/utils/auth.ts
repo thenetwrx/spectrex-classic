@@ -42,23 +42,23 @@ declare module "lucia" {
 }
 
 interface DatabaseUserAttributes {
-  discord_id: string;
+  provider_id: string;
   username: string;
+  display_name: string | null;
   avatar: string | null;
-  global_name: string | null;
-  email: string;
   premium_since: string | null;
-  banned: boolean;
-  description: string | null;
+  email: string;
   public: boolean;
+  description: string | null;
   admin: boolean;
+  banned: boolean;
   created_at: string;
   updated_at: string;
 }
 
 interface DatabaseSessionAttributes {
-  discord_access_token: string;
-  discord_access_token_expires_at: string;
-  discord_refresh_token: string;
+  provider_access_token: string; // Must be encrypted
+  provider_access_token_expires_at: string;
+  provider_refresh_token: string; // Must be encrypted
   created_at: string;
 }

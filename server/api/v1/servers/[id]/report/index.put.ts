@@ -89,18 +89,18 @@ export default defineEventHandler(async (event) => {
     await client.query(
       `
       INSERT INTO server_reports
-        (id, from_id, from_discord_id, suspect_id, suspect_discord_id, suspect_server_id, suspect_server_discord_id, type, description)
+        (id, from_id, from_provider_id, suspect_id, suspect_provider_id, suspect_server_id, suspect_server_provider_id, type, description)
       VALUES
         ($1, $2, $3, $4, $5, $6, $7, $8, $9)
     `,
       [
         generateId(32),
         event.context.user.id,
-        event.context.user.discord_id,
+        event.context.user.provider_id,
         servers[0].owner_id,
-        servers[0].owner_discord_id,
+        servers[0].owner_provider_id,
         servers[0].id,
-        servers[0].discord_id,
+        servers[0].provider_id,
         body.issue_type,
         body.description,
       ]

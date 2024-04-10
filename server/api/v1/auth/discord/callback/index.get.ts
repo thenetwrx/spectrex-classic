@@ -8,9 +8,9 @@ export default defineEventHandler(async (event) => {
   const query = getQuery(event);
   const code = query.code?.toString() ?? null;
   const state = query.state?.toString() ?? null;
-  const storedState = getCookie(event, "state") ?? null;
-  const storedRedirectUri = getCookie(event, "redirect_to") ?? null;
-  if (!code || !state || !storedState || state !== storedState) {
+  const stored_state = getCookie(event, "state") ?? null;
+  const stored_redirect_url = getCookie(event, "redirect_to") ?? null;
+  if (!code || !state || !stored_state || state !== stored_state) {
     setResponseStatus(event, 400);
     return sendRedirect(event, "/");
   }
@@ -18,7 +18,7 @@ export default defineEventHandler(async (event) => {
   const client = await pool.connect();
   try {
     const tokens = await discord.validateAuthorizationCode(code);
-    const discordUserResponse = await fetch(
+    const discord_user_response = await fetch(
       "https://discord.com/api/users/@me",
       {
         headers: {
@@ -26,24 +26,24 @@ export default defineEventHandler(async (event) => {
         },
       }
     );
-    const discordUser: DiscordUser = await discordUserResponse.json();
+    const provider_user: DiscordUser = await discord_user_response.json();
 
-    const { rows: existingUser } = await client.query<User>(
+    const { rows: existing_user } = await client.query<User>(
       `
       SELECT id FROM users
       WHERE
-        discord_id = $1
+        provider_id = $1
     `,
-      [discordUser.id]
+      [provider_user.id]
     );
 
-    if (existingUser.length) {
-      const session = await lucia.createSession(existingUser[0].id, {
-        discord_access_token: cryptr.encrypt(tokens.accessToken),
-        discord_access_token_expires_at: cryptr.encrypt(
-          tokens.accessTokenExpiresAt.getTime().toString()
-        ),
-        discord_refresh_token: cryptr.encrypt(tokens.refreshToken),
+    if (existing_user.length) {
+      const session = await lucia.createSession(existing_user[0].id, {
+        provider_access_token: cryptr.encrypt(tokens.accessToken),
+        provider_access_token_expires_at: tokens.accessTokenExpiresAt
+          .getTime()
+          .toString(),
+        provider_refresh_token: cryptr.encrypt(tokens.refreshToken),
         created_at: Date.now().toString(),
       });
       const cookie = lucia.createSessionCookie(session.id);
@@ -58,47 +58,47 @@ export default defineEventHandler(async (event) => {
 
       client.release();
 
-      if (storedRedirectUri && storedRedirectUri.startsWith("/")) {
-        return sendRedirect(event, storedRedirectUri);
+      if (stored_redirect_url && stored_redirect_url.startsWith("/")) {
+        return sendRedirect(event, stored_redirect_url);
       }
 
       return sendRedirect(event, "/");
     }
 
-    const userId = generateId(32);
+    const user_id = generateId(32);
 
-    const { rows: createdUser } = await client.query(
+    const { rows: created_user } = await client.query(
       `
       INSERT INTO users
-        (id, discord_id, username, avatar, global_name, email, created_at, updated_at)
+        (id, provider_id, username, avatar, display_name, email, created_at, updated_at)
       VALUES
         ($1, $2, $3, $4, $5, $6, $7, $7)
       RETURNING id
     `,
       [
-        userId,
-        discordUser.id,
-        discordUser.username,
-        discordUser.avatar!,
-        discordUser.global_name!,
-        discordUser.email!,
+        user_id,
+        provider_user.id,
+        provider_user.username,
+        provider_user.avatar!,
+        provider_user.global_name!,
+        provider_user.email!,
         Date.now().toString(),
       ]
     );
 
-    if (!createdUser.length) {
+    if (!created_user.length) {
       client.release();
 
       setResponseStatus(event, 500);
       return sendRedirect(event, "/");
     }
 
-    const session = await lucia.createSession(createdUser[0].id, {
-      discord_access_token: cryptr.encrypt(tokens.accessToken),
-      discord_access_token_expires_at: cryptr.encrypt(
-        tokens.accessTokenExpiresAt.getTime().toString()
-      ),
-      discord_refresh_token: cryptr.encrypt(tokens.refreshToken),
+    const session = await lucia.createSession(created_user[0].id, {
+      provider_access_token: cryptr.encrypt(tokens.accessToken),
+      provider_access_token_expires_at: tokens.accessTokenExpiresAt
+        .getTime()
+        .toString(),
+      provider_refresh_token: cryptr.encrypt(tokens.refreshToken),
       created_at: Date.now().toString(),
     });
     const cookie = lucia.createSessionCookie(session.id);

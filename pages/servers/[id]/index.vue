@@ -29,7 +29,7 @@
             :resource="
               server.result.icon
                 ? discordCdn.server_icon(
-                    server.result.discord_id,
+                    server.result.provider_id,
                     server.result.icon
                   )
                 : null

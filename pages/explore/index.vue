@@ -35,7 +35,7 @@
               <ResourceCardHeaderImage
                 :resource="
                   server.icon
-                    ? discordCdn.server_icon(server.discord_id, server.icon)
+                    ? discordCdn.server_icon(server.provider_id, server.icon)
                     : null
                 "
                 :abbreviation="server.name.slice(0, 2).toUpperCase()"

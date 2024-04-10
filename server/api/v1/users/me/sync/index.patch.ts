@@ -20,7 +20,7 @@ export default defineEventHandler(async (event) => {
     const response = await fetch("https://discord.com/api/users/@me", {
       headers: {
         Authorization: `Bearer ${cryptr.decrypt(
-          event.context.session?.discord_access_token!
+          event.context.session?.provider_access_token!
         )}`,
       },
     });
@@ -33,9 +33,9 @@ export default defineEventHandler(async (event) => {
         message: "An unknown Discord API error occurred, try again later",
       };
     }
-    const discord_user: DiscordUser = await response.json();
+    const provider_user: DiscordUser = await response.json();
 
-    if (!discord_user) {
+    if (!provider_user) {
       client.release();
 
       setResponseStatus(event, 404);
@@ -65,17 +65,17 @@ export default defineEventHandler(async (event) => {
     await client.query(
       `
       UPDATE users
-      SET discord_id = $2, username = $3, avatar = $4, global_name = $5, email = $6, updated_at = $7
+      SET provider_id = $2, username = $3, avatar = $4, display_name = $5, email = $6, updated_at = $7
       WHERE
           id = $1
       `,
       [
         event.context.user.id,
-        discord_user.id,
-        discord_user.username,
-        discord_user.avatar!,
-        discord_user.global_name!,
-        discord_user.email!,
+        provider_user.id,
+        provider_user.username,
+        provider_user.avatar!,
+        provider_user.global_name!,
+        provider_user.email!,
         Date.now().toString(),
       ]
     );

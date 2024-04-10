@@ -16,7 +16,7 @@ export default defineEventHandler(async (event) => {
   try {
     const { rows: users } = await client.query<User>(
       `
-      SELECT id, discord_id, username, avatar, global_name, premium_since, description, public, banned FROM users
+      SELECT id, provider_id, username, avatar, display_name, premium_since, description, public, banned FROM users
       WHERE
         id = $1
     `,

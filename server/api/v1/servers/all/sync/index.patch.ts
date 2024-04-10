@@ -22,7 +22,7 @@ export default defineEventHandler(async (event) => {
       {
         headers: {
           Authorization: `Bearer ${cryptr.decrypt(
-            event.context.session?.discord_access_token!
+            event.context.session?.provider_access_token!
           )}`,
         },
       }
@@ -56,7 +56,7 @@ export default defineEventHandler(async (event) => {
     for (let i = 0; i < raw_guilds.length; i++) {
       if (raw_guilds[i].owner) {
         const server = servers.find(
-          (server) => server.discord_id === raw_guilds[i].id
+          (server) => server.provider_id === raw_guilds[i].id
         );
         if (server) {
           if (server.banned) continue;
@@ -66,7 +66,7 @@ export default defineEventHandler(async (event) => {
             UPDATE servers 
               SET updated_at = $1, approximate_member_count = $2, approximate_presence_count = $3, name = $4, icon = $5
             WHERE
-                discord_id = $6
+                provider_id = $6
             `,
             [
               Date.now().toString(),
@@ -83,7 +83,7 @@ export default defineEventHandler(async (event) => {
           await client.query(
             `
           INSERT INTO servers
-            (id, discord_id, approximate_member_count, approximate_presence_count, created_at, updated_at, owner_discord_id, owner_id, name, icon)
+            (id, provider_id, approximate_member_count, approximate_presence_count, created_at, updated_at, owner_provider_id, owner_id, name, icon)
           VALUES
             ($1, $2, $3, $4, $5, $5, $6, $7, $8, $9)
         `,
@@ -93,7 +93,7 @@ export default defineEventHandler(async (event) => {
               raw_guilds[i].approximate_member_count,
               raw_guilds[i].approximate_presence_count,
               now.toString(),
-              event.context.user.discord_id,
+              event.context.user.provider_id,
               event.context.user.id,
               raw_guilds[i].name,
               raw_guilds[i].icon,

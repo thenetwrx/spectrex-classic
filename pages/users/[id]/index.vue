@@ -21,13 +21,13 @@
             :resource="
               profile.result.avatar
                 ? discordCdn.user_avatar(
-                    profile.result.discord_id,
+                    profile.result.provider_id,
                     profile.result.avatar
                   )
                 : null
             "
             :abbreviation="
-              profile.result.global_name?.slice(0, 2).toUpperCase()
+              profile.result.display_name?.slice(0, 2).toUpperCase()
             "
           />
           <div class="flex flex-col items-start">
@@ -41,7 +41,7 @@
                 class="fa-solid fa-crown"
                 v-if="profile.result.premium_since !== null ? true : false"
               ></i>
-              {{ profile.result.global_name || profile.result.username }}
+              {{ profile.result.display_name || profile.result.username }}
             </p>
 
             <p class="opacity-50">@{{ profile.result.username }}</p>

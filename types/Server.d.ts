@@ -3,11 +3,11 @@ export default interface Server {
   created_at: string;
   owner_id: string;
   approved_at: string | null;
-  discord_id: string;
+  provider_id: string;
   approximate_member_count: string;
   nsfw: boolean;
   banned: boolean;
-  owner_discord_id: string;
+  owner_provider_id: string;
   invite_link: string | null;
   name: string;
   icon: string | null;

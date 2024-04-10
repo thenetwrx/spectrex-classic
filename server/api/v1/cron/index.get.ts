@@ -16,28 +16,26 @@ export default defineEventHandler(async (event) => {
     `);
 
     sessions.forEach(async (session) => {
-      const twoDaysInMilliseconds = 2 * 24 * 60 * 60 * 1000; // 2 days in milliseconds
-      const expirationThreshold = Date.now() + twoDaysInMilliseconds;
-      if (
-        Number(cryptr.decrypt(session.discord_access_token_expires_at)) <
-        expirationThreshold
-      ) {
-        // discord access token expires in 2 days, stay ahead and refresh it
+      const two_days_in_ms = 2 * 24 * 60 * 60 * 1000; // 2 days in milliseconds
+      const token_expires_in_ms =
+        Number(session.provider_access_token_expires_at) - Date.now();
 
+      // Check if the current date is greater than half of the token expiration date
+      if (token_expires_in_ms < two_days_in_ms / 2) {
         const response = await discord.refreshAccessToken(
-          cryptr.decrypt(session.discord_refresh_token)
+          cryptr.decrypt(session.provider_refresh_token)
         );
 
         await client.query(
           `
         UPDATE sessions
-        SET discord_access_token = $1, discord_access_token_expires_at = $2, discord_refresh_token = $3
+        SET provider_access_token = $1, provider_access_token_expires_at = $2, provider_refresh_token = $3
         WHERE
             id = $4
       `,
           [
             cryptr.encrypt(response.accessToken),
-            cryptr.encrypt(response.accessTokenExpiresAt.getTime().toString()),
+            response.accessTokenExpiresAt.getTime().toString(),
             cryptr.encrypt(response.refreshToken),
             session.id,
           ]

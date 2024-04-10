@@ -41,7 +41,10 @@
                       <NuxtImg
                         alt="Server Image"
                         :src="
-                          discordCdn.server_icon(server.discord_id, server.icon)
+                          discordCdn.server_icon(
+                            server.provider_id,
+                            server.icon
+                          )
                         "
                       />
                     </div>

@@ -7,7 +7,10 @@
             <NuxtImg
               alt="User Image"
               :src="
-                discordCdn.user_avatar(lucia.user.discord_id, lucia.user.avatar)
+                discordCdn.user_avatar(
+                  lucia.user.provider_id,
+                  lucia.user.avatar
+                )
               "
             />
           </div>
@@ -15,7 +18,7 @@
         <div class="h-full" v-else>
           <div class="rounded-full w-full h-full bg-secondary flex flex-col">
             <span class="text-xl opacity-50 m-auto">{{
-              lucia?.user?.global_name?.slice(0, 2).toUpperCase() || "?"
+              lucia?.user?.display_name?.slice(0, 2).toUpperCase() || "?"
             }}</span>
           </div>
         </div>
@@ -30,7 +33,9 @@
               class="fa-solid fa-crown"
               v-if="lucia?.user?.premium_since !== null ? true : false"
             ></i>
-            {{ lucia?.user?.global_name || lucia?.user?.username || "Unknown" }}
+            {{
+              lucia?.user?.display_name || lucia?.user?.username || "Unknown"
+            }}
           </span>
         </h2>
         <p class="opacity-30">

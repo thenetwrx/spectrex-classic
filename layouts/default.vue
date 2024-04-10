@@ -180,7 +180,7 @@
                       alt="User Image"
                       :src="
                         discordCdn.user_avatar(
-                          lucia.user.discord_id,
+                          lucia.user.provider_id,
                           lucia.user.avatar
                         )
                       "
@@ -192,7 +192,8 @@
                     class="rounded-full w-full h-full bg-secondary flex flex-col"
                   >
                     <span class="text-xl opacity-50 m-auto">{{
-                      lucia?.user?.global_name?.slice(0, 2).toUpperCase() || "?"
+                      lucia?.user?.display_name?.slice(0, 2).toUpperCase() ||
+                      "?"
                     }}</span>
                   </div>
                 </div>
