@@ -1,3 +1,4 @@
+import { Session } from "lucia";
 import { cryptr, discord } from "~/server/utils/auth";
 import pool from "~/server/utils/database";
 
@@ -11,35 +12,52 @@ export default defineEventHandler(async (event) => {
       DELETE FROM sessions 
       WHERE expires_at < NOW()
     `);
-    const { rows: sessions } = await client.query(`
+    const { rows: sessions } = await client.query<Session>(`
         SELECT * FROM sessions;
     `);
 
     sessions.forEach(async (session) => {
-      const two_days_in_ms = 2 * 24 * 60 * 60 * 1000; // 2 days in milliseconds
-      const token_expires_in_ms =
-        Number(session.provider_access_token_expires_at) - Date.now();
+      const expirationPeriodMs =
+        Number(session.provider_access_token_expires_at) - new Date().getTime();
+      const halfExpirationMs = expirationPeriodMs / 2;
 
-      // Check if the current date is greater than half of the token expiration date
-      if (token_expires_in_ms < two_days_in_ms / 2) {
+      const thresholdDate = new Date();
+      thresholdDate.setTime(thresholdDate.getTime() + halfExpirationMs);
+
+      const currentDate = new Date();
+      if (currentDate > thresholdDate) {
         const response = await discord.refreshAccessToken(
           cryptr.decrypt(session.provider_refresh_token)
         );
 
-        await client.query(
-          `
-        UPDATE sessions
-        SET provider_access_token = $1, provider_access_token_expires_at = $2, provider_refresh_token = $3
-        WHERE
-            id = $4
-      `,
-          [
-            cryptr.encrypt(response.accessToken),
-            response.accessTokenExpiresAt.getTime().toString(),
-            cryptr.encrypt(response.refreshToken),
-            session.id,
-          ]
-        );
+        if (
+          !response.accessToken ||
+          !response.refreshToken ||
+          !response.accessTokenExpiresAt
+        ) {
+          await client.query(
+            `
+            DELETE FROM sessions 
+            WHERE id = $1
+          `,
+            [session.id]
+          );
+        } else {
+          await client.query(
+            `
+            UPDATE sessions
+            SET provider_access_token = $1, provider_access_token_expires_at = $2, provider_refresh_token = $3
+            WHERE
+                id = $4
+          `,
+            [
+              cryptr.encrypt(response.accessToken),
+              response.accessTokenExpiresAt.getTime().toString(),
+              cryptr.encrypt(response.refreshToken),
+              session.id,
+            ]
+          );
+        }
       }
     });
 
