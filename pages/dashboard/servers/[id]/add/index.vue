@@ -24,7 +24,7 @@
         <div class="flex flex-col gap-2" v-else>
           <p class="opacity-75 pb-6">
             Submitting a Discord server to Spectrex means you agree to the
-            <NuxtLink href="/guidelines" class="text-accent"
+            <NuxtLink href="/legal/guidelines" class="text-accent"
               >Guidelines</NuxtLink
             >.
           </p>
