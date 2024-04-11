@@ -47,12 +47,10 @@ export default defineEventHandler(async (event) => {
 
     const { rows: servers } = await client.query<Server>(
       `
-            SELECT * FROM servers
-            WHERE
-              owner_id = $1
-        `,
-      [event.context.user.id]
+        SELECT * FROM servers
+      `
     );
+
     for (let i = 0; i < raw_guilds.length; i++) {
       if (raw_guilds[i].owner) {
         const server = servers.find(
@@ -64,12 +62,14 @@ export default defineEventHandler(async (event) => {
           await client.query(
             `
             UPDATE servers 
-              SET updated_at = $1, approximate_member_count = $2, approximate_presence_count = $3, name = $4, icon = $5
+              SET updated_at = $1, owner_id = $2, owner_provider_id = $3, approximate_member_count = $4, approximate_presence_count = $5, name = $6, icon = $7
             WHERE
-                provider_id = $6
+                provider_id = $8
             `,
             [
               Date.now().toString(),
+              event.context.user.id,
+              event.context.user.provider_id,
               raw_guilds[i].approximate_member_count,
               raw_guilds[i].approximate_presence_count,
               raw_guilds[i].name,
