@@ -41,7 +41,7 @@
                 class="fa-solid fa-crown"
                 v-if="profile.result.premium_since !== null ? true : false"
               ></i>
-              @{{ profile.result.username }}
+              {{ profile.result.display_name || profile.result.username }}
             </p>
             <div class="flex flex-wrap gap-1 items-center">
               <div
