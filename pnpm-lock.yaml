@@ -55,6 +55,9 @@ devDependencies:
   nuxt:
     specifier: ^3.11.1
     version: 3.11.1(@types/node@20.12.2)(@unocss/reset@0.58.8)(floating-vue@5.2.2)(typescript@5.4.3)(unocss@0.58.8)(vite@5.2.7)
+  nuxt-gtag:
+    specifier: ^2.0.5
+    version: 2.0.5
   tailwindcss-animated:
     specifier: ^1.0.1
     version: 1.0.1(tailwindcss@3.4.3)
@@ -6017,6 +6020,18 @@ packages:
     hasBin: true
     optionalDependencies:
       fsevents: 2.3.3
+    dev: true
+
+  /nuxt-gtag@2.0.5:
+    resolution: {integrity: sha512-RX/52eXufjly/Y7PJKRLGLBQhI73SnmzcLoI4pjEJIVsEVpIXJLkAwHtKY3HvU8KiV0ai4UE3Cn1xB6ncoiFaA==}
+    dependencies:
+      '@nuxt/kit': 3.11.1
+      defu: 6.1.4
+      pathe: 1.1.2
+      ufo: 1.5.3
+    transitivePeerDependencies:
+      - rollup
+      - supports-color
     dev: true
 
   /nuxt@3.11.1(@types/node@20.12.2)(@unocss/reset@0.58.8)(floating-vue@5.2.2)(typescript@5.4.3)(unocss@0.58.8)(vite@5.2.7):
