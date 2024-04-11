@@ -15,11 +15,7 @@
       },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Cairo&family=REM&display=swap",
-      },
-      {
-        rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Cairo&family=Share+Tech+Mono&display=swap",
       },
     ],
     titleTemplate: (titleChunk) => {
@@ -60,7 +56,7 @@
 
 <style>
   body {
-    font-family: Cairo;
+    font-family: "Cairo";
   }
   .mono {
     font-family: "Share Tech Mono", monospace;
@@ -99,7 +95,10 @@
           <NuxtLink href="/explore" class="p-2 bg-secondary rounded-md">
             <span>Explore</span>
           </NuxtLink>
-          <NuxtLink href="/guidelines" class="p-2 bg-secondary rounded-md">
+          <NuxtLink
+            href="/legal/guidelines"
+            class="p-2 bg-secondary rounded-md"
+          >
             <span>Guidelines</span>
           </NuxtLink>
           <NuxtLink href="/premium" class="p-2 bg-secondary rounded-md">
@@ -159,7 +158,7 @@
           Explore
         </NuxtLink>
         <NuxtLink
-          href="/guidelines"
+          href="/legal/guidelines"
           class="text-[#a1a1a1] hover:text-[#fff] transition-all duration-300"
         >
           Guidelines
@@ -247,15 +246,15 @@
           <NuxtLink href="/premium">Premium</NuxtLink>
         </div>
         <div class="flex flex-col gap-2">
-          <p class="opacity-75 text-md whitespace-break-spaces">USEFUL LINKS</p>
-          <NuxtLink href="/discord">Discord Support</NuxtLink>
-          <NuxtLink href="mailto:contact@spectrex.app">Email Support</NuxtLink>
-          <NuxtLink href="/guidelines">Guidelines</NuxtLink>
-        </div>
-        <div class="flex flex-col gap-2">
           <p class="opacity-75 text-md whitespace-break-spaces">LEGAL</p>
+          <NuxtLink href="/legal/guidelines">Guidelines</NuxtLink>
           <NuxtLink href="/legal/terms-of-service">Terms of Service</NuxtLink>
           <NuxtLink href="/legal/privacy-policy">Privacy Policy</NuxtLink>
+        </div>
+        <div class="flex flex-col gap-2">
+          <p class="opacity-75 text-md whitespace-break-spaces">SUPPORT</p>
+          <NuxtLink href="/discord">Discord Support</NuxtLink>
+          <NuxtLink href="mailto:contact@spectrex.app">Email Support</NuxtLink>
         </div>
       </div>
 

@@ -53,16 +53,11 @@ export default defineEventHandler(async (event) => {
 
     client.release();
 
-    if (servers.rows.length) {
-      setResponseStatus(event, 200);
-      return {
-        message: null,
-        result: servers.rows,
-      };
-    }
-
-    setResponseStatus(event, 404);
-    return { message: "No servers found", result: null };
+    setResponseStatus(event, 200);
+    return {
+      message: null,
+      result: servers.rows,
+    };
   } catch (err) {
     console.log(err);
 

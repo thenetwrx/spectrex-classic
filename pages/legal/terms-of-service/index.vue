@@ -61,7 +61,8 @@
           rights in, and are solely responsible for, the User Content you submit
           to Spectrex. Submitting any form of content to Spectrex means you
           agree to the
-          <NuxtLink href="/guidelines" class="text-accent">Guidelines</NuxtLink
+          <NuxtLink href="/legal/guidelines" class="text-accent"
+            >Guidelines</NuxtLink
           >.
         </p>
       </div>

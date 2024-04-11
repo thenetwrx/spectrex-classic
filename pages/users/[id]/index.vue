@@ -41,10 +41,19 @@
                 class="fa-solid fa-crown"
                 v-if="profile.result.premium_since !== null ? true : false"
               ></i>
-              {{ profile.result.display_name || profile.result.username }}
+              @{{ profile.result.username }}
             </p>
-
-            <p class="opacity-50">@{{ profile.result.username }}</p>
+            <div class="flex flex-wrap gap-1 items-center">
+              <div
+                class="bg-accent bg-opacity-50 px-1 rounded-md"
+                v-if="profile.result.admin"
+              >
+                <span class="opacity-75">Admin</span>
+              </div>
+              <div class="bg-secondary bg-opacity-50 px-1 rounded-md">
+                <span class="opacity-75">Peasant</span>
+              </div>
+            </div>
           </div>
         </ResourceCardHeader>
 
