@@ -13,7 +13,7 @@ export default defineEventHandler(async (event) => {
   }
   if (event.context.user.banned) {
     setResponseStatus(event, 403);
-    return { message: "You are banned" };
+    return { message: "You're banned from Spectrex" };
   }
 
   // 2. Edit server
@@ -35,12 +35,6 @@ export default defineEventHandler(async (event) => {
       return { message: "Server not found" };
     }
 
-    if (!servers[0].public && servers[0].owner_id !== event.context.user.id) {
-      client.release();
-
-      setResponseStatus(event, 404);
-      return { message: "Server not found" };
-    }
     if (servers[0].owner_id !== event.context.user.id) {
       client.release();
 
@@ -51,7 +45,7 @@ export default defineEventHandler(async (event) => {
       client.release();
 
       setResponseStatus(event, 403);
-      return { message: "Server is banned" };
+      return { message: "Server is banned from Spectrex" };
     }
     if (servers[0].approved_at === null) {
       client.release();

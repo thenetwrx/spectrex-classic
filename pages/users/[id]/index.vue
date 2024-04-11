@@ -95,7 +95,11 @@
 
   useHead({
     title: computed(() =>
-      profile.value?.result ? `@${profile.value.result.username}` : "@unknown"
+      profile.value?.result
+        ? `${
+            profile.value.result.display_name || profile.value.result.username
+          }`
+        : "unknown"
     ),
   });
 

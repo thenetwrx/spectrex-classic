@@ -132,7 +132,7 @@
 
   useHead({
     title: computed(() =>
-      server.value?.result ? `${server.value.result.name}` : "Unknown server"
+      server.value?.result ? `${server.value.result.name}` : "unknown server"
     ),
   });
 

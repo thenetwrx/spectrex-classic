@@ -12,7 +12,7 @@ export default defineEventHandler(async (event) => {
   }
   if (event.context.user.banned) {
     setResponseStatus(event, 403);
-    return { message: "You are banned", result: null };
+    return { message: "You're banned from Spectrex", result: null };
   }
 
   // 2. Sync all servers

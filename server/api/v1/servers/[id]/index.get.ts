@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
   // 1. Reject banned users
   if (event.context.user?.banned) {
     setResponseStatus(event, 403);
-    return { message: "You are banned", result: null };
+    return { message: "You're banned from Spectrex", result: null };
   }
 
   // 2. Sync guild
@@ -31,13 +31,11 @@ export default defineEventHandler(async (event) => {
       return { message: "Server not found", result: null };
     }
 
-    if (
-      !servers[0].public &&
-      event.context.user &&
-      servers[0].owner_id !== event.context.user.id
-    ) {
-      setResponseStatus(event, 404);
-      return { message: "Unauthorzied", result: null };
+    if (!servers[0].public) {
+      if (event.context.user?.id !== servers[0].owner_id) {
+        setResponseStatus(event, 403);
+        return { message: "Unauthorized", result: null };
+      }
     }
     if (
       servers[0].banned &&
@@ -45,7 +43,7 @@ export default defineEventHandler(async (event) => {
       servers[0].owner_id !== event.context.user.id
     ) {
       setResponseStatus(event, 403);
-      return { message: "Server is banned", result: null };
+      return { message: "Server is banned from Spectrex", result: null };
     }
     if (
       servers[0].approved_at === null &&

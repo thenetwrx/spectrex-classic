@@ -97,7 +97,7 @@ export default defineEventHandler(async (event) => {
   }
   if (event.context.user.banned) {
     setResponseStatus(event, 403);
-    return { message: "You are banned" };
+    return { message: "You're banned from Spectrex" };
   }
 
   // 3. Edit server
@@ -129,7 +129,7 @@ export default defineEventHandler(async (event) => {
       client.release();
 
       setResponseStatus(event, 403);
-      return { message: "Server is banned" };
+      return { message: "Server is banned from Spectrex" };
     }
     if (servers[0].approved_at === null) {
       client.release();

@@ -26,7 +26,7 @@ export default defineEventHandler(async (event) => {
   // 2. Reject banned users
   if (event.context.user?.banned) {
     setResponseStatus(event, 403);
-    return { message: "You are banned", result: null };
+    return { message: "You're banned from Spectrex", result: null };
   }
 
   // 3. Fetch servers

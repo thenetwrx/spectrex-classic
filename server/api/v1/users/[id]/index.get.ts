@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
   // 1. Reject banned users
   if (event.context.user?.banned) {
     setResponseStatus(event, 403);
-    return { message: "You are banned", result: null };
+    return { message: "You're banned from Spectrex", result: null };
   }
 
   // 2. Fetch user
@@ -31,13 +31,11 @@ export default defineEventHandler(async (event) => {
       return { message: "User not found", result: null };
     }
 
-    if (
-      !users[0].public &&
-      event.context.user &&
-      users[0].id !== event.context.user.id
-    ) {
-      setResponseStatus(event, 404);
-      return { message: "User was not found", result: null };
+    if (!users[0].public) {
+      if (event.context.user?.id !== users[0].id) {
+        setResponseStatus(event, 404);
+        return { message: "Unauthorized", result: null };
+      }
     }
     if (
       users[0].banned &&
@@ -45,7 +43,7 @@ export default defineEventHandler(async (event) => {
       users[0].id !== event.context.user.id
     ) {
       setResponseStatus(event, 403);
-      return { message: "User is banned", result: null };
+      return { message: "User is banned from Spectrex", result: null };
     }
 
     setResponseStatus(event, 200);

@@ -32,6 +32,14 @@
               </div>
               <i class="fa-solid fa-up-from-line"></i>
             </button>
+            <NuxtLink
+              class="btn btn-ghost btn-sm"
+              :class="!server?.result ? 'btn-disabled' : ''"
+              :href="'/servers/' + server?.result?.id"
+            >
+              View
+              <i class="fa-solid fa-arrow-up-right-from-square"></i>
+            </NuxtLink>
             <button
               class="btn btn-ghost btn-sm"
               :class="syncing || !server?.result ? 'btn-disabled' : ''"
@@ -44,14 +52,6 @@
                 :class="syncing ? 'fa-spin' : ''"
               ></i>
             </button>
-            <NuxtLink
-              class="btn btn-ghost btn-sm"
-              :class="!server?.result ? 'btn-disabled' : ''"
-              :href="'/servers/' + server?.result?.id"
-            >
-              View
-              <i class="fa-solid fa-arrow-up-right-from-square"></i>
-            </NuxtLink>
           </div>
         </div>
 

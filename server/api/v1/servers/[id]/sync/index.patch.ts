@@ -15,7 +15,7 @@ export default defineEventHandler(async (event) => {
   }
   if (event.context.user.banned) {
     setResponseStatus(event, 403);
-    return { message: "You are banned", result: null };
+    return { message: "You're banned from Spectrex", result: null };
   }
 
   // 2. Sync server
@@ -63,7 +63,7 @@ export default defineEventHandler(async (event) => {
         client.release();
 
         setResponseStatus(event, 403);
-        return { message: "Server is banned", result: null };
+        return { message: "Server is banned from Spectrex", result: null };
       }
 
       for (const server_from_discord of servers_from_discord) {
