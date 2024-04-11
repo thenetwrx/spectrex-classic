@@ -258,7 +258,16 @@
         </div>
       </div>
 
-      <p class="opacity-75 ml-auto max-md:mx-auto">&copy; 2024 Spectrex</p>
+      <p class="opacity-75 ml-auto max-md:mx-auto">
+        &copy; 2024 Spectrex -
+        <NuxtLink
+          href="https://scriptkiddie5.vercel.app"
+          target="_blank"
+          class="underline"
+        >
+          by scriptkiddie
+        </NuxtLink>
+      </p>
     </div>
   </div>
 </template>
