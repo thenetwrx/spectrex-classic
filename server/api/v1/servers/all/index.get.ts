@@ -2,7 +2,7 @@ import pool from "~/server/utils/database";
 import type Server from "~/types/Server";
 
 export default defineEventHandler(async (event) => {
-  // 1. Check logged in status to prevent spam
+  // 1. Require being logged in
   if (!event.context.user) {
     setResponseStatus(event, 401);
     return { message: "Unauthorized", result: null };
@@ -12,7 +12,7 @@ export default defineEventHandler(async (event) => {
     return { message: "You are banned", result: null };
   }
 
-  // 2. Fetch guilds
+  // 2. Fetch servers for Dashboard
   const client = await pool.connect();
   try {
     const { rows: servers } = await client.query<Server>(

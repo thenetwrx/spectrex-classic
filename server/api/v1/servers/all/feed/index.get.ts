@@ -2,15 +2,11 @@ import pool from "~/server/utils/database";
 import type Server from "~/types/Server";
 
 export default defineEventHandler(async (event) => {
-  if (event.context.user?.banned) {
-    setResponseStatus(event, 403);
-    return { message: "You are banned", result: null };
-  }
-
   // Parameters
   const query = getQuery(event);
   const page = query.page?.toString() || "0";
 
+  // 1. Check variables on server side to prevent abuse
   if (Number.isNaN(page)) {
     setResponseStatus(event, 400);
     return { message: "Invalid page query", result: null };
@@ -27,7 +23,13 @@ export default defineEventHandler(async (event) => {
     return { message: "Exceeded page query (50 maximum)", result: null };
   }
 
-  // 2. Fetch guilds
+  // 2. Reject banned users
+  if (event.context.user?.banned) {
+    setResponseStatus(event, 403);
+    return { message: "You are banned", result: null };
+  }
+
+  // 3. Fetch servers
   const client = await pool.connect();
   try {
     const max_per_page = 10;

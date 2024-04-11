@@ -2,16 +2,17 @@ import type { User } from "lucia";
 import pool from "~/server/utils/database";
 
 export default defineEventHandler(async (event) => {
+  // Parameters
+  const params = getRouterParams(event);
+  const user_id = params.id;
+
+  // 1. Reject banned users
   if (event.context.user?.banned) {
     setResponseStatus(event, 403);
     return { message: "You are banned", result: null };
   }
 
-  // Parameters
-  const params = getRouterParams(event);
-  const user_id = params.id;
-
-  // 3. Fetch user
+  // 2. Fetch user
   const client = await pool.connect();
   try {
     const { rows: users } = await client.query<User>(

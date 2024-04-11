@@ -15,7 +15,7 @@ export default defineEventHandler(async (event) => {
     return { message: "Description has too many characters (max of 128)" };
   }
 
-  // 2. Check logged in status to prevent spam
+  // 2. Require being logged in
   if (!event.context.user) {
     setResponseStatus(event, 401);
     return { message: "Unauthorized" };

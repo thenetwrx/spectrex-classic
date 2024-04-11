@@ -6,7 +6,7 @@ export default defineEventHandler(async (event) => {
   const params = getRouterParams(event);
   const server_id = params.id;
 
-  // 1. Check logged in status to prevent spam
+  // 1. Require being logged in
   if (!event.context.user) {
     setResponseStatus(event, 401);
     return { message: "Unauthorized" };

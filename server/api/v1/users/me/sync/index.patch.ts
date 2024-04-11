@@ -4,7 +4,7 @@ import pool from "~/server/utils/database";
 import DiscordUser from "~/types/DiscordUser";
 
 export default defineEventHandler(async (event) => {
-  // 1. Check logged in status to prevent spam
+  // 1. Require being logged in
   if (!event.context.user) {
     setResponseStatus(event, 401);
     return { message: "Unauthorized", result: null };
@@ -14,7 +14,7 @@ export default defineEventHandler(async (event) => {
     return { message: "You are banned", result: null };
   }
 
-  // 2. Fetch guilds using raw HTTP
+  // 2. Sync user
   const client = await pool.connect();
   try {
     const response = await fetch("https://discord.com/api/users/@me", {

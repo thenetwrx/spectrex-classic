@@ -86,7 +86,7 @@ export default defineEventHandler(async (event) => {
     };
   }
 
-  // 2. Check logged in status to prevent spam
+  // 2. Require being logged in
   if (!event.context.user) {
     setResponseStatus(event, 401);
     return { message: "Unauthorized" };

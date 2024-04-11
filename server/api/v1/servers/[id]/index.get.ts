@@ -2,14 +2,15 @@ import pool from "~/server/utils/database";
 import type Server from "~/types/Server";
 
 export default defineEventHandler(async (event) => {
+  // Parameters
+  const params = getRouterParams(event);
+  const server_id = params.id;
+
+  // 1. Reject banned users
   if (event.context.user?.banned) {
     setResponseStatus(event, 403);
     return { message: "You are banned", result: null };
   }
-
-  // Parameters
-  const params = getRouterParams(event);
-  const server_id = params.id;
 
   // 2. Sync guild
   const client = await pool.connect();

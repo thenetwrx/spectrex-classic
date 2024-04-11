@@ -1,14 +1,14 @@
-import { generateId } from "lucia";
 import pool from "~/server/utils/database";
 import { cryptr } from "~/server/utils/auth";
 import type Server from "~/types/Server";
+import DiscordServerPartial from "~/types/DiscordServerPartial";
 
 export default defineEventHandler(async (event) => {
   // Parameters
   const params = getRouterParams(event);
   const server_id = params.id;
 
-  // 1. Check logged in status to prevent spam
+  // 1. Require being logged in
   if (!event.context.user) {
     setResponseStatus(event, 401);
     return { message: "Unauthorized", result: null };
@@ -18,7 +18,7 @@ export default defineEventHandler(async (event) => {
     return { message: "You are banned", result: null };
   }
 
-  // 2. Fetch guilds using raw HTTP
+  // 2. Sync server
   const client = await pool.connect();
   try {
     const response = await fetch(
@@ -40,9 +40,9 @@ export default defineEventHandler(async (event) => {
         message: "An unknown Discord API error occurred, try again later",
       };
     }
-    const raw_guilds = await response.json();
+    const servers_from_discord: DiscordServerPartial[] = await response.json();
 
-    if (!raw_guilds.length) {
+    if (!servers_from_discord.length) {
       client.release();
 
       setResponseStatus(event, 404);
@@ -53,40 +53,40 @@ export default defineEventHandler(async (event) => {
 
     const { rows: servers } = await client.query<Server>(
       `
-        SELECT * FROM servers
-      `
+            SELECT * FROM servers
+            WHERE id = $1
+          `,
+      [server_id]
     );
+    if (servers[0]) {
+      if (servers[0].banned) {
+        client.release();
 
-    for (let i = 0; i < raw_guilds.length; i++) {
-      if (raw_guilds[i].owner) {
-        const server = servers.find(
-          (server) =>
-            server.provider_id === raw_guilds[i].id && server.id === server_id
-        );
-        if (server) {
-          if (server.banned) {
-            client.release();
+        setResponseStatus(event, 403);
+        return { message: "Server is banned", result: null };
+      }
 
-            setResponseStatus(event, 403);
-            return { message: "Server is banned", result: null };
-          }
-
-          await client.query(
+      for (const server_from_discord of servers_from_discord) {
+        if (
+          server_from_discord.owner &&
+          server_from_discord.id === servers[0].provider_id
+        ) {
+          await client.query<any>(
             `
-            UPDATE servers 
-              SET updated_at = $1, owner_id = $2, owner_provider_id = $3, approximate_member_count = $4, approximate_presence_count = $5, name = $6, icon = $7
-            WHERE
-                provider_id = $8
+              UPDATE servers 
+                SET updated_at = $1, owner_id = $2, owner_provider_id = $3, approximate_member_count = $4, approximate_presence_count = $5, name = $6, icon = $7
+              WHERE
+                  id = $8
             `,
             [
               Date.now().toString(),
               event.context.user.id,
               event.context.user.provider_id,
-              raw_guilds[i].approximate_member_count,
-              raw_guilds[i].approximate_presence_count,
-              raw_guilds[i].name,
-              raw_guilds[i].icon,
-              raw_guilds[i].id,
+              server_from_discord.approximate_member_count.toString(),
+              server_from_discord.approximate_presence_count.toString(),
+              server_from_discord.name,
+              server_from_discord.icon,
+              servers[0].id,
             ]
           );
 

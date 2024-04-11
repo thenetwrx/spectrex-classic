@@ -6,11 +6,9 @@ export default defineEventHandler(async (event) => {
   // Parameters
   const params = getRouterParams(event);
   const server_id = params.id;
-
-  // 1. Grab body
   const body = await readBody(event);
 
-  // 2. Check variables on server side to prevent abuse
+  // 1. Check variables on server side to prevent abuse
   if (typeof body.issue_type !== "number") {
     setResponseStatus(event, 400);
     return { message: "Issue type must be selected" };
@@ -38,7 +36,7 @@ export default defineEventHandler(async (event) => {
     return { message: "Description has too many characters (max of 128)" };
   }
 
-  // 3. Check logged in status to prevent spam
+  // 2. Require being logged in
   if (!event.context.user) {
     setResponseStatus(event, 401);
     return { message: "Unauthorized" };
@@ -48,7 +46,7 @@ export default defineEventHandler(async (event) => {
     return { message: "You are banned" };
   }
 
-  // 4. Insert server report
+  // 3. Insert server report
   const client = await pool.connect();
   try {
     const { rows: servers } = await client.query<Server>(

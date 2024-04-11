@@ -38,6 +38,13 @@ export default defineEventHandler(async (event) => {
     );
 
     if (existing_user.length) {
+      if (existing_user[0].banned) {
+        client.release();
+
+        setResponseStatus(event, 403);
+        return sendRedirect(event, "/");
+      }
+
       const session = await lucia.createSession(existing_user[0].id, {
         provider_access_token: cryptr.encrypt(tokens.accessToken),
         provider_access_token_expires_at: tokens.accessTokenExpiresAt
