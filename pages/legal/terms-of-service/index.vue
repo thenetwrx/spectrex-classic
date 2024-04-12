@@ -10,8 +10,11 @@
         Please read these Terms carefully, and contact us if you have any
         questions. By accessing or using our Products, you agree to be bound by
         these Terms and by our
-        <NuxtLink href="/legal/privacy-policy" class="text-accent"
-          >Privacy Policy</NuxtLink
+        <NuxtLink
+          href="/legal/privacy-policy"
+          class="text-accent hover:underline"
+        >
+          Privacy Policy </NuxtLink
         >.
       </p>
 
@@ -61,8 +64,11 @@
           rights in, and are solely responsible for, the User Content you submit
           to Spectrex. Submitting any form of content to Spectrex means you
           agree to the
-          <NuxtLink href="/legal/guidelines" class="text-accent"
-            >Guidelines</NuxtLink
+          <NuxtLink
+            href="/legal/guidelines"
+            class="text-accent hover:underline"
+          >
+            Guidelines </NuxtLink
           >.
         </p>
       </div>

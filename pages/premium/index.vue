@@ -30,14 +30,14 @@
             </p>
           </div>
           <button class="btn btn-primary" onclick="my_modal_1.showModal()">
-            Donate
+            I will!
           </button>
         </div>
       </div>
     </div>
   </Container>
   <dialog class="modal" id="my_modal_1">
-    <div class="modal-box bg-base-200">
+    <div class="modal-box bg-base-200 flex flex-col">
       <div class="flex flex-row gap-1 items-center w-full pb-4">
         <h3 class="text-lg font-bold">Support Spectrex</h3>
 
@@ -48,20 +48,43 @@
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
-      <p>
-        To become a Spectrex supporter, you must send exactly $4.99 USD to
-        <a class="text-accent" href="https://venmo.com/u/hankhannefey1"
-          >this venmo address</a
-        >
-        and adding your
-        <a
-          class="text-accent"
-          href="https://support.discord.com/hc/en-us/articles/206346498-Where-can-I-find-my-User-Server-Message-ID"
-          >Discord User ID</a
-        >
-        as the note. Your payment can take up to 24 hours to be processed.
-        Contact support if you have any issues or questions.
-      </p>
+      <div class="flex flex-col gap-4">
+        <p>To become a Spectrex supporter, you must</p>
+        <ul class="block list-disc mx-6">
+          <li>Have created a Spectrex account</li>
+          <li>
+            Send at least $4.99 USD to
+            <NuxtLink
+              class="text-accent hover:underline"
+              href="https://venmo.com/u/hankhannefey1"
+              :external="true"
+              target="_blank"
+            >
+              this venmo address
+            </NuxtLink>
+            (make sure to add your
+            <NuxtLink
+              class="text-accent hover:underline"
+              href="https://support.discord.com/hc/en-us/articles/206346498-Where-can-I-find-my-User-Server-Message-ID"
+              :external="true"
+              target="_blank"
+            >
+              Discord User ID
+            </NuxtLink>
+            as the note)
+          </li>
+          <li>Wait up to 24 hours for your payment to be processed</li>
+        </ul>
+        <p>
+          Benefits do not stack. Contact support if you have any issues or
+          questions.
+        </p>
+        <p>
+          Payments under $4.99 USD or proceeding an inital $4.99 USD payment
+          will be considered as donations
+          <i class="fa-solid fa-heart text-error"></i>
+        </p>
+      </div>
     </div>
   </dialog>
 </template>

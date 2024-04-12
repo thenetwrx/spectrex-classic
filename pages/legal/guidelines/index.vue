@@ -28,9 +28,12 @@
       <p class="text-3xl">3. Discord Community Guidelines</p>
       <p class="opacity-75">
         Servers violating the
-        <NuxtLink href="https://discord.com/guidelines" class="text-accent"
-          >Discord Community Guidelines</NuxtLink
+        <NuxtLink
+          href="https://discord.com/guidelines"
+          class="text-accent hover:underline"
         >
+          Discord Community Guidelines
+        </NuxtLink>
         are not allowed.
       </p>
 

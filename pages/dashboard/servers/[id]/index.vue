@@ -136,7 +136,7 @@
                 <option value="Community">Community</option>
                 <option value="Music">Music</option>
                 <option value="Gaming">Gaming</option>
-                <option value="Anime">Gaming</option>
+                <option value="Anime">Anime</option>
                 <option value="Technology">Technology</option>
                 <option value="Movies">Movies</option>
                 <option value="Other">Other</option>
