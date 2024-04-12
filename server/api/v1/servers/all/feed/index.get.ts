@@ -43,7 +43,7 @@ export default defineEventHandler(async (event) => {
           AND public = true 
           AND approved_at IS NOT NULL
           ${category !== null ? `AND category = $1` : ``}
-      ORDER BY bumped_at
+      ORDER BY bumped_at DESC
       LIMIT ${max_per_page}
       OFFSET ${max_per_page * Number(page)}`;
 
