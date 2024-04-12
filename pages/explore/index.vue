@@ -95,7 +95,7 @@
             <div>
               <p class="text-2xl pb-2">Description</p>
 
-              <p class="break-words opacity-50">
+              <p class="break-words whitespace-pre-wrap opacity-50">
                 {{ server.description }}
               </p>
             </div>
