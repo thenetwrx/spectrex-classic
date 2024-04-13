@@ -19,17 +19,32 @@
         {{ category }}
       </NuxtLink>
     </div>
-    <p class="opacity-75 text-md mb-3">
-      Showing ({{ servers?.result?.length || 0 }} / {{ max_per_page }}) results
-      for Page {{ page + 1 }}
-    </p>
+    <div class="flex flex-row">
+      <p class="opacity-75 text-md mb-3">
+        Showing ({{ servers?.result?.length || 0 }} / {{ max_per_page }})
+        results for Page {{ page + 1 }}
+      </p>
+
+      <button
+        class="btn btn-ghost btn-sm ml-auto"
+        :class="refreshing ? 'btn-disabled' : ''"
+        v-on:click="refresh"
+      >
+        <span v-if="refreshing">Refreshing</span>
+        <span v-else>Refresh</span>
+        <i
+          class="fa-solid fa-arrows-rotate"
+          :class="refreshing ? 'fa-spin' : ''"
+        ></i>
+      </button>
+    </div>
     <ResourcePending v-if="servers_pending" />
     <ResourceNotFound
       v-else-if="!servers?.result?.length"
       message="No servers found"
     />
     <div class="w-fit mx-auto" v-else>
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div class="grid grid-cols-3 max-lg:grid-cols-2 max-md:grid-cols-1 gap-4">
         <ResourceCardContainer v-for="server in servers?.result">
           <ResourceCardHeader class="relative">
             <NuxtLink :href="'/servers/' + server.id">
@@ -149,17 +164,30 @@
     "Movies",
     "Other",
   ]);
-  const category = computed(() => route.query.category);
+  const category = computed(() => {
+    go_to_page(0);
+    return route.query.category;
+  });
+  const refreshing = ref<boolean>(false);
 
   const go_to_page = async (num: number) => {
     page.value = num;
+  };
+  const refresh = async () => {
+    refreshing.value = true;
+    await refreshServers();
+    refreshing.value = false;
   };
 
   const page = ref<number>(0);
   const max_per_page = ref<number>(10);
   const max_pages = ref<number>(50);
 
-  const { data: servers, pending: servers_pending } = useFetch<{
+  const {
+    data: servers,
+    pending: servers_pending,
+    refresh: refreshServers,
+  } = useFetch<{
     message: string | null;
     result: Server[] | null;
   }>("/api/v1/servers/all/feed", {
