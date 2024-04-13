@@ -173,10 +173,4 @@
     is_public.value = lucia.value?.user.public!;
     description.value = lucia.value?.user.description!;
   });
-
-  function formatDateString(dynamicString: string) {
-    const date = new Date(Number(dynamicString));
-
-    return date ? date.toString() : "Unknown";
-  }
 </script>

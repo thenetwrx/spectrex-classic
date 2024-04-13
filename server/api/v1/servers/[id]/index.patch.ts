@@ -8,7 +8,7 @@ export default defineEventHandler(async (event) => {
   const body = await readBody(event);
 
   // 1. Check variables on server side to prevent abuse
-  if (typeof body.public !== "boolean") {
+  if (typeof body?.public !== "boolean") {
     setResponseStatus(event, 400);
     return { message: "A public selection must be made" };
   }
@@ -44,28 +44,25 @@ export default defineEventHandler(async (event) => {
   }
 
   if (
-    body.language === "unspecified" ||
-    body.language === "en" ||
-    body.language === "es" ||
-    body.language === "it" ||
-    body.language === "ja" ||
-    body.language === "ru"
+    !["unspecified", "en", "es", "it", "ja", "ru"].some(
+      (code) => body.language === code
+    )
   ) {
-  } else {
     setResponseStatus(event, 400);
     return { message: "Invalid language selection" };
   }
 
   if (
-    body.category === "Community" ||
-    body.category === "Music" ||
-    body.category === "Gaming" ||
-    body.category === "Anime" ||
-    body.category === "Technology" ||
-    body.category === "Movies" ||
-    body.category === "Other"
+    ![
+      "Community",
+      "Music",
+      "Gaming",
+      "Anime",
+      "Technology",
+      "Movies",
+      "Other",
+    ].some((cat) => body.category === cat)
   ) {
-  } else {
     setResponseStatus(event, 400);
     return { message: "Invalid category selection" };
   }
@@ -82,11 +79,14 @@ export default defineEventHandler(async (event) => {
     return { message: "Description has too many characters (max of 512)" };
   }
 
-  if (!body.invite_link.startsWith("https://discord.gg/")) {
+  if (
+    !["https://discord.gg/", "https://discord.com/invite/"].some((prefix) =>
+      body.invite_link.startsWith(prefix)
+    )
+  ) {
     setResponseStatus(event, 400);
     return {
-      message:
-        "Invite link is not valid, must be https://discord.gg/<code here>",
+      message: "Invite link is not valid, it must be a Discord invite link",
     };
   }
 

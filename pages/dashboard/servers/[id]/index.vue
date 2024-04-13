@@ -302,7 +302,7 @@
     title: computed(() =>
       server.value?.result
         ? `Dashboard - ${server.value.result.name}`
-        : "Unknown server"
+        : "Dashboard - unknown server"
     ),
   });
 

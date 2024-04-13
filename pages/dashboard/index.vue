@@ -162,10 +162,4 @@
     refreshServers();
     syncing.value = false;
   };
-
-  function formatDateString(dynamicString: string) {
-    const date = new Date(Number(dynamicString));
-
-    return date ? date.toString() : "Unknown";
-  }
 </script>

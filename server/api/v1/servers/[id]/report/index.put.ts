@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
   const body = await readBody(event);
 
   // 1. Check variables on server side to prevent abuse
-  if (typeof body.issue_type !== "number") {
+  if (typeof body?.issue_type !== "number") {
     setResponseStatus(event, 400);
     return { message: "Issue type must be selected" };
   }
@@ -18,8 +18,7 @@ export default defineEventHandler(async (event) => {
     return { message: "Description must not be empty" };
   }
 
-  if (body.issue_type === 0 || body.issue_type === 1) {
-  } else {
+  if (![0, 1].some((type) => body.issue_type === type)) {
     setResponseStatus(event, 400);
     return { message: "Invalid issue type selection" };
   }

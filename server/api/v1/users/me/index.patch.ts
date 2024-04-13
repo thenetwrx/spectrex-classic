@@ -6,7 +6,7 @@ export default defineEventHandler(async (event) => {
   const body = await readBody(event);
 
   // 1. Check variables on server side to prevent abuse
-  if (typeof body.public !== "boolean") {
+  if (typeof body?.public !== "boolean") {
     setResponseStatus(event, 400);
     return { message: "A public selection must be made" };
   }
