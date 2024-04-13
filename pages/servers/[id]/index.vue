@@ -94,12 +94,12 @@
                 {{ tag.toLowerCase() }}
               </span>
             </div>
-            <p class="opacity-50" v-else>No tags provided</p>
+            <p class="opacity-75" v-else>No tags provided</p>
           </div>
           <div>
             <p class="text-2xl pb-2">Description</p>
 
-            <p class="break-words whitespace-pre-wrap opacity-50">
+            <p class="break-words whitespace-pre-wrap opacity-75">
               {{ server.result.description }}
             </p>
           </div>
