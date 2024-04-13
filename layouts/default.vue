@@ -29,7 +29,7 @@
     ogTitle: "Spectrex - Find YOUR Discord server",
     ogDescription:
       "Unleash a world of niche communities, passionate gamers, and endless possibilities. Curated listings, tailored just for you.",
-    ogImage: "https://spectrex.app/images/logo.png",
+    ogImage: "https://spectrex.app/images/logo_black.png",
     ogSiteName: "Spectrex",
     ogType: "website",
     ogUrl: "https://spectrex.app",
