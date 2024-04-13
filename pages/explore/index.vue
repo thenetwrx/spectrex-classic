@@ -19,8 +19,8 @@
         {{ category }}
       </NuxtLink>
     </div>
-    <div class="flex flex-row">
-      <p class="opacity-75 text-md mb-3">
+    <div class="flex flex-row items-center mb-3">
+      <p class="opacity-75 text-md">
         Showing ({{ servers?.result?.length || 0 }} / {{ max_per_page }})
         results for Page {{ page + 1 }}
       </p>
