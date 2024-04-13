@@ -21,6 +21,7 @@
     </div>
     <p class="opacity-75 text-md mb-3">
       Showing ({{ servers?.result?.length || 0 }} / {{ max_per_page }}) results
+      for Page {{ page + 1 }}
     </p>
     <ResourcePending v-if="servers_pending" />
     <ResourceNotFound
