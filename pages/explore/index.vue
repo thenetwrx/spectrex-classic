@@ -21,8 +21,11 @@
     </div>
     <div class="flex flex-row items-center mb-3">
       <p class="opacity-75 text-md">
-        Showing
-        {{ servers?.result?.length ? servers?.result?.length : 0 }} results
+        Found
+        {{ servers?.result?.length ? servers?.result?.length : 0 }}/{{
+          max_per_page
+        }}
+        result(s) for Page {{ page + 1 }}
       </p>
 
       <button
