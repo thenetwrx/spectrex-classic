@@ -179,7 +179,6 @@
   };
   const refresh = async () => {
     refreshing.value = true;
-    await new Promise((res) => setTimeout(res, 5000));
     await refreshServers();
     refreshing.value = false;
   };
