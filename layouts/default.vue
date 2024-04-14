@@ -131,7 +131,6 @@
             href="/api/v1/auth/discord"
             :external="true"
             class="btn btn-sm btn-secondary w-full"
-            data-theme="dark"
           >
             <i class="fa-brands fa-discord"></i>
             Login
@@ -175,7 +174,7 @@
               <div class="w-8 h-8 overflow-hidden rounded-full">
                 <div class="avatar" v-if="lucia.user.avatar">
                   <div class="rounded-full w-full">
-                    <img
+                    <NuxtImg
                       alt="Resource Image"
                       :src="
                         discordCdn.user_avatar(
@@ -218,7 +217,6 @@
             href="/api/v1/auth/discord"
             :external="true"
             class="btn btn-sm btn-secondary px-4"
-            data-theme="dark"
           >
             <i class="fa-brands fa-discord"></i>
             Login

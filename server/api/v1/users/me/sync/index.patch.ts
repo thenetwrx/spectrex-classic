@@ -46,7 +46,7 @@ export default defineEventHandler(async (event) => {
 
     const { rows: users } = await client.query<User>(
       `
-      SELECT * FROM users
+      SELECT id FROM users
       WHERE
         id = $1
       `,
@@ -56,10 +56,8 @@ export default defineEventHandler(async (event) => {
     if (!users.length) {
       client.release();
 
-      setResponseStatus(event, 403);
-      return {
-        message: "User doesn't exist",
-      };
+      setResponseStatus(event, 404);
+      return { message: "User not found" };
     }
 
     await client.query(

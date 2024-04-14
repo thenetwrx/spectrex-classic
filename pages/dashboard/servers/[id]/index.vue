@@ -323,10 +323,25 @@
     ),
   });
 
+  const refreshServerMetadata = () => {
+    const premium = lucia.value?.user.premium_since !== null ? true : false;
+
+    const cooldown = premium ? 3600000 : 7200000;
+    const on_cooldown =
+      Number(server.value?.result?.bumped_at || 0) + cooldown <= Date.now()
+        ? false
+        : true;
+
+    server_metadata.value.bumping = false;
+    server_metadata.value.on_cooldown = on_cooldown;
+  };
+
   watch(
     server,
     () => {
       if (server.value?.result) {
+        refreshServerMetadata();
+
         is_public.value = server.value.result.public;
         language.value = server.value.result.language!;
         category.value = server.value.result.category!;
@@ -416,22 +431,6 @@
         screen.height / 2 - 820 / 2
       }`
     );
-  };
-
-  onMounted(async () => refreshServerMetadata());
-  watch(server, () => refreshServerMetadata());
-
-  const refreshServerMetadata = () => {
-    const premium = lucia.value?.user.premium_since !== null ? true : false;
-
-    const cooldown = premium ? 3600000 : 7200000;
-    const on_cooldown =
-      Number(server.value?.result?.bumped_at || 0) + cooldown <= Date.now()
-        ? false
-        : true;
-
-    server_metadata.value.bumping = false;
-    server_metadata.value.on_cooldown = on_cooldown;
   };
 
   const bump_server = async () => {

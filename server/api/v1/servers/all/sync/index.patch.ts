@@ -49,7 +49,7 @@ export default defineEventHandler(async (event) => {
       if (server_from_discord.owner) {
         const { rows: servers } = await client.query<Server>(
           `
-            SELECT * FROM servers
+            SELECT id, banned FROM servers
             WHERE provider_id = $1
           `,
           [server_from_discord.id]

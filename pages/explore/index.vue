@@ -5,26 +5,26 @@
     <div class="flex flex-wrap gap-2 overflow-x-auto mb-6">
       <NuxtLink
         href="/explore"
-        class="block max-w-fit px-2 py-1 bg-accent border-none bg-opacity-50 rounded-sm gap-2 hover:bg-opacity-65 hover:cursor-pointer transition-colors duration-200 ease-in-out text-white"
+        class="block max-w-fit px-2 py-1 bg-accent border-none rounded-sm gap-2 hover:cursor-pointer text-white"
         :class="
           category === undefined
             ? 'bg-opacity-100'
-            : 'hover:bg-opacity-65 transition-colors duration-200 ease-in-out'
+            : 'bg-opacity-50 hover:bg-opacity-65 transition-colors duration-200 ease-in-out'
         "
       >
         <span :class="category === undefined ? 'text-white' : 'text-accent'"
           >/</span
         >
-        All
+        All Categories
       </NuxtLink>
       <NuxtLink
         v-for="_category in popular_categories"
         :href="'/explore?category=' + _category"
-        class="block max-w-fit px-2 py-1 bg-accent border-none bg-opacity-50 rounded-sm gap-2 hover:cursor-pointer text-white"
+        class="block max-w-fit px-2 py-1 bg-accent border-none rounded-sm gap-2 hover:cursor-pointer text-white"
         :class="
           category === _category
             ? 'bg-opacity-100'
-            : 'hover:bg-opacity-65 transition-colors duration-200 ease-in-out'
+            : 'bg-opacity-50 hover:bg-opacity-65 transition-colors duration-200 ease-in-out'
         "
       >
         <span :class="category === _category ? 'text-white' : 'text-accent'"
@@ -194,6 +194,7 @@
   };
   const refresh = async () => {
     refreshing.value = true;
+    go_to_page(0);
     await refreshServers();
     refreshing.value = false;
   };
@@ -213,4 +214,14 @@
     query: { page, category },
     retry: false,
   });
+
+  watch(
+    () => servers.value,
+    () => {
+      if (process.client) {
+        window.scrollTo(0, 0);
+      }
+    },
+    { immediate: true }
+  );
 </script>

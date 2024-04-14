@@ -2,7 +2,7 @@
   <div class="w-16 h-16 overflow-hidden rounded-full">
     <div class="avatar" v-if="props.resource">
       <div class="rounded-full w-full">
-        <img alt="Resource Image" :src="props.resource" />
+        <NuxtImg alt="Resource Image" :src="props.resource" />
       </div>
     </div>
     <div class="h-full" v-else>

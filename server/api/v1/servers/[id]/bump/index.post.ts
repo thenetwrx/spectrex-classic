@@ -21,7 +21,7 @@ export default defineEventHandler(async (event) => {
   try {
     const { rows: servers } = await client.query<Server>(
       `
-      SELECT * FROM servers
+      SELECT id, owner_id, banned, approved_at, bumped_at FROM servers
       WHERE
         id = $1
     `,
@@ -66,7 +66,7 @@ export default defineEventHandler(async (event) => {
         WHERE
             id = $2
       `,
-        [now.toString(), server_id]
+        [now.toString(), servers[0].id]
       );
 
       client.release();

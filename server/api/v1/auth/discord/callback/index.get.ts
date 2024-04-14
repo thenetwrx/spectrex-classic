@@ -30,7 +30,7 @@ export default defineEventHandler(async (event) => {
 
     const { rows: existing_user } = await client.query<User>(
       `
-      SELECT id FROM users
+      SELECT id, banned FROM users
       WHERE
         provider_id = $1
     `,

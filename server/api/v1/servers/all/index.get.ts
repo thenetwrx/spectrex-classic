@@ -19,7 +19,7 @@ export default defineEventHandler(async (event) => {
       `
       SELECT * FROM servers
       WHERE
-        owner_id = $1     
+        owner_id = $1
       `,
       [event.context.user.id]
     );

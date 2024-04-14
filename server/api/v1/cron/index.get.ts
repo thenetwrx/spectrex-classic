@@ -13,7 +13,7 @@ export default defineEventHandler(async (event) => {
       WHERE expires_at < NOW()
     `);
     const { rows: sessions } = await client.query<Session>(`
-        SELECT * FROM sessions;
+        SELECT id, provider_access_token_expires_at, provider_refresh_token FROM sessions;
     `);
 
     sessions.forEach(async (session) => {
