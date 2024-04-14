@@ -6,40 +6,51 @@
       <NuxtLink
         href="/explore"
         class="block max-w-fit px-2 py-1 bg-accent border-none bg-opacity-50 rounded-sm gap-2 hover:bg-opacity-65 hover:cursor-pointer transition-colors duration-200 ease-in-out text-white"
+        :class="
+          category === undefined
+            ? 'bg-opacity-100'
+            : 'hover:bg-opacity-65 transition-colors duration-200 ease-in-out'
+        "
       >
-        <span class="text-accent">/</span>
+        <span :class="category === undefined ? 'text-white' : 'text-accent'"
+          >/</span
+        >
         All
       </NuxtLink>
       <NuxtLink
-        v-for="category in popular_categories"
-        :href="'/explore?category=' + category"
-        class="block max-w-fit px-2 py-1 bg-accent border-none bg-opacity-50 rounded-sm gap-2 hover:bg-opacity-65 hover:cursor-pointer transition-colors duration-200 ease-in-out text-white"
+        v-for="_category in popular_categories"
+        :href="'/explore?category=' + _category"
+        class="block max-w-fit px-2 py-1 bg-accent border-none bg-opacity-50 rounded-sm gap-2 hover:cursor-pointer text-white"
+        :class="
+          category === _category
+            ? 'bg-opacity-100'
+            : 'hover:bg-opacity-65 transition-colors duration-200 ease-in-out'
+        "
       >
-        <span class="text-accent">/</span>
-        {{ category }}
+        <span :class="category === _category ? 'text-white' : 'text-accent'"
+          >/</span
+        >
+        {{ _category }}
       </NuxtLink>
     </div>
     <div class="flex flex-row items-center mb-3">
-      <p class="opacity-75 text-md">
-        Found
-        {{ servers?.result?.length ? servers?.result?.length : 0 }}/{{
-          max_per_page
-        }}
-        result(s) for Page {{ page + 1 }}
+      <p class="opacity-75 text-lg">
+        Showing
+        <span class="font-bold"
+          >{{ max_per_page * page }}-{{
+            page === 0 ? max_per_page : page * max_per_page + max_per_page
+          }}</span
+        >
+        of <span class="font-bold">{{ servers?.amount }}</span> servers
       </p>
 
       <button
         class="btn btn-ghost btn-sm ml-auto"
-        :class="refreshing ? 'btn-disabled' : ''"
+        v-if="!refreshing"
         v-on:click="refresh"
       >
-        <span v-if="refreshing">Refresh</span>
-        <span v-else>Refresh</span>
-        <span
-          v-if="refreshing"
-          class="loading loading-spinner loading-xs"
-        ></span>
-        <i v-else class="fa-solid fa-arrows-rotate"></i>
+        <span>Refresh</span>
+        <i class="fa-solid fa-arrows-rotate"></i>
       </button>
     </div>
     <ResourcePending v-if="servers_pending" />
@@ -124,27 +135,31 @@
       </div>
     </div>
 
-    <div class="flex flex-row items-center place-self-center my-8">
+    <div class="flex flex-row gap-2 mx-auto my-8">
       <button
-        class="btn btn-primary btn-sm"
-        :class="page === 0 ? 'btn-disabled' : ''"
+        class="btn"
         v-on:click="go_to_page(page - 1)"
+        :class="page === 0 ? 'btn-disabled' : ''"
       >
-        <i class="fa-solid fa-arrow-left"></i>
+        <i class="fa-solid fa-chevrons-left"></i>
       </button>
-      <span class="mx-2 bg-base-200 px-2 py-1 rounded-md"
-        >Page {{ page + 1 }}</span
-      >
+
+      <div class="bg-base-200 p-3 rounded-md h-full">
+        {{ page + 1 }} <span class="opacity-25">/</span>
+        {{ Math.ceil((servers?.amount || max_per_page) / max_per_page) }}
+      </div>
+
       <button
-        class="btn btn-primary btn-sm"
+        class="btn"
+        v-on:click="go_to_page(page + 1)"
         :class="
-          page === max_pages || (servers?.result?.length || 0) < max_per_page
+          page + 1 ===
+          Math.ceil((servers?.amount || max_per_page) / max_per_page)
             ? 'btn-disabled'
             : ''
         "
-        v-on:click="go_to_page(page + 1)"
       >
-        <i class="fa-solid fa-arrow-right"></i>
+        <i class="fa-solid fa-chevrons-right"></i>
       </button>
     </div>
   </Container>
@@ -185,7 +200,6 @@
 
   const page = ref<number>(0);
   const max_per_page = ref<number>(10);
-  const max_pages = ref<number>(50);
 
   const {
     data: servers,
@@ -194,6 +208,7 @@
   } = useFetch<{
     message: string | null;
     result: Server[] | null;
+    amount: number;
   }>("/api/v1/servers/all/feed", {
     query: { page, category },
     retry: false,

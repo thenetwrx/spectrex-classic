@@ -4,8 +4,8 @@
       <div class="w-16 h-16 overflow-hidden rounded-full">
         <div class="avatar" v-if="lucia?.user?.avatar">
           <div class="rounded-full w-full">
-            <NuxtImg
-              alt="User Image"
+            <img
+              alt="Resource Image"
               :src="
                 discordCdn.user_avatar(
                   lucia.user.provider_id,

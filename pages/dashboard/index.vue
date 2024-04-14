@@ -39,8 +39,8 @@
                 <div class="w-16 h-16 overflow-hidden rounded-lg">
                   <div class="avatar" v-if="server.icon">
                     <div class="rounded-full w-full">
-                      <NuxtImg
-                        alt="Server Image"
+                      <img
+                        alt="Resource Image"
                         :src="
                           discordCdn.server_icon(
                             server.provider_id,

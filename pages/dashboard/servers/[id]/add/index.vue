@@ -240,7 +240,7 @@
       navigateTo("/");
     }
 
-    if (response.ok) navigateTo("/servers/" + server_id);
+    if (response.ok) navigateTo("/dashboard/servers/" + server_id);
     else {
       const json = await response.json();
       alert(json.message);

@@ -67,6 +67,22 @@
             {{ server.result.name }} with
             {{ server.result.approximate_member_count }} members
           </p>
+          <div
+            class="alert bg-accent flex items-start flex-row max-md:flex-col bg-opacity-50 text-opacity-75 rounded-md"
+          >
+            <span class="max-w-lg">
+              <i class="fa-solid fa-circle-info px-2"></i> Want quick and easy
+              access to your Spectrex server? Add the Discord bot for a bump
+              command!</span
+            >
+            <NuxtLink
+              v-on:click="invite_bot(server.result.provider_id)"
+              target="popup"
+              class="btn btn-sm btn-secondary ml-auto"
+            >
+              Add to server
+            </NuxtLink>
+          </div>
           <DashboardCardContainer>
             <DashboardCardHeader>
               <p class="text-xl">
@@ -389,6 +405,17 @@
       const json = await response.json();
       alert(json.message);
     }
+  };
+
+  const invite_bot = (server_id: string) => {
+    const inviteUrl = `https://discord.com/oauth2/authorize?scope=bot+applications.commands&permissions=277025736769&client_id=1216792581577506826&guild_id=${server_id}&disable_guild_select=true`;
+    window.open(
+      inviteUrl,
+      "name",
+      `width=458,height=820,left=${screen.width / 2 - 458 / 2},top=${
+        screen.height / 2 - 820 / 2
+      }`
+    );
   };
 
   onMounted(async () => refreshServerMetadata());
