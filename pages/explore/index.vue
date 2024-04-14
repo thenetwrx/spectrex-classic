@@ -37,7 +37,7 @@
       <p class="opacity-75 text-lg">
         Showing
         <span class="font-bold"
-          >{{ max_per_page * page }}-{{
+          >{{ max_per_page * page + 1 }}-{{
             page === 0 ? max_per_page : page * max_per_page + max_per_page
           }}</span
         >
