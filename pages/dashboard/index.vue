@@ -13,10 +13,11 @@
           >
             <span v-if="syncing">Syncing</span>
             <span v-else>Sync</span>
-            <i
-              class="fa-solid fa-arrows-rotate"
-              :class="syncing ? 'fa-spin' : ''"
-            ></i>
+            <span
+              v-if="syncing"
+              class="loading loading-spinner loading-xs"
+            ></span>
+            <i v-else class="fa-solid fa-arrows-rotate"></i>
           </button>
         </div>
 
@@ -96,10 +97,11 @@
         >
           <span v-if="syncing">Syncing</span>
           <span v-else>Sync</span>
-          <i
-            class="fa-solid fa-arrows-rotate"
-            :class="syncing ? 'fa-spin' : ''"
-          ></i>
+          <span
+            v-if="syncing"
+            class="loading loading-spinner loading-xs"
+          ></span>
+          <i v-else class="fa-solid fa-arrows-rotate"></i>
         </button>
         <button class="btn btn-ghost btn-sm" onclick="my_modal_1.close()">
           <i class="fa-solid fa-xmark"></i>

@@ -33,12 +33,13 @@
         :class="refreshing ? 'btn-disabled' : ''"
         v-on:click="refresh"
       >
-        <span v-if="refreshing">Refreshing</span>
+        <span v-if="refreshing">Refresh</span>
         <span v-else>Refresh</span>
-        <i
-          class="fa-solid fa-arrows-rotate"
-          :class="refreshing ? 'fa-spin' : ''"
-        ></i>
+        <span
+          v-if="refreshing"
+          class="loading loading-spinner loading-xs"
+        ></span>
+        <i v-else class="fa-solid fa-arrows-rotate"></i>
       </button>
     </div>
     <ResourcePending v-if="servers_pending" />
@@ -178,6 +179,7 @@
   };
   const refresh = async () => {
     refreshing.value = true;
+    await new Promise((res) => setTimeout(res, 5000));
     await refreshServers();
     refreshing.value = false;
   };
