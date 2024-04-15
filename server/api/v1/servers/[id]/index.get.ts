@@ -42,8 +42,10 @@ export default defineEventHandler(async (event) => {
       return { message: "Server is banned from Spectrex", result: null };
     }
     if (servers[0].approved_at === null) {
-      setResponseStatus(event, 403);
-      return { message: "Server is not approved", result: null };
+      if (event.context.user?.id !== servers[0].owner_id) {
+        setResponseStatus(event, 403);
+        return { message: "Server is not approved", result: null };
+      }
     }
 
     setResponseStatus(event, 200);
