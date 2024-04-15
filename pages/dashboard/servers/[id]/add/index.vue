@@ -16,7 +16,10 @@
         </div>
 
         <ResourcePending v-if="server_pending" />
-        <ResourceNotFound v-else-if="!server?.result" />
+        <ResourceNotFound
+          v-else-if="!server?.result"
+          :message="server_error?.data.message"
+        />
         <ResourceNotFound
           v-else-if="server.result.owner_id !== lucia?.user?.id"
           message="Unauthorized"
@@ -204,7 +207,11 @@
   const tags = ref<Array<string>>([]);
   const new_tag = ref<string>("");
 
-  const { data: server, pending: server_pending } = useFetch<{
+  const {
+    data: server,
+    pending: server_pending,
+    error: server_error,
+  } = useFetch<{
     message: string | null;
     result: Server | null;
   }>(`/api/v1/servers/${server_id}`, { retry: false });

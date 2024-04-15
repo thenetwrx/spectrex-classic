@@ -24,11 +24,11 @@
   });
 
   useSeoMeta({
-    description:
-      "Unleash a world of niche communities, passionate gamers, and endless possibilities. Curated listings, tailored just for you.",
     ogTitle: "Spectrex - Find YOUR Discord server",
+    description:
+      "Grow your Discord community or find your next online home. Our server list advocates for equal exposure, helping servers connect with the right audience.",
     ogDescription:
-      "Unleash a world of niche communities, passionate gamers, and endless possibilities. Curated listings, tailored just for you.",
+      "Grow your Discord community or find your next online home. Our server list advocates for equal exposure, helping servers connect with the right audience.",
     ogImage: "https://spectrex.app/images/logo_black.png",
     ogSiteName: "Spectrex",
     ogType: "website",

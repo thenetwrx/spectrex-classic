@@ -1,7 +1,10 @@
 <template>
   <Container class="max-w-4xl text-center">
     <ResourcePending v-if="profile_pending" />
-    <ResourceNotFound v-else-if="!profile?.result" />
+    <ResourceNotFound
+      v-else-if="!profile?.result"
+      :message="profile_error?.data.message"
+    />
     <template v-else>
       <ResourceRow>
         <NuxtLink
@@ -88,7 +91,11 @@
   const route = useRoute();
   const user_id = route.params.id;
 
-  const { data: profile, pending: profile_pending } = useFetch<{
+  const {
+    data: profile,
+    pending: profile_pending,
+    error: profile_error,
+  } = useFetch<{
     message: string | null;
     result: User | null;
   }>(`/api/v1/users/${user_id}`, { retry: false });

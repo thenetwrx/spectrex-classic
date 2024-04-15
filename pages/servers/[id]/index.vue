@@ -1,7 +1,10 @@
 <template>
   <Container class="max-w-4xl text-center">
     <ResourcePending v-if="server_pending" />
-    <ResourceNotFound v-else-if="!server?.result" />
+    <ResourceNotFound
+      v-else-if="!server?.result"
+      :message="server_error?.data.message"
+    />
     <template v-else>
       <ResourceRow>
         <NuxtLink
@@ -125,7 +128,11 @@
   const route = useRoute();
   const server_id = route.params.id;
 
-  const { data: server, pending: server_pending } = useFetch<{
+  const {
+    data: server,
+    pending: server_pending,
+    error: server_error,
+  } = useFetch<{
     message: string | null;
     result: Server | null;
   }>(`/api/v1/servers/${server_id}`, { retry: false });

@@ -33,15 +33,11 @@ export default defineEventHandler(async (event) => {
 
     if (!users[0].public) {
       if (event.context.user?.id !== users[0].id) {
-        setResponseStatus(event, 404);
+        setResponseStatus(event, 403);
         return { message: "Unauthorized", result: null };
       }
     }
-    if (
-      users[0].banned &&
-      event.context.user &&
-      users[0].id !== event.context.user.id
-    ) {
+    if (users[0].banned) {
       setResponseStatus(event, 403);
       return { message: "User is banned from Spectrex", result: null };
     }

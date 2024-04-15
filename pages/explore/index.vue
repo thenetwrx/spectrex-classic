@@ -60,7 +60,7 @@
     />
     <div class="w-fit mx-auto" v-else>
       <div class="grid grid-cols-3 max-lg:grid-cols-2 max-md:grid-cols-1 gap-4">
-        <ResourceCardContainer v-for="server in servers?.result">
+        <ResourceCardContainer v-for="server in servers.result">
           <ResourceCardHeader class="relative">
             <NuxtLink :href="'/servers/' + server.id">
               <ResourceCardHeaderImage
