@@ -42,7 +42,7 @@
                       <NuxtImg
                         alt="Resource Image"
                         :src="
-                          discordCdn.server_icon(
+                          discord.cdn.server_icon(
                             server.provider_id,
                             server.icon
                           )
@@ -135,7 +135,7 @@
     title: "Dashboard",
   });
   const lucia = useLucia();
-  const discordCdn = useDiscordCdn();
+  const discord = useDiscord();
   const syncing = ref<boolean>(false);
 
   const {

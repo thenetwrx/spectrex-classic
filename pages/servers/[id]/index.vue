@@ -31,7 +31,7 @@
           <ResourceCardHeaderImage
             :resource="
               server.result.icon
-                ? discordCdn.server_icon(
+                ? discord.cdn.server_icon(
                     server.result.provider_id,
                     server.result.icon
                   )
@@ -123,8 +123,8 @@
   import useClipboard from "~/composables/useClipboard";
   import type Server from "~/types/Server";
 
-  const discordCdn = useDiscordCdn();
   const lucia = useLucia();
+  const discord = useDiscord();
   const route = useRoute();
   const server_id = route.params.id;
 

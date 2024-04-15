@@ -42,7 +42,7 @@
   const isMobileSidebarOpen = ref<boolean>(false);
 
   const lucia = useLucia();
-  const discordCdn = useDiscordCdn();
+  const discord = useDiscord();
 
   const logout = async () => {
     await $fetch("/api/v1/auth/logout", {
@@ -177,7 +177,7 @@
                     <NuxtImg
                       alt="Resource Image"
                       :src="
-                        discordCdn.user_avatar(
+                        discord.cdn.user_avatar(
                           lucia.user.provider_id,
                           lucia.user.avatar
                         )

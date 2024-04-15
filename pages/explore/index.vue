@@ -66,7 +66,7 @@
               <ResourceCardHeaderImage
                 :resource="
                   server.icon
-                    ? discordCdn.server_icon(server.provider_id, server.icon)
+                    ? discord.cdn.server_icon(server.provider_id, server.icon)
                     : null
                 "
                 :abbreviation="server.name.slice(0, 2).toUpperCase()"
@@ -171,7 +171,7 @@
   useHead({
     title: "Explore",
   });
-  const discordCdn = useDiscordCdn();
+  const discord = useDiscord();
 
   const route = useRoute();
   const popular_categories = ref<Array<string>>([

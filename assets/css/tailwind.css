@@ -2,3 +2,16 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  :root:has(
+      :is(
+          .modal-open,
+          .modal:target,
+          .modal-toggle:checked + .modal,
+          .modal[open]
+        )
+    ) {
+    scrollbar-gutter: revert !important;
+  }
+}

@@ -23,7 +23,7 @@
           <ResourceCardHeaderImage
             :resource="
               profile.result.avatar
-                ? discordCdn.user_avatar(
+                ? discord.cdn.user_avatar(
                     profile.result.provider_id,
                     profile.result.avatar
                   )
@@ -86,7 +86,7 @@
   import useClipboard from "~/composables/useClipboard";
 
   const lucia = useLucia();
-  const discordCdn = useDiscordCdn();
+  const discord = useDiscord();
 
   const route = useRoute();
   const user_id = route.params.id;

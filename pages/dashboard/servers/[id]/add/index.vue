@@ -186,6 +186,36 @@
       </DashboardMainContent>
     </DashboardMainContainer>
   </Container>
+  <dialog class="modal" id="my_modal_1">
+    <div class="modal-box bg-base-200 flex flex-col gap-4">
+      <div class="flex flex-row gap-1 items-center w-full">
+        <h3 class="text-lg font-bold">Server added!</h3>
+      </div>
+      <p class="opacity-75">
+        Do you want to add the Spectrex Discord bot for a bump command in your
+        Discord server? It's 100% optional!
+      </p>
+      <div class="flex flex-row gap-2 ml-auto">
+        <button
+          class="btn btn-sm btn-accent"
+          v-on:click="
+            () => {
+              invite_bot(server?.result?.provider_id || '0');
+              navigateTo('/dashboard/servers/' + server?.result?.id);
+            }
+          "
+        >
+          Accept <i class="fa-solid fa-arrow-up-right-from-square ml-auto"></i>
+        </button>
+        <NuxtLink
+          class="btn btn-sm btn-secondary"
+          :href="'/dashboard/servers/' + server?.result?.id"
+        >
+          Decline
+        </NuxtLink>
+      </div>
+    </div>
+  </dialog>
 </template>
 
 <script setup lang="ts">
@@ -195,6 +225,7 @@
     middleware: ["1-protected"],
   });
   const lucia = useLucia();
+  const discord = useDiscord();
   const route = useRoute();
   const server_id = route.params.id;
 
@@ -247,11 +278,25 @@
       navigateTo("/");
     }
 
-    if (response.ok) navigateTo("/dashboard/servers/" + server_id);
-    else {
+    if (response.ok) {
+      if (process.client) {
+        const element = document.getElementById("my_modal_1") as any;
+        element.showModal();
+      }
+    } else {
       const json = await response.json();
       alert(json.message);
     }
+  };
+
+  const invite_bot = (server_id: string) => {
+    window.open(
+      discord.invite.bot(server_id),
+      "name",
+      `width=458,height=820,left=${screen.width / 2 - 458 / 2},top=${
+        screen.height / 2 - 820 / 2
+      }`
+    );
   };
 
   // Method to add a tag to the array

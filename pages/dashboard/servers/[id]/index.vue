@@ -292,6 +292,7 @@
     middleware: ["1-protected"],
   });
   const lucia = useLucia();
+  const discord = useDiscord();
   const route = useRoute();
   const server_id = route.params.id;
   const syncing = ref<boolean>(false);
@@ -427,9 +428,8 @@
   };
 
   const invite_bot = (server_id: string) => {
-    const inviteUrl = `https://discord.com/oauth2/authorize?scope=bot+applications.commands&permissions=277025736769&client_id=1216792581577506826&guild_id=${server_id}&disable_guild_select=true`;
     window.open(
-      inviteUrl,
+      discord.invite.bot(server_id),
       "name",
       `width=458,height=820,left=${screen.width / 2 - 458 / 2},top=${
         screen.height / 2 - 820 / 2

@@ -7,7 +7,7 @@
             <NuxtImg
               alt="Resource Image"
               :src="
-                discordCdn.user_avatar(
+                discord.cdn.user_avatar(
                   lucia.user.provider_id,
                   lucia.user.avatar
                 )
@@ -50,7 +50,7 @@
 
 <script setup lang="ts">
   const lucia = useLucia();
-  const discordCdn = useDiscordCdn();
+  const discord = useDiscord();
 
   function formatDateString(dynamicString: string) {
     const date = new Date(Number(dynamicString));
