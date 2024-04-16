@@ -50,7 +50,7 @@ export default defineEventHandler(async (event) => {
     if (!servers[0].approved_at) {
       client.release();
 
-      setResponseStatus(event, 404);
+      setResponseStatus(event, 403);
       return { message: "Server is not approved" };
     }
 
