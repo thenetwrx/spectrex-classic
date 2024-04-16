@@ -260,13 +260,12 @@
       method: "PUT",
       headers: new Headers({ "content-type": "application/json" }),
       body: JSON.stringify({
-        public: is_public.value,
         language: language.value,
         category: category.value,
         tags: tags.value,
         description: description.value,
-        nsfw: nsfw.value,
         invite_link: invite_link.value,
+        nsfw: nsfw.value,
       }),
     });
     if (response.status === 401) {

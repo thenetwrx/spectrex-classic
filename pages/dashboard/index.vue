@@ -88,7 +88,7 @@
   </Container>
   <dialog class="modal" id="my_modal_1">
     <div class="modal-box bg-base-200">
-      <div class="flex flex-row gap-1 items-center w-full pb-4">
+      <div class="flex flex-row gap-1 items-center w-full">
         <h3 class="text-lg font-bold">Add server</h3>
         <button
           class="btn btn-ghost btn-sm ml-auto"
@@ -107,6 +107,10 @@
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
+      <p class="opacity-75 py-2">
+        Not seeing a server? Your Discord account has to be the owner of it
+        before you can add it.
+      </p>
       <select
         class="select select-bordered rounded-none w-full"
         v-on:change="((event:any) => navigateTo(event?.target?.value || '/'))"
