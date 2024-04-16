@@ -106,12 +106,9 @@
             </div>
           </ResourceCardHeader>
           <ResourceCardContent>
-            <div>
-              <p class="text-2xl pb-2">Tags</p>
-
+            <div v-if="server.tags?.length">
               <div
                 class="flex flex-wrap gap-2 w-fit max-sm:max-w-fit overflow-x-auto"
-                v-if="server.tags?.length"
               >
                 <span
                   v-for="tag in server.tags"
@@ -121,11 +118,9 @@
                   {{ tag.toLowerCase() }}
                 </span>
               </div>
-              <p class="opacity-75" v-else>No tags provided</p>
             </div>
+            <div class="divider my-0"></div>
             <div>
-              <p class="text-2xl pb-2">Description</p>
-
               <p class="break-words whitespace-pre-wrap opacity-75">
                 {{ server.description }}
               </p>
