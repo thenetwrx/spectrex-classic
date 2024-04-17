@@ -1,5 +1,4 @@
 import Postgres from "pg";
-import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { drizzle } from "drizzle-orm/node-postgres";
 
 const pool = new Postgres.Pool({

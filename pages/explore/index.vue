@@ -99,7 +99,7 @@
             >
               <NuxtLink
                 :href="'/servers/' + server.id + '/report'"
-                class="btn btn-ghost max-sm:btn-sm"
+                class="btn btn-ghost btn-sm"
               >
                 <i class="fa-solid md:fa-lg fa-flag"></i>
               </NuxtLink>

@@ -21,7 +21,7 @@ export default defineEventHandler(async (event) => {
     const servers = await db
       .select({
         id: servers_table.id,
-        owner_id: servers_table.id,
+        owner_id: servers_table.owner_id,
         banned: servers_table.banned,
         approved_at: servers_table.approved_at,
       })
