@@ -43,7 +43,12 @@
             <button
               class="btn btn-ghost btn-sm"
               :class="syncing || !server?.result ? 'btn-disabled' : ''"
-              v-on:click="sync"
+              v-on:click="
+                async () => {
+                  await sync();
+                  await refreshServer();
+                }
+              "
             >
               <span v-if="syncing">Syncing</span>
               <span v-else>Sync</span>
@@ -372,7 +377,6 @@
       lucia.value = null;
       navigateTo("/");
     }
-    refreshServer();
     syncing.value = false;
   };
 
@@ -440,6 +444,7 @@
   const bump_server = async () => {
     if (server.value !== null) {
       server_metadata.value.bumping = true;
+      await sync();
       const response = await fetch(`/api/v1/servers/${server_id}/bump`, {
         method: "POST",
       });
@@ -451,9 +456,7 @@
         lucia.value = null;
         navigateTo("/");
       }
-
       server_metadata.value.bumping = false;
-
       await refreshServer();
     }
   };

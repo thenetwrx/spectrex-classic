@@ -140,8 +140,6 @@
       lucia.value = null;
       navigateTo("/");
     }
-
-    refreshNuxtData("lucia");
     syncing.value = false;
   };
 
