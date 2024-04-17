@@ -1,5 +1,5 @@
-import pool from "~/server/utils/database";
-import type Server from "~/types/Server";
+import { eq } from "drizzle-orm";
+import db from "~/server/utils/database";
 
 export default defineEventHandler(async (event) => {
   // Parameters
@@ -89,6 +89,10 @@ export default defineEventHandler(async (event) => {
       message: "Invite link is not valid, it must be a Discord invite link",
     };
   }
+  if (body.invite_link.length >= 128) {
+    setResponseStatus(event, 400);
+    return { message: "Invite link has too many characters (max of 128)" };
+  }
 
   // 2. Require being logged in
   if (!event.context.user) {
@@ -101,70 +105,52 @@ export default defineEventHandler(async (event) => {
   }
 
   // 3. Edit server
-  const client = await pool.connect();
   try {
-    const { rows: servers } = await client.query<Server>(
-      `
-      SELECT id, owner_id, banned, approved_at FROM servers
-      WHERE
-        id = $1
-    `,
-      [server_id]
-    );
+    const servers = await db
+      .select({
+        id: servers_table.id,
+        owner_id: servers_table.owner_id,
+        banned: servers_table.banned,
+        approved_at: servers_table.approved_at,
+      })
+      .from(servers_table)
+      .where(eq(servers_table.id, server_id));
 
     if (!servers.length) {
-      client.release();
-
       setResponseStatus(event, 404);
       return { message: "Server not found" };
     }
 
     if (servers[0].owner_id !== event.context.user.id) {
-      client.release();
-
       setResponseStatus(event, 403);
       return { message: "Unauthorized" };
     }
     if (servers[0].banned) {
-      client.release();
-
       setResponseStatus(event, 403);
       return { message: "Server is banned from Spectrex" };
     }
     if (servers[0].approved_at === null) {
-      client.release();
-
       setResponseStatus(event, 403);
       return { message: "Server is not approved" };
     }
 
-    await client.query(
-      `
-        UPDATE servers 
-        SET public = $1, language = $2, category = $3, tags = $4, description = $5, invite_link = $6, nsfw = $7, updated_at = $8
-        WHERE
-            id = $9
-    `,
-      [
-        body.public,
-        body.language,
-        body.category,
-        body.tags,
-        body.description,
-        body.invite_link,
-        body.nsfw,
-        Date.now().toString(),
-        servers[0].id,
-      ]
-    );
-
-    client.release();
+    await db
+      .update(servers_table)
+      .set({
+        public: body.public,
+        language: body.language,
+        category: body.category,
+        tags: body.tags,
+        description: body.description,
+        invite_link: body.invite_link,
+        nsfw: body.nsfw,
+        updated_at: Date.now().toString(),
+      })
+      .where(eq(servers_table.id, servers[0].id));
 
     return;
   } catch (err) {
     console.log(err);
-
-    client.release();
 
     setResponseStatus(event, 500);
     return {

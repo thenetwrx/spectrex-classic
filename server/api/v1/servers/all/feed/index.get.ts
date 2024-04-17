@@ -1,5 +1,5 @@
-import pool from "~/server/utils/database";
-import type Server from "~/types/Server";
+import db from "~/server/utils/database";
+import { eq, and, not, isNull, desc } from "drizzle-orm";
 
 export default defineEventHandler(async (event) => {
   // Parameters
@@ -38,53 +38,46 @@ export default defineEventHandler(async (event) => {
   // }
 
   // 3. Fetch servers
-  const client = await pool.connect();
   try {
     const max_per_page = 10;
     const category: string | null = query.category?.toString() || null;
 
-    let feed;
-    let servers;
+    const amount = await db
+      .select({ id: servers_table.id })
+      .from(servers_table)
+      .where(
+        and(
+          eq(servers_table.banned, false),
+          eq(servers_table.public, true),
+          not(isNull(servers_table.approved_at)),
+          category?.length ? eq(servers_table.category, category!) : undefined
+        )
+      )
+      .orderBy(desc(servers_table.bumped_at));
 
-    let filtered_sql_query = `
-      SELECT * FROM servers  
-      WHERE
-          banned = false 
-          AND public = true 
-          AND approved_at IS NOT NULL
-          ${category !== null ? `AND category = $1` : ``}
-      ORDER BY bumped_at DESC`;
-
-    if (category?.length) {
-      servers = await client.query<Server>(filtered_sql_query, [category]);
-      feed = await client.query<Server>(
-        filtered_sql_query +
-          `\nLIMIT ${max_per_page}
-      OFFSET ${max_per_page * Number(page)}`,
-        [category]
-      );
-    } else {
-      servers = await client.query<Server>(filtered_sql_query);
-
-      feed = await client.query<Server>(
-        filtered_sql_query +
-          `\nLIMIT ${max_per_page}
-      OFFSET ${max_per_page * Number(page)}`
-      );
-    }
-
-    client.release();
+    const servers = await db
+      .select()
+      .from(servers_table)
+      .where(
+        and(
+          eq(servers_table.banned, false),
+          eq(servers_table.public, true),
+          not(isNull(servers_table.approved_at)),
+          category?.length ? eq(servers_table.category, category!) : undefined
+        )
+      )
+      .orderBy(desc(servers_table.bumped_at))
+      .limit(max_per_page)
+      .offset(max_per_page * Number(page));
 
     setResponseStatus(event, 200);
     return {
       message: null,
-      result: feed.rows,
-      amount: servers.rows.length,
+      result: servers,
+      amount: amount.length,
     };
   } catch (err) {
     console.log(err);
-
-    client.release();
 
     setResponseStatus(event, 500);
     return {

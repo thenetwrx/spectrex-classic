@@ -1,5 +1,5 @@
-import type { User } from "lucia";
-import pool from "~/server/utils/database";
+import { eq } from "drizzle-orm";
+import db from "~/server/utils/database";
 
 export default defineEventHandler(async (event) => {
   // Parameters
@@ -26,59 +26,38 @@ export default defineEventHandler(async (event) => {
   }
 
   // 3. Edit server
-  const client = await pool.connect();
   try {
-    const { rows: users } = await client.query<User>(
-      `
-      SELECT id, banned FROM users
-      WHERE
-        id = $1
-    `,
-      [event.context.user.id]
-    );
+    const users = await db
+      .select({ id: users_table.id, banned: users_table.banned })
+      .from(users_table)
+      .where(eq(users_table.id, event.context.user.id));
 
     if (!users.length) {
-      client.release();
-
       setResponseStatus(event, 404);
       return { message: "User not found" };
     }
 
     if (users[0].id !== event.context.user.id) {
-      client.release();
-
       setResponseStatus(event, 404);
       return { message: "User not found" };
     }
     if (users[0].banned) {
-      client.release();
-
       setResponseStatus(event, 403);
       return { message: "User is banned from Spectrex" };
     }
 
-    await client.query(
-      `
-        UPDATE users 
-        SET public = $2, description = $3, updated_at = $4
-        WHERE
-            id = $1
-    `,
-      [
-        event.context.user.id,
-        body.public,
-        body.description || "",
-        Date.now().toString(),
-      ]
-    );
-
-    client.release();
+    await db
+      .update(users_table)
+      .set({
+        public: body.public,
+        description: body.description || null,
+        updated_at: Date.now().toString(),
+      })
+      .where(eq(users_table.id, users[0].id));
 
     return;
   } catch (err) {
     console.log(err);
-
-    client.release();
 
     setResponseStatus(event, 500);
     return {

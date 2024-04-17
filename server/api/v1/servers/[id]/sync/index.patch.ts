@@ -1,6 +1,5 @@
-import pool from "~/server/utils/database";
-import { cryptr } from "~/server/utils/auth";
-import type Server from "~/types/Server";
+import { eq } from "drizzle-orm";
+import db from "~/server/utils/database";
 import DiscordServerPartial from "~/types/DiscordServerPartial";
 
 export default defineEventHandler(async (event) => {
@@ -19,7 +18,6 @@ export default defineEventHandler(async (event) => {
   }
 
   // 2. Sync server
-  const client = await pool.connect();
   try {
     const response = await fetch(
       "https://discord.com/api/users/@me/guilds?with_counts=true",
@@ -33,8 +31,6 @@ export default defineEventHandler(async (event) => {
     );
 
     if (!response.ok) {
-      client.release();
-
       setResponseStatus(event, 500);
       return {
         message: "An unknown Discord API error occurred, try again later",
@@ -43,25 +39,23 @@ export default defineEventHandler(async (event) => {
     const servers_from_discord: DiscordServerPartial[] = await response.json();
 
     if (!servers_from_discord.length) {
-      client.release();
-
       setResponseStatus(event, 404);
       return {
         message: "No servers found from Discord",
       };
     }
 
-    const { rows: servers } = await client.query<Server>(
-      `
-            SELECT id, banned, provider_id FROM servers
-            WHERE id = $1
-          `,
-      [server_id]
-    );
+    const servers = await db
+      .select({
+        id: servers_table.id,
+        banned: servers_table.banned,
+        provider_id: servers_table.provider_id,
+      })
+      .from(servers_table)
+      .where(eq(servers_table.id, server_id));
+
     if (servers[0]) {
       if (servers[0].banned) {
-        client.release();
-
         setResponseStatus(event, 403);
         return { message: "Server is banned from Spectrex", result: null };
       }
@@ -71,33 +65,25 @@ export default defineEventHandler(async (event) => {
           server_from_discord.owner &&
           server_from_discord.id === servers[0].provider_id
         ) {
-          await client.query<any>(
-            `
-              UPDATE servers 
-                SET updated_at = $1, owner_id = $2, owner_provider_id = $3, approximate_member_count = $4, approximate_presence_count = $5, name = $6, icon = $7
-              WHERE
-                  id = $8
-            `,
-            [
-              Date.now().toString(),
-              event.context.user.id,
-              event.context.user.provider_id,
-              server_from_discord.approximate_member_count.toString(),
-              server_from_discord.approximate_presence_count.toString(),
-              server_from_discord.name,
-              server_from_discord.icon,
-              servers[0].id,
-            ]
-          );
-
-          client.release();
+          await db
+            .update(servers_table)
+            .set({
+              updated_at: Date.now().toString(),
+              owner_id: event.context.user.id,
+              owner_provider_id: event.context.user.provider_id,
+              approximate_member_count:
+                server_from_discord.approximate_member_count.toString(),
+              approximate_presence_count:
+                server_from_discord.approximate_presence_count.toString(),
+              name: server_from_discord.name,
+              icon: server_from_discord.icon,
+            })
+            .where(eq(servers_table.id, servers[0].id));
 
           return;
         }
       }
     }
-
-    client.release();
 
     setResponseStatus(event, 403);
     return {
@@ -106,8 +92,6 @@ export default defineEventHandler(async (event) => {
     };
   } catch (err) {
     console.log(err);
-
-    client.release();
 
     setResponseStatus(event, 500);
     return { message: "An unknown error occurred, try again later" };

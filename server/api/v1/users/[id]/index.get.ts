@@ -1,5 +1,5 @@
-import type { User } from "lucia";
-import pool from "~/server/utils/database";
+import { eq } from "drizzle-orm";
+import db from "~/server/utils/database";
 
 export default defineEventHandler(async (event) => {
   // Parameters
@@ -13,18 +13,22 @@ export default defineEventHandler(async (event) => {
   }
 
   // 2. Fetch user
-  const client = await pool.connect();
   try {
-    const { rows: users } = await client.query<User>(
-      `
-      SELECT id, provider_id, username, avatar, display_name, premium_since, description, public, banned, admin FROM users
-      WHERE
-        id = $1
-    `,
-      [user_id]
-    );
-
-    client.release();
+    const users = await db
+      .select({
+        id: users_table.id,
+        provider_id: users_table.provider_id,
+        username: users_table.username,
+        avatar: users_table.avatar,
+        display_name: users_table.display_name,
+        premium_since: users_table.premium_since,
+        description: users_table.description,
+        public: users_table.public,
+        banned: users_table.banned,
+        admin: users_table.admin,
+      })
+      .from(users_table)
+      .where(eq(users_table.id, user_id));
 
     if (!users.length) {
       setResponseStatus(event, 404);
@@ -49,8 +53,6 @@ export default defineEventHandler(async (event) => {
     };
   } catch (err) {
     console.log(err);
-
-    client.release();
 
     setResponseStatus(event, 500);
     return {

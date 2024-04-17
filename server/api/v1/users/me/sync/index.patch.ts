@@ -1,6 +1,5 @@
-import type { User } from "lucia";
-import { cryptr } from "~/server/utils/auth";
-import pool from "~/server/utils/database";
+import { eq } from "drizzle-orm";
+import db from "~/server/utils/database";
 import DiscordUser from "~/types/DiscordUser";
 
 export default defineEventHandler(async (event) => {
@@ -15,7 +14,6 @@ export default defineEventHandler(async (event) => {
   }
 
   // 2. Sync user
-  const client = await pool.connect();
   try {
     const response = await fetch("https://discord.com/api/users/@me", {
       headers: {
@@ -26,8 +24,6 @@ export default defineEventHandler(async (event) => {
     });
 
     if (!response.ok) {
-      client.release();
-
       setResponseStatus(event, 500);
       return {
         message: "An unknown Discord API error occurred, try again later",
@@ -36,55 +32,37 @@ export default defineEventHandler(async (event) => {
     const provider_user: DiscordUser = await response.json();
 
     if (!provider_user) {
-      client.release();
-
       setResponseStatus(event, 404);
       return {
         message: "No user found from Discord",
       };
     }
 
-    const { rows: users } = await client.query<User>(
-      `
-      SELECT id FROM users
-      WHERE
-        id = $1
-      `,
-      [event.context.user.id]
-    );
+    const users = await db
+      .select({ id: users_table.id })
+      .from(users_table)
+      .where(eq(users_table.id, event.context.user.id));
 
     if (!users.length) {
-      client.release();
-
       setResponseStatus(event, 404);
       return { message: "User not found" };
     }
 
-    await client.query(
-      `
-      UPDATE users
-      SET provider_id = $2, username = $3, avatar = $4, display_name = $5, email = $6, updated_at = $7
-      WHERE
-          id = $1
-      `,
-      [
-        event.context.user.id,
-        provider_user.id,
-        provider_user.username,
-        provider_user.avatar!,
-        provider_user.global_name!,
-        provider_user.email!,
-        Date.now().toString(),
-      ]
-    );
-
-    client.release();
+    await db
+      .update(users_table)
+      .set({
+        provider_id: provider_user.id,
+        username: provider_user.username,
+        avatar: provider_user.avatar,
+        display_name: provider_user.global_name,
+        email: provider_user.email!,
+        updated_at: Date.now().toString(),
+      })
+      .where(eq(users_table.id, users[0].id));
 
     return;
   } catch (err) {
     console.log(err);
-
-    client.release();
 
     setResponseStatus(event, 500);
     return { message: "An unknown error occurred, try again later" };

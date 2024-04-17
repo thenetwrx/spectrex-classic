@@ -11,10 +11,11 @@
     "generate-types": "supabase gen types typescript --project-id qpvredklgeepeyxvjgch > database.types.ts"
   },
   "dependencies": {
-    "@lucia-auth/adapter-postgresql": "^3.1.2",
+    "@lucia-auth/adapter-drizzle": "^1.0.7",
     "arctic": "^1.5.0",
     "clipboard": "^2.0.11",
     "cryptr": "^6.3.0",
+    "drizzle-orm": "^0.30.8",
     "lucia": "^3.1.1",
     "pg": "^8.11.4",
     "tailwindcss-animate": "^1.0.7",

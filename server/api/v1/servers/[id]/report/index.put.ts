@@ -1,6 +1,7 @@
+import { eq } from "drizzle-orm";
 import { generateId } from "lucia";
-import pool from "~/server/utils/database";
-import type Server from "~/types/Server";
+import db from "~/server/utils/database";
+import { server_reports_table } from "~/server/utils/schema";
 
 export default defineEventHandler(async (event) => {
   // Parameters
@@ -45,72 +46,54 @@ export default defineEventHandler(async (event) => {
     return { message: "You're banned from Spectrex" };
   }
 
-  // 3. Insert server report
-  const client = await pool.connect();
+  // 3. Create server report
   try {
-    const { rows: servers } = await client.query<Server>(
-      `
-      SELECT id, provider_id, owner_id, owner_provider_id, banned, approved_at FROM servers
-      WHERE
-        id = $1
-    `,
-      [server_id]
-    );
+    const servers = await db
+      .select({
+        id: servers_table.id,
+        provider_id: servers_table.provider_id,
+        owner_id: servers_table.owner_id,
+        owner_provider_id: servers_table.owner_provider_id,
+        banned: servers_table.banned,
+        approved_at: servers_table.approved_at,
+      })
+      .from(servers_table)
+      .where(eq(servers_table.id, server_id));
 
     if (!servers.length) {
-      client.release();
-
       setResponseStatus(event, 404);
       return { message: "Server not found" };
     }
     if (servers[0].approved_at === null) {
-      client.release();
-
       // refuse existence if it's not approved
       setResponseStatus(event, 404);
       return { message: "Server not found" };
     }
     if (servers[0].owner_id === event.context.user.id) {
-      client.release();
-
       setResponseStatus(event, 403);
       return { message: "You can't report your own server" };
     }
     if (servers[0].banned) {
-      client.release();
-
       setResponseStatus(event, 403);
       return { message: "Server is banned from Spectrex" };
     }
 
-    await client.query(
-      `
-      INSERT INTO server_reports
-        (id, from_id, from_provider_id, suspect_id, suspect_provider_id, suspect_server_id, suspect_server_provider_id, type, description)
-      VALUES
-        ($1, $2, $3, $4, $5, $6, $7, $8, $9)
-    `,
-      [
-        generateId(32),
-        event.context.user.id,
-        event.context.user.provider_id,
-        servers[0].owner_id,
-        servers[0].owner_provider_id,
-        servers[0].id,
-        servers[0].provider_id,
-        body.issue_type,
-        body.description,
-      ]
-    );
-
-    client.release();
+    await db.insert(server_reports_table).values({
+      id: generateId(32),
+      from_id: event.context.user.id,
+      from_provider_id: event.context.user.provider_id,
+      suspect_id: servers[0].owner_id,
+      suspect_provider_id: servers[0].owner_provider_id,
+      suspect_server_id: servers[0].id,
+      suspect_server_provider_id: servers[0].provider_id,
+      type: body.issue_type,
+      description: body.description,
+    });
 
     setResponseStatus(event, 200);
     return { message: "Report recorded" };
   } catch (err) {
     console.log(err);
-
-    client.release();
 
     setResponseStatus(event, 500);
     return {

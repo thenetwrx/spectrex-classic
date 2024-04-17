@@ -1,5 +1,5 @@
-import pool from "~/server/utils/database";
-import type Server from "~/types/Server";
+import { eq } from "drizzle-orm";
+import db from "~/server/utils/database";
 
 export default defineEventHandler(async (event) => {
   // 1. Require being logged in
@@ -13,18 +13,11 @@ export default defineEventHandler(async (event) => {
   }
 
   // 2. Fetch servers for Dashboard
-  const client = await pool.connect();
   try {
-    const { rows: servers } = await client.query<Server>(
-      `
-      SELECT * FROM servers
-      WHERE
-        owner_id = $1
-      `,
-      [event.context.user.id]
-    );
-
-    client.release();
+    const servers = await db
+      .select()
+      .from(servers_table)
+      .where(eq(servers_table.owner_id, event.context.user.id));
 
     setResponseStatus(event, 200);
     return {
@@ -33,8 +26,6 @@ export default defineEventHandler(async (event) => {
     };
   } catch (err) {
     console.log(err);
-
-    client.release();
 
     setResponseStatus(event, 500);
     return {

@@ -1,8 +1,9 @@
 import { Lucia, TimeSpan } from "lucia";
-import { NodePostgresAdapter } from "@lucia-auth/adapter-postgresql";
-import pool from "./database";
+import { DrizzlePostgreSQLAdapter } from "@lucia-auth/adapter-drizzle";
+import db from "./database";
 import { Discord } from "arctic";
 import Cryptr from "cryptr";
+import { users_table, sessions_table } from "./schema";
 
 export const cryptr = new Cryptr(process.env.ENCRYPTION_KEY!);
 
@@ -12,10 +13,7 @@ export const discord = new Discord(
   process.env.BASE_URL! + "/api/v1/auth/discord/callback"
 );
 
-const adapter = new NodePostgresAdapter(pool, {
-  user: "users",
-  session: "sessions",
-});
+const adapter = new DrizzlePostgreSQLAdapter(db, sessions_table, users_table);
 
 export const lucia = new Lucia(adapter, {
   sessionCookie: {

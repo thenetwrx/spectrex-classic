@@ -1,8 +1,8 @@
+import { eq } from "drizzle-orm";
 import { generateId } from "lucia";
 import { cryptr } from "~/server/utils/auth";
-import pool from "~/server/utils/database";
+import db from "~/server/utils/database";
 import DiscordServerPartial from "~/types/DiscordServerPartial";
-import type Server from "~/types/Server";
 
 export default defineEventHandler(async (event) => {
   // 1. Require being logged in
@@ -16,7 +16,6 @@ export default defineEventHandler(async (event) => {
   }
 
   // 2. Sync all servers
-  const client = await pool.connect();
   try {
     const response = await fetch(
       "https://discord.com/api/users/@me/guilds?with_counts=true",
@@ -43,74 +42,59 @@ export default defineEventHandler(async (event) => {
     }
 
     // 3. Batch database operations
-    const now = Date.now();
-    const queries = [];
     for (const server_from_discord of servers_from_discord) {
       if (server_from_discord.owner) {
-        const { rows: servers } = await client.query<Server>(
-          `
-            SELECT id, banned FROM servers
-            WHERE provider_id = $1
-          `,
-          [server_from_discord.id]
-        );
-        if (servers[0]) {
+        const servers = await db
+          .select({
+            id: servers_table.id,
+            banned: servers_table.banned,
+          })
+          .from(servers_table)
+          .where(eq(servers_table.provider_id, server_from_discord.id));
+
+        if (servers.length) {
           if (servers[0].banned) continue;
 
-          queries.push(
-            client.query<any>(
-              `
-                UPDATE servers 
-                  SET updated_at = $1, owner_id = $2, owner_provider_id = $3, approximate_member_count = $4, approximate_presence_count = $5, name = $6, icon = $7
-                WHERE
-                    id = $8
-                `,
-              [
-                now.toString(),
-                event.context.user.id,
-                event.context.user.provider_id,
+          const now = Date.now().toString();
+
+          await db
+            .update(servers_table)
+            .set({
+              updated_at: now,
+              owner_id: event.context.user.id,
+              owner_provider_id: event.context.user.provider_id,
+              approximate_member_count:
                 server_from_discord.approximate_member_count.toString(),
+              approximate_presence_count:
                 server_from_discord.approximate_presence_count.toString(),
-                server_from_discord.name,
-                server_from_discord.icon,
-                servers[0].id,
-              ]
-            )
-          );
+              name: server_from_discord.name,
+              icon: server_from_discord.icon,
+            })
+            .where(eq(servers_table.id, servers[0].id));
         } else {
-          queries.push(
-            client.query<any>(
-              `
-                INSERT INTO servers
-                  (id, provider_id, approximate_member_count, approximate_presence_count, created_at, updated_at, owner_id, owner_provider_id, name, icon)
-                VALUES
-                  ($1, $2, $3, $4, $5, $5, $6, $7, $8, $9)
-              `,
-              [
-                generateId(32),
-                server_from_discord.id,
-                server_from_discord.approximate_member_count.toString(),
-                server_from_discord.approximate_presence_count.toString(),
-                now.toString(),
-                event.context.user.id,
-                event.context.user.provider_id,
-                server_from_discord.name,
-                server_from_discord.icon,
-              ]
-            )
-          );
+          const now = Date.now().toString();
+
+          await db.insert(servers_table).values({
+            id: generateId(32),
+            provider_id: server_from_discord.id,
+            approximate_member_count:
+              server_from_discord.approximate_member_count.toString(),
+            approximate_presence_count:
+              server_from_discord.approximate_presence_count.toString(),
+            created_at: now,
+            updated_at: now,
+            owner_id: event.context.user.id,
+            owner_provider_id: event.context.user.provider_id,
+            name: server_from_discord.name,
+            icon: server_from_discord.icon,
+          });
         }
       }
     }
-    await Promise.all(queries);
-
-    client.release();
 
     return;
   } catch (err) {
     console.log(err);
-
-    client.release();
 
     setResponseStatus(event, 500);
     return { message: "An unknown error occurred, try again later" };
