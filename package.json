@@ -30,7 +30,6 @@
     "daisyui": "^4.7.3",
     "nitropack": "^2.9.5",
     "nuxt": "^3.11.2",
-    "nuxt-gtag": "^2.0.5",
     "tailwindcss-animated": "^1.0.1",
     "typescript": "^5.4.3"
   }
