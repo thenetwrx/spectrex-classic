@@ -1,7 +1,7 @@
 <template>
   <Container class="max-w-4xl">
     <h2 class="text-center text-3xl font-bold">Privacy Policy</h2>
-    <p class="text-center text-lg">Last modified: 3/24/2024</p>
+    <p class="text-center text-lg">Last modified: 4/17/2024</p>
     <div class="text-start flex flex-col gap-2 py-10">
       <p class="text-4xl">Introduction</p>
       <p class="opacity-75">
@@ -16,7 +16,7 @@
         <p class="opacity-75">
           We collect information by fair and lawful means, with your knowledge
           and consent. We also let you know why we're collecting it and how it
-          will be used. You are free to refuse our request for this information,
+          will be used. You are free to refuse our request for some information,
           with the understanding that we may be unable to provide you with some
           of your desired services without it.
         </p>
@@ -24,12 +24,25 @@
 
       <p class="text-3xl">2. Use of information</p>
       <p class="opacity-75">
-        We may use a combination of identifying and non-identifying information
-        to understand who our visitors are, how they use our services, and how
-        we may improve their experience of our website in future. We do not
-        disclose the specifics of this information publicly, but may share
-        aggregated and anonymized versions of this information, for example, in
-        website and customer usage trend reports.
+        We use a combination of identifying and non-identifying information to
+        understand who our visitors are, how they use our services, and how we
+        may improve their experience of our website in future. We partner with
+        Microsoft Clarity and Microsoft Advertising to capture how you use and
+        interact with our website through behavioral metrics, heatmaps, and
+        session replay to improve and market our products/services. Website
+        usage data is captured using first and third-party cookies and other
+        tracking technologies to determine the popularity of products/services
+        and online activity. Additionally, we use this information for site
+        optimization, fraud/security purposes, and advertising. For more
+        information about how Microsoft collects and uses your data, visit the
+        <NuxtLink
+          href="https://privacy.microsoft.com/privacystatement"
+          :external="true"
+          target="_blank"
+          class="text-accent hover:underline"
+        >
+          Microsoft Privacy Statement</NuxtLink
+        >.
       </p>
 
       <p class="text-3xl">3. Data processing and storage</p>
