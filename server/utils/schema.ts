@@ -52,8 +52,8 @@ export const servers_table = pgTable("servers", {
   bumped_at: text("bumped_at"),
   language: text("language"),
   description: text("description"),
-  tags: text("tags").array().default([]),
-  public: boolean("public").default(false),
+  tags: text("tags").array().notNull().default([]),
+  public: boolean("public").notNull().default(false),
   category: text("category"),
   updated_at: text("updated_at").notNull(),
 });

@@ -1,5 +1,6 @@
 import Postgres from "pg";
 import { drizzle } from "drizzle-orm/node-postgres";
+import * as schema from "./schema";
 
 const pool = new Postgres.Pool({
   host: "aws-0-us-east-1.pooler.supabase.com",
@@ -36,6 +37,6 @@ o/bKiIz+Fq8=
     `,
   },
 });
-const db = drizzle(pool);
+const db = drizzle(pool, { schema });
 
 export default db;

@@ -291,8 +291,6 @@
 </template>
 
 <script setup lang="ts">
-  import type Server from "~/types/Server";
-
   definePageMeta({
     middleware: ["1-protected"],
   });
@@ -320,10 +318,10 @@
     pending: server_pending,
     refresh: refreshServer,
     error: server_error,
-  } = useFetch<{ message: string | null; result: Server | null }>(
-    `/api/v1/servers/${server_id}`,
-    { retry: false }
-  );
+  } = useFetch<{
+    message: string | null;
+    result: typeof servers_table.$inferSelect | null;
+  }>(`/api/v1/servers/${server_id}`, { retry: false });
 
   useHead({
     title: computed(() =>

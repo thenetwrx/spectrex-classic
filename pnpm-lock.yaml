@@ -18,8 +18,8 @@ dependencies:
     specifier: ^6.3.0
     version: 6.3.0
   drizzle-orm:
-    specifier: ^0.30.8
-    version: 0.30.8(@types/pg@8.11.5)(pg@8.11.5)
+    specifier: ^0.29.4
+    version: 0.29.5(@types/pg@8.11.5)(pg@8.11.5)
   lucia:
     specifier: ^3.1.1
     version: 3.1.1
@@ -54,10 +54,10 @@ devDependencies:
     version: 4.10.1(postcss@8.4.38)
   nitropack:
     specifier: ^2.9.5
-    version: 2.9.6(drizzle-orm@0.30.8)
+    version: 2.9.6(drizzle-orm@0.29.5)
   nuxt:
     specifier: ^3.11.2
-    version: 3.11.2(@types/node@20.12.7)(@unocss/reset@0.59.2)(drizzle-orm@0.30.8)(floating-vue@5.2.2)(typescript@5.4.5)(unocss@0.59.2)(vite@5.2.8)
+    version: 3.11.2(@types/node@20.12.7)(@unocss/reset@0.59.2)(drizzle-orm@0.29.5)(floating-vue@5.2.2)(typescript@5.4.5)(unocss@0.59.2)(vite@5.2.8)
   tailwindcss-animated:
     specifier: ^1.0.1
     version: 1.0.1(tailwindcss@3.4.3)
@@ -1640,7 +1640,7 @@ packages:
       '@nuxt/kit': 3.11.2
       '@nuxt/schema': 3.11.2
       execa: 7.2.0
-      nuxt: 3.11.2(@types/node@20.12.7)(@unocss/reset@0.59.2)(drizzle-orm@0.30.8)(floating-vue@5.2.2)(typescript@5.4.5)(unocss@0.59.2)(vite@5.2.8)
+      nuxt: 3.11.2(@types/node@20.12.7)(@unocss/reset@0.59.2)(drizzle-orm@0.29.5)(floating-vue@5.2.2)(typescript@5.4.5)(unocss@0.59.2)(vite@5.2.8)
       vite: 5.2.8(@types/node@20.12.7)
     transitivePeerDependencies:
       - rollup
@@ -1692,7 +1692,7 @@ packages:
       launch-editor: 2.6.1
       local-pkg: 0.5.0
       magicast: 0.3.4
-      nuxt: 3.11.2(@types/node@20.12.7)(@unocss/reset@0.59.2)(drizzle-orm@0.30.8)(floating-vue@5.2.2)(typescript@5.4.5)(unocss@0.59.2)(vite@5.2.8)
+      nuxt: 3.11.2(@types/node@20.12.7)(@unocss/reset@0.59.2)(drizzle-orm@0.29.5)(floating-vue@5.2.2)(typescript@5.4.5)(unocss@0.59.2)(vite@5.2.8)
       nypm: 0.3.8
       ohash: 1.1.3
       pacote: 17.0.7
@@ -3947,7 +3947,7 @@ packages:
       - postcss
     dev: true
 
-  /db0@0.1.4(drizzle-orm@0.30.8):
+  /db0@0.1.4(drizzle-orm@0.29.5):
     resolution: {integrity: sha512-Ft6eCwONYxlwLjBXSJxw0t0RYtA5gW9mq8JfBXn9TtC0nDPlqePAhpv9v4g9aONBi6JI1OXHTKKkUYGd+BOrCA==}
     peerDependencies:
       '@libsql/client': ^0.5.2
@@ -3961,7 +3961,7 @@ packages:
       drizzle-orm:
         optional: true
     dependencies:
-      drizzle-orm: 0.30.8(@types/pg@8.11.5)(pg@8.11.5)
+      drizzle-orm: 0.29.5(@types/pg@8.11.5)(pg@8.11.5)
     dev: true
 
   /debug@2.6.9:
@@ -4151,23 +4151,20 @@ packages:
     engines: {node: '>=12'}
     dev: true
 
-  /drizzle-orm@0.30.8(@types/pg@8.11.5)(pg@8.11.5):
-    resolution: {integrity: sha512-9pBJA0IjnpPpzZ6s9jlS1CQAbKoBmbn2GJesPhXaVblAA/joOJ4AWWevYcqvLGj9SvThBAl7WscN8Zwgg5mnTw==}
+  /drizzle-orm@0.29.5(@types/pg@8.11.5)(pg@8.11.5):
+    resolution: {integrity: sha512-jS3+uyzTz4P0Y2CICx8FmRQ1eplURPaIMWDn/yq6k4ShRFj9V7vlJk67lSf2kyYPzQ60GkkNGXcJcwrxZ6QCRw==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
       '@cloudflare/workers-types': '>=3'
-      '@electric-sql/pglite': '>=0.1.1'
       '@libsql/client': '*'
       '@neondatabase/serverless': '>=0.1'
-      '@op-engineering/op-sqlite': '>=2'
       '@opentelemetry/api': ^1.4.1
       '@planetscale/database': '>=1'
       '@types/better-sqlite3': '*'
       '@types/pg': '*'
       '@types/react': '>=18'
       '@types/sql.js': '*'
-      '@vercel/postgres': '>=0.8.0'
-      '@xata.io/client': '*'
+      '@vercel/postgres': '*'
       better-sqlite3: '>=7'
       bun-types: '*'
       expo-sqlite: '>=13.2.0'
@@ -4184,13 +4181,9 @@ packages:
         optional: true
       '@cloudflare/workers-types':
         optional: true
-      '@electric-sql/pglite':
-        optional: true
       '@libsql/client':
         optional: true
       '@neondatabase/serverless':
-        optional: true
-      '@op-engineering/op-sqlite':
         optional: true
       '@opentelemetry/api':
         optional: true
@@ -4205,8 +4198,6 @@ packages:
       '@types/sql.js':
         optional: true
       '@vercel/postgres':
-        optional: true
-      '@xata.io/client':
         optional: true
       better-sqlite3:
         optional: true
@@ -5792,7 +5783,7 @@ packages:
     engines: {node: '>= 0.6'}
     dev: true
 
-  /nitropack@2.9.6(drizzle-orm@0.30.8):
+  /nitropack@2.9.6(drizzle-orm@0.29.5):
     resolution: {integrity: sha512-HP2PE0dREcDIBVkL8Zm6eVyrDd10/GI9hTL00PHvjUM8I9Y/2cv73wRDmxNyInfrx/CJKHATb2U/pQrqpzJyXA==}
     engines: {node: ^16.11.0 || >=17.0.0}
     hasBin: true
@@ -5823,7 +5814,7 @@ packages:
       cookie-es: 1.1.0
       croner: 8.0.2
       crossws: 0.2.4
-      db0: 0.1.4(drizzle-orm@0.30.8)
+      db0: 0.1.4(drizzle-orm@0.29.5)
       defu: 6.1.4
       destr: 2.0.3
       dot-prop: 8.0.2
@@ -6094,7 +6085,7 @@ packages:
       fsevents: 2.3.3
     dev: true
 
-  /nuxt@3.11.2(@types/node@20.12.7)(@unocss/reset@0.59.2)(drizzle-orm@0.30.8)(floating-vue@5.2.2)(typescript@5.4.5)(unocss@0.59.2)(vite@5.2.8):
+  /nuxt@3.11.2(@types/node@20.12.7)(@unocss/reset@0.59.2)(drizzle-orm@0.29.5)(floating-vue@5.2.2)(typescript@5.4.5)(unocss@0.59.2)(vite@5.2.8):
     resolution: {integrity: sha512-Be1d4oyFo60pdF+diBolYDcfNemoMYM3R8PDjhnGrs/w3xJoDH1YMUVWHXXY8WhSmYZI7dyBehx/6kTfGFliVA==}
     engines: {node: ^14.18.0 || >=16.10.0}
     hasBin: true
@@ -6138,7 +6129,7 @@ packages:
       knitwork: 1.1.0
       magic-string: 0.30.9
       mlly: 1.6.1
-      nitropack: 2.9.6(drizzle-orm@0.30.8)
+      nitropack: 2.9.6(drizzle-orm@0.29.5)
       nuxi: 3.11.1
       nypm: 0.3.8
       ofetch: 1.3.4

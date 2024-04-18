@@ -161,8 +161,6 @@
 </template>
 
 <script setup lang="ts">
-  import type Server from "~/types/Server";
-
   useHead({
     title: "Explore",
   });
@@ -203,7 +201,7 @@
     refresh: refreshServers,
   } = useFetch<{
     message: string | null;
-    result: Server[] | null;
+    result: (typeof servers_table.$inferSelect)[] | null;
     amount: number;
   }>("/api/v1/servers/all/feed", {
     query: { page, category },

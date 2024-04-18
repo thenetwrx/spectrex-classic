@@ -130,8 +130,6 @@
 </template>
 
 <script setup lang="ts">
-  import type Server from "~/types/Server";
-
   definePageMeta({
     middleware: ["1-protected"],
   });
@@ -146,10 +144,10 @@
     data: servers,
     pending: servers_pending,
     refresh: refreshServers,
-  } = useFetch<{ message: string | null; result: Server[] | null }>(
-    "/api/v1/servers/all",
-    { retry: false }
-  );
+  } = useFetch<{
+    message: string | null;
+    result: (typeof servers_table.$inferSelect)[] | null;
+  }>("/api/v1/servers/all", { retry: false });
 
   const syncDiscordServers = async () => {
     syncing.value = true;

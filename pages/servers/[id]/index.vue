@@ -121,7 +121,6 @@
 
 <script setup lang="ts">
   import useClipboard from "~/composables/useClipboard";
-  import type Server from "~/types/Server";
 
   const lucia = useLucia();
   const discord = useDiscord();
@@ -134,7 +133,7 @@
     error: server_error,
   } = useFetch<{
     message: string | null;
-    result: Server | null;
+    result: typeof servers_table.$inferSelect;
   }>(`/api/v1/servers/${server_id}`, { retry: false });
 
   useHead({
