@@ -63,14 +63,7 @@
         <ResourceCardContainer v-for="server in servers.result">
           <ResourceCardHeader class="relative">
             <NuxtLink :href="'/servers/' + server.id">
-              <ResourceCardHeaderImage
-                :resource="
-                  server.icon
-                    ? discord.cdn.server_icon(server.provider_id, server.icon)
-                    : null
-                "
-                :abbreviation="server.name.slice(0, 2).toUpperCase()"
-              />
+              <ServerIcon :resource="server" />
             </NuxtLink>
             <div class="flex flex-col">
               <NuxtLink :href="'/servers/' + server.id">
@@ -201,7 +194,6 @@
   useHead({
     title: "Explore",
   });
-  const discord = useDiscord();
 
   const route = useRoute();
   const popular_categories = ref<Array<string>>([
@@ -225,7 +217,7 @@
   const refresh = async () => {
     refreshing.value = true;
     go_to_page(0);
-    await refreshServers();
+    await refresh_servers();
     refreshing.value = false;
   };
 
@@ -235,7 +227,7 @@
   const {
     data: servers,
     pending: servers_pending,
-    refresh: refreshServers,
+    refresh: refresh_servers,
   } = useFetch<{
     message: string | null;
     result:
@@ -248,7 +240,7 @@
   });
 
   watch(
-    () => servers.value,
+    servers,
     () => {
       if (process.client) {
         window.scrollTo(0, 0);

@@ -46,7 +46,7 @@
               v-on:click="
                 async () => {
                   await sync();
-                  await refreshServer();
+                  await refresh_server();
                 }
               "
             >
@@ -316,7 +316,7 @@
   const {
     data: server,
     pending: server_pending,
-    refresh: refreshServer,
+    refresh: refresh_server,
     error: server_error,
   } = useFetch<{
     message: string | null;
@@ -331,7 +331,7 @@
     ),
   });
 
-  const refreshServerMetadata = () => {
+  const refresh_server_metadata = () => {
     const premium = lucia.value?.user.premium_since !== null ? true : false;
 
     const cooldown = premium ? 3600000 : 7200000;
@@ -348,7 +348,7 @@
     server,
     () => {
       if (server.value?.result) {
-        refreshServerMetadata();
+        refresh_server_metadata();
 
         is_public.value = server.value.result.public;
         language.value = server.value.result.language!;
@@ -406,7 +406,7 @@
       const json = await response.json();
       alert(json.message);
     }
-    await refreshServer();
+    await refresh_server();
   };
 
   const _delete = async () => {
@@ -455,7 +455,7 @@
         navigateTo("/");
       }
       server_metadata.value.bumping = false;
-      await refreshServer();
+      await refresh_server();
     }
   };
 

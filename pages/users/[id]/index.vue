@@ -20,19 +20,7 @@
       </ResourceRow>
       <ResourceCardContainer>
         <ResourceCardHeader>
-          <ResourceCardHeaderImage
-            :resource="
-              profile.result.avatar
-                ? discord.cdn.user_avatar(
-                    profile.result.provider_id,
-                    profile.result.avatar
-                  )
-                : null
-            "
-            :abbreviation="
-              profile.result.display_name?.slice(0, 2).toUpperCase()
-            "
-          />
+          <UserAvatar :resource="profile.result" />
           <div class="flex flex-col items-start">
             <p
               class="font-medium text-lg"

@@ -36,30 +36,7 @@
           >
             <div class="flex flex-row items-center w-full">
               <div class="flex flex-col w-full">
-                <div class="w-16 h-16 overflow-hidden rounded-lg">
-                  <div class="avatar" v-if="server.icon">
-                    <div class="rounded-full w-full">
-                      <NuxtImg
-                        alt="Resource Image"
-                        :src="
-                          discord.cdn.server_icon(
-                            server.provider_id,
-                            server.icon
-                          )
-                        "
-                      />
-                    </div>
-                  </div>
-                  <div class="h-full" v-else>
-                    <div
-                      class="rounded-full w-full h-full bg-secondary flex flex-col"
-                    >
-                      <span class="text-xl opacity-50 m-auto">{{
-                        server.name.slice(0, 2).toUpperCase()
-                      }}</span>
-                    </div>
-                  </div>
-                </div>
+                <ServerIcon :resource="server" />
                 <span class="font-medium text-lg">{{ server.name }}</span>
               </div>
 
@@ -143,7 +120,7 @@
   const {
     data: servers,
     pending: servers_pending,
-    refresh: refreshServers,
+    refresh: refresh_servers,
   } = useFetch<{
     message: string | null;
     result: (typeof servers_table.$inferSelect)[] | null;
@@ -163,7 +140,7 @@
       navigateTo("/");
     }
 
-    refreshServers();
+    refresh_servers();
     syncing.value = false;
   };
 </script>

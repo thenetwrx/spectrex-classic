@@ -28,17 +28,7 @@
 
       <ResourceCardContainer>
         <ResourceCardHeader>
-          <ResourceCardHeaderImage
-            :resource="
-              server.result.icon
-                ? discord.cdn.server_icon(
-                    server.result.provider_id,
-                    server.result.icon
-                  )
-                : null
-            "
-            :abbreviation="server.result.name.slice(0, 2).toUpperCase()"
-          />
+          <ServerIcon :resource="server.result" />
           <div class="flex flex-col items-start">
             <span class="font-medium text-lg">{{ server.result.name }}</span>
             <div class="flex flex-wrap gap-1 items-center">
