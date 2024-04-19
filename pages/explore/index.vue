@@ -120,10 +120,47 @@
               </div>
             </div>
             <div class="divider my-0"></div>
-            <div>
-              <p class="break-words whitespace-pre-wrap opacity-75">
+            <div class="relative">
+              <p
+                class="break-words whitespace-pre-wrap opacity-90"
+                :class="[
+                  server.expanded
+                    ? ''
+                    : 'max-h-[7.50rem] overflow-clip whitespace-nowrap',
+                ]"
+              >
                 {{ server.description }}
               </p>
+              <div
+                class="absolute inset-x-0 bottom-0 h-16"
+                :class="
+                  server.expanded
+                    ? ''
+                    : 'bg-gradient-to-b from-transparent to-[var(--fallback-b3,oklch(var(--b3)/var(--tw-bg-opacity)))]'
+                "
+              ></div>
+            </div>
+            <button
+              @click="server.expanded = !server.expanded"
+              class="btn btn-circle btn-sm btn-secondary mx-auto"
+            >
+              <i
+                class="fa-solid"
+                :class="server.expanded ? 'fa-chevron-up' : 'fa-chevron-down'"
+              ></i>
+            </button>
+
+            <div class="flex flex-row items-center w-full gap-2">
+              <p class="opacity-25">
+                bumped {{ timeAgo(new Date(Number(server.bumped_at))) }}
+              </p>
+              <NuxtLink
+                class="ml-auto btn btn-sm btn-primary"
+                :href="server.invite_link"
+                :external="true"
+              >
+                Join Server
+              </NuxtLink>
             </div>
           </ResourceCardContent>
         </ResourceCardContainer>
@@ -140,7 +177,7 @@
       </button>
 
       <div class="bg-base-200 p-3 rounded-md h-full">
-        {{ page + 1 }} <span class="opacity-25">/</span>
+        Page {{ page + 1 }} <span class="opacity-25">/</span>
         {{ Math.ceil((servers?.amount || max_per_page) / max_per_page) }}
       </div>
 
@@ -193,7 +230,7 @@
   };
 
   const page = ref<number>(0);
-  const max_per_page = ref<number>(10);
+  const max_per_page = ref<number>(20);
 
   const {
     data: servers,
@@ -201,7 +238,9 @@
     refresh: refreshServers,
   } = useFetch<{
     message: string | null;
-    result: (typeof servers_table.$inferSelect)[] | null;
+    result:
+      | (typeof servers_table.$inferSelect & { expanded: boolean })[]
+      | null;
     amount: number;
   }>("/api/v1/servers/all/feed", {
     query: { page, category },
@@ -217,4 +256,32 @@
     },
     { immediate: true }
   );
+
+  function timeAgo(date: Date): string {
+    const now = new Date();
+    const diff = Math.abs(now.getTime() - date.getTime());
+    const seconds = Math.floor(diff / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+    const weeks = Math.floor(days / 7);
+    const months = Math.floor(days / 30);
+    const years = Math.floor(days / 365);
+
+    if (seconds < 60) {
+      return "just now";
+    } else if (minutes < 60) {
+      return minutes === 1 ? "1 minute ago" : `${minutes} minutes ago`;
+    } else if (hours < 24) {
+      return hours === 1 ? "1 hour ago" : `${hours} hours ago`;
+    } else if (days < 7) {
+      return days === 1 ? "1 day ago" : `${days} days ago`;
+    } else if (weeks < 4) {
+      return weeks === 1 ? "1 week ago" : `${weeks} weeks ago`;
+    } else if (months < 12) {
+      return months === 1 ? "1 month ago" : `${months} months ago`;
+    } else {
+      return years === 1 ? "1 year ago" : `${years} years ago`;
+    }
+  }
 </script>

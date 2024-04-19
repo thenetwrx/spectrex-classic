@@ -39,7 +39,7 @@ export default defineEventHandler(async (event) => {
 
   // 3. Fetch servers
   try {
-    const max_per_page = 10;
+    const max_per_page = 20;
     const category: string | null = query.category?.toString() || null;
 
     const amount = await db

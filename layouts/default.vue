@@ -157,7 +157,6 @@
       >
         <NuxtLink href="/" class="btn btn-ghost items-center px-3">
           <NuxtImg src="/images/logo.png" class="h-10" />
-          <!-- <span class="text-lg">Spectrex</span> -->
         </NuxtLink>
         <NuxtLink
           href="/explore"
