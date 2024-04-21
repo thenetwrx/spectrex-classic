@@ -49,10 +49,7 @@ export default defineEventHandler(async (event) => {
       }
     }
 
-    servers[0].invite_uses.push({
-      from_id: event.context.user?.id || "0",
-      created_at: Date.now().toString(),
-    });
+    servers[0].invite_uses.push(Date.now().toString());
     await db
       .update(servers_table)
       .set({
