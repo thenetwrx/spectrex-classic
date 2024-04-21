@@ -9,7 +9,7 @@
       <ResourceRow>
         <NuxtLink
           class="btn btn-ghost btn-sm"
-          href="/dashboard/account"
+          href="/dashboard/profile"
           v-if="profile.result.id === lucia?.user?.id"
         >
           Manage <i class="fa-solid fa-gear"></i>

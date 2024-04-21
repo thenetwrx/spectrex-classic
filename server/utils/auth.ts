@@ -22,7 +22,7 @@ export const lucia = new Lucia(adapter, {
     },
     name: "session",
   },
-  sessionExpiresIn: new TimeSpan(14, "d"),
+  sessionExpiresIn: new TimeSpan(3, "d"),
   getUserAttributes: (attributes) => {
     return attributes;
   },
@@ -52,10 +52,12 @@ interface DatabaseUserAttributes {
   banned: boolean;
   created_at: string;
   updated_at: string;
+  monthly_server_reports: boolean;
 }
 
 interface DatabaseSessionAttributes {
   provider_access_token: string; // Must be encrypted
+  provider_access_token_refreshed_at: string;
   provider_access_token_expires_at: string;
   provider_refresh_token: string; // Must be encrypted
   created_at: string;

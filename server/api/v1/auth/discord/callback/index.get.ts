@@ -41,6 +41,7 @@ export default defineEventHandler(async (event) => {
 
       const session = await lucia.createSession(existing_user[0].id, {
         provider_access_token: cryptr.encrypt(tokens.accessToken),
+        provider_access_token_refreshed_at: Date.now().toString(),
         provider_access_token_expires_at: tokens.accessTokenExpiresAt
           .getTime()
           .toString(),
@@ -88,6 +89,7 @@ export default defineEventHandler(async (event) => {
 
     const session = await lucia.createSession(created_user[0].id, {
       provider_access_token: cryptr.encrypt(tokens.accessToken),
+      provider_access_token_refreshed_at: Date.now().toString(),
       provider_access_token_expires_at: tokens.accessTokenExpiresAt
         .getTime()
         .toString(),

@@ -15,8 +15,18 @@
         active === 'account' ? 'bg-base-200 ' : 'hover:bg-base-200 opacity-75'
       "
       href="/dashboard/account"
-      >Account</NuxtLink
     >
+      Account
+    </NuxtLink>
+    <NuxtLink
+      class="transition-all duration-[150] rounded-md p-2"
+      :class="
+        active === 'profile' ? 'bg-base-200 ' : 'hover:bg-base-200 opacity-75'
+      "
+      href="/dashboard/profile"
+    >
+      Profile
+    </NuxtLink>
     <NuxtLink
       v-if="lucia?.user.admin"
       class="transition-all duration-[150] rounded-md p-2"
@@ -24,8 +34,9 @@
         active === 'admin' ? 'bg-base-200 ' : 'hover:bg-base-200 opacity-75'
       "
       href="/dashboard/admin"
-      >Admin Panel</NuxtLink
     >
+      Admin Panel
+    </NuxtLink>
   </div>
 </template>
 
@@ -34,7 +45,7 @@
 
   const props = defineProps({
     active: {
-      type: String as PropType<"servers" | "account" | "admin">,
+      type: String as PropType<"servers" | "account" | "profile" | "admin">,
       required: true,
     },
   });

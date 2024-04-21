@@ -14,6 +14,9 @@ export const users_table = pgTable("users", {
   admin: boolean("admin").notNull().default(false),
   created_at: text("created_at").notNull(),
   updated_at: text("updated_at").notNull(),
+  monthly_server_reports: boolean("monthly_server_reports")
+    .notNull()
+    .default(true),
 });
 
 export const sessions_table = pgTable("sessions", {
@@ -26,6 +29,9 @@ export const sessions_table = pgTable("sessions", {
     .notNull()
     .references(() => users_table.id),
   provider_access_token: text("provider_access_token").notNull(),
+  provider_access_token_refreshed_at: text(
+    "provider_access_token_refreshed_at"
+  ).notNull(),
   provider_access_token_expires_at: text(
     "provider_access_token_expires_at"
   ).notNull(),

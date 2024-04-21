@@ -1,7 +1,8 @@
 <template>
   <Container class="max-w-4xl">
     <h2 class="text-center text-3xl font-bold">Privacy Policy</h2>
-    <p class="text-center text-lg">Last modified: 4/17/2024</p>
+    <p class="text-center text-lg">Effective: 4/28/2024</p>
+    <p class="text-center text-lg">Last updated: 4/21/2024</p>
     <div class="text-start flex flex-col gap-2 py-10">
       <p class="text-4xl">Introduction</p>
       <p class="opacity-75">
