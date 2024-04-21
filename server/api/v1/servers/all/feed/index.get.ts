@@ -1,5 +1,5 @@
 import db from "~/server/utils/database";
-import { eq, and, not, isNull, desc } from "drizzle-orm";
+import { eq, and, not, isNull, desc, getTableColumns } from "drizzle-orm";
 
 export default defineEventHandler(async (event) => {
   // Parameters
@@ -55,8 +55,9 @@ export default defineEventHandler(async (event) => {
       )
       .orderBy(desc(servers_table.bumped_at));
 
+    const { invite_link, ...rest } = getTableColumns(servers_table); // exclude "invite_link" column
     const servers = await db
-      .select()
+      .select({ ...rest })
       .from(servers_table)
       .where(
         and(

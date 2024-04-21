@@ -79,18 +79,12 @@
             class="alert bg-accent flex items-start flex-row max-md:flex-col bg-opacity-50 text-opacity-75 rounded-md"
           >
             <span class="max-w-lg">
-              <i class="fa-solid fa-circle-info px-2"></i> Want quick and easy
-              access to your Spectrex server? Add the Discord bot for a bump
-              command!</span
+              <i class="fa-solid fa-circle-info px-2"></i>
+              {{ server.result.invite_uses.length }} people have used your
+              invite!</span
             >
-            <NuxtLink
-              v-on:click="invite_bot(server.result.provider_id)"
-              target="popup"
-              class="btn btn-sm btn-secondary ml-auto"
-            >
-              Add to server
-            </NuxtLink>
           </div>
+
           <DashboardCardContainer>
             <DashboardCardHeader>
               <p class="text-xl">
@@ -427,16 +421,6 @@
       const json = await response.json();
       alert(json.message);
     }
-  };
-
-  const invite_bot = (server_id: string) => {
-    window.open(
-      discord.invite.bot(server_id),
-      "name",
-      `width=458,height=820,left=${screen.width / 2 - 458 / 2},top=${
-        screen.height / 2 - 820 / 2
-      }`
-    );
   };
 
   const bump_server = async () => {

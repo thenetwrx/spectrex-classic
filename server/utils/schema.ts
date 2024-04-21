@@ -1,4 +1,4 @@
-import { boolean, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import { boolean, jsonb, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 
 export const users_table = pgTable("users", {
   id: text("id").primaryKey(),
@@ -56,6 +56,7 @@ export const servers_table = pgTable("servers", {
   public: boolean("public").notNull().default(false),
   category: text("category"),
   updated_at: text("updated_at").notNull(),
+  invite_uses: jsonb("invite_uses").array().notNull().default([]),
 });
 
 export const server_reports_table = pgTable("server_reports", {

@@ -67,7 +67,8 @@
           </div>
           <NuxtLink
             class="btn btn-success text-white rounded-md px-6 ml-auto"
-            :href="server.result.invite_link || '#'"
+            :href="'/api/v1/servers/' + server.result.id + '/join'"
+            :external="true"
             >Join</NuxtLink
           >
         </ResourceCardHeader>

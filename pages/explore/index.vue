@@ -149,7 +149,7 @@
               </p>
               <NuxtLink
                 class="ml-auto btn btn-sm btn-primary"
-                :href="server.invite_link"
+                :href="'/api/v1/servers/' + server.id + '/join'"
                 :external="true"
               >
                 Join Server

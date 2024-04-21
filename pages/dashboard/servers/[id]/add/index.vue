@@ -288,7 +288,7 @@
 
   const invite_bot = (server_id: string) => {
     window.open(
-      discord.invite.bot(server_id),
+      discord.invite.bot_to_server(server_id),
       "name",
       `width=458,height=820,left=${screen.width / 2 - 458 / 2},top=${
         screen.height / 2 - 820 / 2

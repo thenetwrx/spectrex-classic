@@ -11,7 +11,11 @@ export default () => {
     return `${cdn_base_url}/icons/${server_id}/${icon_hash}.webp`;
   };
 
-  const bot = (server_id: string) => {
+  const bot = () => {
+    return `${oauth_base_url}/authorize?scope=bot+applications.commands&permissions=277025736769&client_id=1216792581577506826`;
+  };
+
+  const bot_to_server = (server_id: string) => {
     return `${oauth_base_url}/authorize?scope=bot+applications.commands&permissions=277025736769&client_id=1216792581577506826&guild_id=${server_id}&disable_guild_select=true`;
   };
 
@@ -22,6 +26,7 @@ export default () => {
     },
     invite: {
       bot,
+      bot_to_server,
     },
   };
 };

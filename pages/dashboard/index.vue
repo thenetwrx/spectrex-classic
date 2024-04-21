@@ -4,7 +4,7 @@
     <DashboardMainContainer>
       <DashboardMainSidebar active="servers" />
       <DashboardMainContent>
-        <div class="flex flex-row items-center pb-6">
+        <div class="flex flex-row items-center">
           <h2 class="text-lg font-semibold">Manage Servers</h2>
           <button
             class="btn btn-ghost btn-sm ml-auto"
@@ -21,6 +21,14 @@
           </button>
         </div>
 
+        <p class="opacity-75 pb-6">
+          Want quick access to bumping your Discord server?
+          <NuxtLink
+            class="text-accent hover:underline"
+            :href="discord.invite.bot()"
+            >Add the Discord bot!</NuxtLink
+          >
+        </p>
         <ResourcePending v-if="servers_pending" />
         <div class="grid md:grid-cols-1 lg:grid-cols-2 gap-3" v-else>
           <NuxtLink
