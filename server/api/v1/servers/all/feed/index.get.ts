@@ -55,7 +55,8 @@ export default defineEventHandler(async (event) => {
       )
       .orderBy(desc(servers_table.bumped_at));
 
-    const { invite_link, ...rest } = getTableColumns(servers_table); // exclude "invite_link" column
+    const { invite_link, invite_uses, ...rest } =
+      getTableColumns(servers_table); // exclude "invite_link" column
     const servers = await db
       .select({ ...rest })
       .from(servers_table)

@@ -44,7 +44,7 @@ export default defineEventHandler(async (event) => {
     setResponseStatus(event, 200);
 
     if (servers[0].owner_id !== event.context.user?.id) {
-      const { invite_link, ...servers_no_invite } = servers[0];
+      const { invite_link, invite_uses, ...servers_no_invite } = servers[0];
 
       return {
         message: null,
