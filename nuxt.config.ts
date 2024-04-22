@@ -2,7 +2,7 @@
 
 export default defineNuxtConfig({
   devtools: { enabled: true },
-  modules: ["@nuxt/image", "@nuxtjs/tailwindcss"],
+  modules: ["@nuxt/image", "@nuxtjs/tailwindcss", "nuxt-time"],
   image: {
     format: ["avif", "webp"],
     domains: ["https://cdn.discordapp.com"],

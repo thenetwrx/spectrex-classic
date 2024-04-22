@@ -145,7 +145,10 @@
 
             <div class="flex flex-row items-center w-full gap-2">
               <p class="opacity-25">
-                bumped {{ timeAgo(new Date(Number(server.bumped_at))) }}
+                {{
+                  formatDistance(new Date(), new Date(Number(server.bumped_at)))
+                }}
+                ago
               </p>
               <NuxtLink
                 class="ml-auto btn btn-sm btn-primary"
@@ -191,6 +194,8 @@
 </template>
 
 <script setup lang="ts">
+  import { formatDistance } from "date-fns";
+
   useHead({
     title: "Explore",
   });

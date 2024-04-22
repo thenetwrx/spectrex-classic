@@ -18,7 +18,12 @@
           </span>
         </h2>
         <p class="opacity-30">
-          Logged in at: {{ formatDateString(lucia?.session?.created_at!) }}
+          You logged in on
+          <NuxtTime
+            :datetime="new Date(Number(lucia?.session?.created_at))"
+            time-style="full"
+            date-style="full"
+          />
         </p>
       </div>
     </div>
@@ -29,11 +34,4 @@
 
 <script setup lang="ts">
   const lucia = useLucia();
-  const discord = useDiscord();
-
-  function formatDateString(dynamicString: string) {
-    const date = new Date(Number(dynamicString));
-
-    return date ? date.toString() : "Unknown";
-  }
 </script>

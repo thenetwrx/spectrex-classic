@@ -10,28 +10,37 @@
           <h2 class="text-lg font-semibold">Manage Server</h2>
 
           <div class="flex flex-row gap-1 ml-auto">
-            <button
-              class="btn btn-ghost btn-sm"
-              :class="
-                !server?.result ||
-                server_metadata.bumping ||
-                server_metadata.on_cooldown
-                  ? 'btn-disabled'
-                  : ''
-              "
-              v-on:click="bump_server"
-            >
-              <span v-if="server_metadata.on_cooldown">
-                {{
-                  formatRemainingTime(Number(server?.result?.bumped_at || 0))
-                }}
-              </span>
-              <div v-if="!server_metadata.on_cooldown">
-                <span v-if="!server_metadata.bumping">Bump </span>
-                <span v-else>Bumping </span>
-              </div>
-              <i class="fa-solid fa-up-from-line"></i>
-            </button>
+            <ClientOnly>
+              <button
+                class="btn btn-ghost btn-sm"
+                :class="
+                  !server?.result || bump.pending || bump.on_cooldown
+                    ? 'btn-disabled'
+                    : ''
+                "
+                v-on:click="bump_server"
+              >
+                <span v-if="bump.pending"> Bumping </span>
+                <span v-else>
+                  <template v-if="!bump.on_cooldown">Bump</template>
+                  <template v-else>
+                    {{
+                      formatDistance(
+                        new Date(Number(server?.result?.bumped_at)),
+                        new Date(
+                          Number(server?.result?.bumped_at || 0) +
+                            (lucia?.user.premium_since !== null
+                              ? 3600000
+                              : 7200000)
+                        )
+                      )
+                    }}
+                  </template>
+                </span>
+                <i class="fa-solid fa-up-from-line"></i>
+              </button>
+            </ClientOnly>
+
             <NuxtLink
               class="btn btn-ghost btn-sm"
               :class="!server?.result ? 'btn-disabled' : ''"
@@ -285,6 +294,8 @@
 </template>
 
 <script setup lang="ts">
+  import { formatDistance } from "date-fns";
+
   definePageMeta({
     middleware: ["1-protected"],
   });
@@ -302,10 +313,10 @@
   const nsfw = ref<boolean>();
   const tags = ref<Array<string>>([]);
   const new_tag = ref<string>("");
-  const server_metadata = ref<{
-    on_cooldown: boolean;
-    bumping: boolean;
-  }>({ on_cooldown: false, bumping: false });
+  const bump = ref<{ pending: boolean; on_cooldown: boolean }>({
+    pending: false,
+    on_cooldown: false,
+  });
 
   const {
     data: server,
@@ -325,24 +336,16 @@
     ),
   });
 
-  const refresh_server_metadata = () => {
-    const premium = lucia.value?.user.premium_since !== null ? true : false;
-
-    const cooldown = premium ? 3600000 : 7200000;
-    const on_cooldown =
-      Number(server.value?.result?.bumped_at || 0) + cooldown <= Date.now()
-        ? false
-        : true;
-
-    server_metadata.value.bumping = false;
-    server_metadata.value.on_cooldown = on_cooldown;
-  };
-
   watch(
     server,
     () => {
       if (server.value?.result) {
-        refresh_server_metadata();
+        bump.value.on_cooldown =
+          Number(server.value?.result?.bumped_at || 0) +
+            (lucia.value?.user.premium_since !== null ? 3600000 : 7200000) <=
+          Date.now()
+            ? false
+            : true;
 
         is_public.value = server.value.result.public;
         language.value = server.value.result.language!;
@@ -425,7 +428,7 @@
 
   const bump_server = async () => {
     if (server.value !== null) {
-      server_metadata.value.bumping = true;
+      bump.value.pending = true;
       await sync();
       const response = await fetch(`/api/v1/servers/${server_id}/bump`, {
         method: "POST",
@@ -438,31 +441,10 @@
         lucia.value = null;
         navigateTo("/");
       }
-      server_metadata.value.bumping = false;
+      bump.value.pending = false;
       await refresh_server();
     }
   };
-
-  function formatRemainingTime(bumped_at: number) {
-    const premium = lucia.value?.user.premium_since ? true : false;
-
-    const cooldownDuration = premium ? 3600000 : 7200000;
-    const targetTime = new Date(bumped_at + cooldownDuration);
-    const timeDifference = targetTime.getTime() - Date.now();
-
-    if (timeDifference <= 0) {
-      return "00:00:00"; // Cooldown ended
-    }
-
-    const totalSeconds = Math.floor(timeDifference / 1000);
-    const hours = Math.floor(totalSeconds / 3600);
-    const minutes = Math.floor((totalSeconds % 3600) / 60);
-    const seconds = totalSeconds % 60;
-
-    return `${hours.toString().padStart(2, "0")}:${minutes
-      .toString()
-      .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
-  }
 
   // Method to add a tag to the array
   const addTag = () => {
