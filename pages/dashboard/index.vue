@@ -61,7 +61,7 @@
                 if (!servers?.result?.length) syncDiscordServers();
               }
             "
-            onclick="my_modal_1.showModal()"
+            onclick="modal.showModal()"
           >
             <div class="w-full h-full flex justify-center items-center py-10">
               <i class="fa-solid fa-plus fa-2xl"></i>
@@ -71,7 +71,7 @@
       </DashboardMainContent>
     </DashboardMainContainer>
   </Container>
-  <dialog class="modal" id="my_modal_1">
+  <dialog class="modal" id="modal">
     <div class="modal-box bg-base-200">
       <div class="flex flex-row gap-1 items-center w-full">
         <h3 class="text-lg font-bold">Add server</h3>
@@ -88,7 +88,7 @@
           ></span>
           <i v-else class="fa-solid fa-arrows-rotate"></i>
         </button>
-        <button class="btn btn-ghost btn-sm" onclick="my_modal_1.close()">
+        <button class="btn btn-ghost btn-sm" onclick="modal.close()">
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>

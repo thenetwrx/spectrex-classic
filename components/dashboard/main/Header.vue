@@ -20,10 +20,12 @@
         <p class="opacity-30">
           You logged in on
           <NuxtTime
-            :datetime="new Date(Number(lucia?.session?.created_at))"
+            v-if="lucia?.session?.created_at"
+            :datetime="new Date(Number(lucia.session.created_at))"
             time-style="full"
             date-style="full"
           />
+          <span v-else>Unknown</span>
         </p>
       </div>
     </div>

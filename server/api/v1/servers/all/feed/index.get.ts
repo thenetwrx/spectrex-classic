@@ -5,6 +5,7 @@ export default defineEventHandler(async (event) => {
   // Parameters
   const query = getQuery(event);
   const page = query.page?.toString() || "0";
+  const limit = query.limit?.toString() || "20";
   // const sort = query.sort?.toString() || "bumped_at";
 
   // 1. Check variables on server side to prevent abuse
@@ -24,6 +25,21 @@ export default defineEventHandler(async (event) => {
     return { message: "Exceeded page query (50 maximum)", result: null };
   }
 
+  if (Number.isNaN(limit)) {
+    setResponseStatus(event, 400);
+    return { message: "Invalid page query", result: null };
+  }
+  if (Number(limit) < 1) {
+    // minimum page
+    setResponseStatus(event, 400);
+    return { message: "Invalid limit query (1-20)", result: null };
+  }
+  if (Number(limit) > 20) {
+    // max pages
+    setResponseStatus(event, 400);
+    return { message: "Exceeded limit query (20 maximum)", result: null };
+  }
+
   // 2. Reject banned users
   if (event.context.user?.banned) {
     setResponseStatus(event, 403);
@@ -39,7 +55,7 @@ export default defineEventHandler(async (event) => {
 
   // 3. Fetch servers
   try {
-    const max_per_page = 20;
+    const max_per_page = Number(limit);
     const category: string | null = query.category?.toString() || null;
 
     const amount = await db

@@ -186,7 +186,7 @@
       </DashboardMainContent>
     </DashboardMainContainer>
   </Container>
-  <dialog class="modal" id="my_modal_1">
+  <dialog class="modal" id="modal">
     <div class="modal-box bg-base-200 flex flex-col gap-4">
       <div class="flex flex-row gap-1 items-center w-full">
         <h3 class="text-lg font-bold">Server added!</h3>
@@ -277,7 +277,7 @@
 
     if (response.ok) {
       if (process.client) {
-        const element = document.getElementById("my_modal_1") as any;
+        const element = document.getElementById("modal") as any;
         element.showModal();
       }
     } else {

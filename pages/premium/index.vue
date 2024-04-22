@@ -29,22 +29,19 @@
               A super special role in our Discord server
             </p>
           </div>
-          <button class="btn btn-primary" onclick="my_modal_1.showModal()">
-            I will!
+          <button class="btn btn-primary" onclick="modal.showModal()">
+            Purchase
           </button>
         </div>
       </div>
     </div>
   </Container>
-  <dialog class="modal" id="my_modal_1">
+  <dialog class="modal" id="modal">
     <div class="modal-box bg-base-200 flex flex-col">
       <div class="flex flex-row gap-1 items-center w-full pb-4">
         <h3 class="text-lg font-bold">Support Spectrex</h3>
 
-        <button
-          class="btn btn-ghost btn-sm ml-auto"
-          onclick="my_modal_1.close()"
-        >
+        <button class="btn btn-ghost btn-sm ml-auto" onclick="modal.close()">
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
