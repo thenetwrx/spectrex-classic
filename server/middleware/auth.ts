@@ -48,12 +48,9 @@ export default defineEventHandler(async (event) => {
 
     // Check if the current time is greater than or equal to one day after the refreshed time
     if (Date.now() >= oneDayAfterRefreshedMs) {
-      console.log("yes");
       const response = await discord.refreshAccessToken(
         cryptr.decrypt(session?.provider_refresh_token!)
       );
-
-      console.log(response);
 
       if (
         !response.accessToken ||

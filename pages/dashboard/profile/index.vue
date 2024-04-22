@@ -13,7 +13,7 @@
               :class="!lucia?.user ? 'btn-disabled' : ''"
               :href="'/users/' + lucia?.user.id"
             >
-              Profile
+              View
               <i class="fa-solid fa-arrow-up-right-from-square"></i>
             </NuxtLink>
             <button
