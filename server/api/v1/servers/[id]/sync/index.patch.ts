@@ -79,10 +79,12 @@ export default defineEventHandler(async (event) => {
               icon: server_from_discord.icon,
             })
             .where(eq(servers_table.id, servers[0].id));
-
           return;
         }
       }
+
+      await db.delete(servers_table).where(eq(servers_table.id, servers[0].id));
+      return;
     }
 
     setResponseStatus(event, 403);

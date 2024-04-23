@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { and, eq, notInArray } from "drizzle-orm";
 import { generateId } from "lucia";
 import { cryptr } from "~/server/utils/auth";
 import db from "~/server/utils/database";
@@ -42,55 +42,72 @@ export default defineEventHandler(async (event) => {
     }
 
     // 3. Batch database operations
-    for (const server_from_discord of servers_from_discord) {
-      if (server_from_discord.owner) {
-        const servers = await db
-          .select({
-            id: servers_table.id,
-            banned: servers_table.banned,
-          })
-          .from(servers_table)
-          .where(eq(servers_table.provider_id, server_from_discord.id));
+    const servers = await db
+      .select({
+        id: servers_table.id,
+        provider_id: servers_table.provider_id,
+        banned: servers_table.banned,
+      })
+      .from(servers_table)
+      .where(eq(servers_table.owner_id, event.context.user.id));
 
-        if (servers.length) {
-          if (servers[0].banned) continue;
+    if (servers.length) {
+      for (const server_from_discord of servers_from_discord) {
+        if (server_from_discord.owner) {
+          const server = servers.find(
+            (server) => server.provider_id === server_from_discord.id
+          );
+          if (server) {
+            if (server.banned) continue;
 
-          const now = Date.now().toString();
+            const now = Date.now().toString();
 
-          await db
-            .update(servers_table)
-            .set({
-              updated_at: now,
-              owner_id: event.context.user.id,
-              owner_provider_id: event.context.user.provider_id,
+            await db
+              .update(servers_table)
+              .set({
+                updated_at: now,
+                owner_id: event.context.user.id,
+                owner_provider_id: event.context.user.provider_id,
+                approximate_member_count:
+                  server_from_discord.approximate_member_count.toString(),
+                approximate_presence_count:
+                  server_from_discord.approximate_presence_count.toString(),
+                name: server_from_discord.name,
+                icon: server_from_discord.icon,
+              })
+              .where(eq(servers_table.id, server.id));
+          } else {
+            const now = Date.now().toString();
+
+            await db.insert(servers_table).values({
+              id: generateId(32),
+              provider_id: server_from_discord.id,
               approximate_member_count:
                 server_from_discord.approximate_member_count.toString(),
               approximate_presence_count:
                 server_from_discord.approximate_presence_count.toString(),
+              created_at: now,
+              updated_at: now,
+              owner_id: event.context.user.id,
+              owner_provider_id: event.context.user.provider_id,
               name: server_from_discord.name,
               icon: server_from_discord.icon,
-            })
-            .where(eq(servers_table.id, servers[0].id));
-        } else {
-          const now = Date.now().toString();
-
-          await db.insert(servers_table).values({
-            id: generateId(32),
-            provider_id: server_from_discord.id,
-            approximate_member_count:
-              server_from_discord.approximate_member_count.toString(),
-            approximate_presence_count:
-              server_from_discord.approximate_presence_count.toString(),
-            created_at: now,
-            updated_at: now,
-            owner_id: event.context.user.id,
-            owner_provider_id: event.context.user.provider_id,
-            name: server_from_discord.name,
-            icon: server_from_discord.icon,
-          });
+            });
+          }
         }
       }
     }
+
+    // 4. Delete servers not found in servers_from_discord
+    await db.delete(servers_table).where(
+      and(
+        eq(servers_table.owner_id, event.context.user.id), // Servers owned by the user
+        notInArray(
+          servers_table.provider_id,
+          servers_from_discord.map((server) => server.id)
+        ) // Servers not found in servers_from_discord
+      )
+    );
 
     return;
   } catch (err) {

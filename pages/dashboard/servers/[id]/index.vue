@@ -18,7 +18,7 @@
                     ? 'btn-disabled'
                     : ''
                 "
-                v-on:click="bump_server"
+                v-on:click="_bump"
               >
                 <span v-if="bump.pending"> Bumping </span>
                 <span v-else>
@@ -277,9 +277,9 @@
             <div
               class="bg-error bg-opacity-65 w-full p-4 flex flex-row items-center rounded-md"
             >
-              <p class="text-xl">Delete</p>
+              <p class="text-xl">Remove Listing</p>
               <button v-on:click="_delete" class="btn btn-error btn-sm ml-auto">
-                Confirm Deletion
+                Confirm
               </button>
             </div>
           </DashboardCardContainer>
@@ -426,7 +426,7 @@
     }
   };
 
-  const bump_server = async () => {
+  const _bump = async () => {
     if (server.value !== null) {
       bump.value.pending = true;
       await sync();
