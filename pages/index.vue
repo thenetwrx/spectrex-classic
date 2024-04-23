@@ -49,7 +49,7 @@
             <div
               class="relative bg-base-200 h-48 overflow-hidden rounded-2xl shadow-lg sm:h-60 lg:h-40 mb-10 flex flex-col"
             >
-              <i class="fa-solid fa-money-bill fa-2xl m-auto"></i>
+              <i class="fa-solid fa-credit-card fa-2xl m-auto"></i>
             </div>
             <div>
               <p class="text-2xl">Free</p>
@@ -217,13 +217,13 @@
           >
             <NuxtLink
               class="btn btn-primary btn-sm rounded-badge"
-              href="/explore"
+              href="/explore?utm_source=site&utm_medium=direct&utm_campaign=convinced"
             >
               Find a server
             </NuxtLink>
             <NuxtLink
               class="btn btn-secondary btn-sm rounded-badge"
-              href="/dashboard"
+              href="/dashboard?utm_source=site&utm_medium=direct&utm_campaign=convinced"
             >
               Add a server
             </NuxtLink>

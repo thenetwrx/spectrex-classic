@@ -223,33 +223,62 @@
         </NuxtLink>
         <div class="flex flex-col gap-2">
           <p class="opacity-75 text-md whitespace-break-spaces">SERVICE</p>
-          <NuxtLink href="/explore">Find a server</NuxtLink>
-          <NuxtLink href="/dashboard">Add your server</NuxtLink>
-          <NuxtLink href="/premium">Premium</NuxtLink>
+          <NuxtLink
+            href="/explore?utm_source=site&utm_medium=direct&utm_campaign=footer"
+            class="hover:underline"
+            >Find a server</NuxtLink
+          >
+          <NuxtLink
+            href="/dashboard?utm_source=site&utm_medium=direct&utm_campaign=footer"
+            class="hover:underline"
+            >Add your server</NuxtLink
+          >
+          <NuxtLink
+            href="/premium?utm_source=site&utm_medium=direct&utm_campaign=footer"
+            class="hover:underline"
+            >Premium</NuxtLink
+          >
         </div>
         <div class="flex flex-col gap-2">
           <p class="opacity-75 text-md whitespace-break-spaces">LEGAL</p>
-          <NuxtLink href="/legal/guidelines">Guidelines</NuxtLink>
-          <NuxtLink href="/legal/terms-of-service">Terms of Service</NuxtLink>
-          <NuxtLink href="/legal/privacy-policy">Privacy Policy</NuxtLink>
+          <NuxtLink href="/legal/guidelines" class="hover:underline"
+            >Guidelines</NuxtLink
+          >
+          <NuxtLink href="/legal/terms-of-service" class="hover:underline"
+            >Terms of Service</NuxtLink
+          >
+          <NuxtLink href="/legal/privacy-policy" class="hover:underline"
+            >Privacy Policy</NuxtLink
+          >
         </div>
         <div class="flex flex-col gap-2">
           <p class="opacity-75 text-md whitespace-break-spaces">SUPPORT</p>
-          <NuxtLink href="/discord">Discord Support</NuxtLink>
-          <NuxtLink href="mailto:contact@spectrex.app">Email Support</NuxtLink>
+          <NuxtLink
+            href="/discord?utm_source=site&utm_medium=direct&utm_campaign=footer"
+            class="hover:underline"
+            >Discord Support</NuxtLink
+          >
+          <NuxtLink href="mailto:contact@spectrex.app" class="hover:underline"
+            >Email Support</NuxtLink
+          >
         </div>
       </div>
 
-      <p class="opacity-75 ml-auto max-md:mx-auto">
-        &copy; 2024 Spectrex -
-        <NuxtLink
-          href="https://scriptkiddie5.me"
-          target="_blank"
-          class="underline"
-        >
-          by scriptkiddie
-        </NuxtLink>
-      </p>
+      <div
+        class="flex flex-row max-md:flex-col justify-between text-sm opacity-75"
+      >
+        <p>Spectrex is not affiliated with Discord.</p>
+        <p>
+          &copy; 2024 Spectrex -
+          <NuxtLink
+            href="https://scriptkiddie5.me"
+            target="_blank"
+            class="underline"
+          >
+            by scriptkiddie
+          </NuxtLink>
+        </p>
+      </div>
     </div>
   </div>
 </template>

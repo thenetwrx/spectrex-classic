@@ -87,7 +87,7 @@ export default defineEventHandler(async (event) => {
       return;
     }
 
-    setResponseStatus(event, 403);
+    setResponseStatus(event, 404);
     return {
       message: "Server doesn't exist. Try syncing all servers first",
     };
