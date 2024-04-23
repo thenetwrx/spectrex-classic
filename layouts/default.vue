@@ -243,7 +243,7 @@
       <p class="opacity-75 ml-auto max-md:mx-auto">
         &copy; 2024 Spectrex -
         <NuxtLink
-          href="https://scriptkiddie5.vercel.app"
+          href="https://scriptkiddie5.me"
           target="_blank"
           class="underline"
         >
