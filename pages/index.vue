@@ -118,7 +118,7 @@
                 <p>
                   Listing your server is completely free, ensuring all servers
                   have equal visibility. For a boost, our
-                  <NuxtLink class="text-accent underline" href="/premium"
+                  <NuxtLink class="text-accent hover:underline" href="/premium"
                     >Premium</NuxtLink
                   >
                   one-time purchase allows more frequent bumps to keep your
@@ -149,7 +149,7 @@
                   Servers violating our guidelines will be removed. Repeated or
                   extreme violations may result in account suspension. Please
                   <NuxtLink
-                    class="text-accent underline"
+                    class="text-accent hover:underline"
                     href="/legal/guidelines"
                     >review our guidelines
                   </NuxtLink>
@@ -192,12 +192,12 @@
                 <p>
                   Please feel free to contact us! We offer
                   <NuxtLink
-                    class="text-accent underline"
+                    class="text-accent hover:underline"
                     href="mailto:contact@spectrex.app"
                     >Email</NuxtLink
                   >
                   and
-                  <NuxtLink class="text-accent underline" href="/discord"
+                  <NuxtLink class="text-accent hover:underline" href="/discord"
                     >Discord</NuxtLink
                   >
                   support options.

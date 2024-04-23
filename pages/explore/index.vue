@@ -151,11 +151,11 @@
                 ago
               </p>
               <NuxtLink
-                class="ml-auto btn btn-sm btn-primary"
+                class="ml-auto btn btn-sm btn-primary px-5"
                 :href="'/api/v1/servers/' + server.id + '/join'"
                 :external="true"
               >
-                Join Server
+                Join
               </NuxtLink>
             </div>
           </ResourceCardContent>
