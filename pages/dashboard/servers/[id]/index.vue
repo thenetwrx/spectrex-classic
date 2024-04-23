@@ -26,7 +26,7 @@
                   <template v-else>
                     {{
                       formatDistance(
-                        new Date(Number(server?.result?.bumped_at)),
+                        new Date(),
                         new Date(
                           Number(server?.result?.bumped_at || 0) +
                             (lucia?.user.premium_since !== null
