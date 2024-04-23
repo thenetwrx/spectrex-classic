@@ -17,7 +17,7 @@ export default defineEventHandler(async (event) => {
     return { message: "You're banned from Spectrex", result: null };
   }
 
-  // 2. Sync server
+  // 2. Sync server with Discord
   try {
     const response = await fetch(
       "https://discord.com/api/users/@me/guilds?with_counts=true",
@@ -89,8 +89,7 @@ export default defineEventHandler(async (event) => {
 
     setResponseStatus(event, 403);
     return {
-      message:
-        "Server doesn't exist or you aren't the owner of it. Try syncing all servers first",
+      message: "Server doesn't exist. Try syncing all servers first",
     };
   } catch (err) {
     console.log(err);

@@ -1,4 +1,4 @@
-import { and, eq, notInArray } from "drizzle-orm";
+import { and, eq, inArray, notInArray } from "drizzle-orm";
 import { generateId } from "lucia";
 import { cryptr } from "~/server/utils/auth";
 import db from "~/server/utils/database";
@@ -41,7 +41,7 @@ export default defineEventHandler(async (event) => {
       return { message: "No servers found from Discord" };
     }
 
-    // 3. Batch database operations
+    // 3. Sync servers with Discord
     const servers = await db
       .select({
         id: servers_table.id,
@@ -49,7 +49,12 @@ export default defineEventHandler(async (event) => {
         banned: servers_table.banned,
       })
       .from(servers_table)
-      .where(eq(servers_table.owner_id, event.context.user.id));
+      .where(
+        inArray(
+          servers_table.provider_id,
+          servers_from_discord.map((server) => server.id)
+        )
+      );
 
     if (servers.length) {
       for (const server_from_discord of servers_from_discord) {
