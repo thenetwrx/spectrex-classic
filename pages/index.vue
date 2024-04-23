@@ -95,7 +95,7 @@
             class="flex flex-col gap-4 w-full max-w-4xl px-4 mx-auto py-12 text-start"
           >
             <div class="collapse collapse-arrow bg-base-200">
-              <input type="radio" name="accordion" />
+              <input type="radio" name="accordion" :checked="true" />
               <div class="collapse-title text-xl max-md:text-lg font-medium">
                 Is it safe to connect my Discord account to your site?
               </div>
