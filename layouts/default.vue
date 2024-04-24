@@ -268,16 +268,7 @@
         class="flex flex-row max-md:flex-col justify-between text-sm opacity-75"
       >
         <p>Spectrex is not affiliated with Discord.</p>
-        <p>
-          &copy; 2024 Spectrex -
-          <NuxtLink
-            href="https://scriptkiddie5.me"
-            target="_blank"
-            class="underline"
-          >
-            by scriptkiddie
-          </NuxtLink>
-        </p>
+        <p>&copy; 2024 Spectrex</p>
       </div>
     </div>
   </div>
