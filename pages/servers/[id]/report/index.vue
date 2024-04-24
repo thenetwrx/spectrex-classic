@@ -19,10 +19,18 @@
 
             <select
               v-model="issue_type"
+              v-on:change="
+                () => {
+                  if (Number(issue_type) === IssueType.Server) {
+                    report();
+                    issue_type = '';
+                  }
+                }
+              "
               class="select select-bordered rounded-none w-full"
             >
               <option disabled selected value="">Select issue</option>
-              <option :value="IssueType.Server">The Discord Server</option>
+              <option :value="IssueType.Server">The Server</option>
               <option :value="IssueType.Listing">The Listing</option>
             </select>
           </div>
@@ -80,6 +88,11 @@
   });
 
   const report = async () => {
+    if (Number(issue_type.value) === IssueType.Server)
+      return alert(
+        "Please report issues inside of the server to Discord instead."
+      );
+
     const response = await fetch(`/api/v1/servers/${server_id}/report`, {
       method: "PUT",
       headers: new Headers({ "content-type": "application/json" }),

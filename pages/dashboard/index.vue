@@ -98,7 +98,10 @@
       </p>
       <select
         class="select select-bordered rounded-none w-full"
-        v-on:change="((event:any) => navigateTo(event?.target?.value || '/'))"
+        v-on:change="(event) => {
+          const target = event.target as HTMLSelectElement;
+          navigateTo(target || '/')
+        }"
       >
         <option disabled selected>Select server</option>
         <option

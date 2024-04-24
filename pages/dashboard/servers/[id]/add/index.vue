@@ -99,7 +99,7 @@
               <!-- Input field to add new tags -->
               <input
                 type="text"
-                placeholder="Separate with enter or comma"
+                placeholder="Press enter or comma to create tag"
                 class="input input-bordered rounded-none w-full"
                 v-on:keydown="checkForComma($event)"
                 v-model="new_tag"
@@ -310,7 +310,7 @@
   };
 
   // Method to check for comma key press
-  const checkForComma = (event: any) => {
+  const checkForComma = (event: KeyboardEvent) => {
     if (event.key === "," || event.code === "Comma" || event.code === "Enter") {
       event.preventDefault(); // Prevent comma from being entered
       addTag(); // If a comma is entered, add the tag
@@ -318,7 +318,7 @@
   };
 
   // Method to remove a tag from the array
-  const removeTag = (index: any) => {
+  const removeTag = (index: number) => {
     tags.value.splice(index, 1);
   };
 </script>

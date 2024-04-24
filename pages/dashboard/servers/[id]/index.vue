@@ -178,13 +178,13 @@
             </DashboardCardHeader>
             <DashboardCardContent>
               <div
-                class="flex flex-wrap gap-2 w-fit max-sm:max-w-fit overflow-x-auto"
+                class="flex flex-wrap gap-2 w-fit max-sm:max-w-fit overflow-x-auto mb-2"
                 v-if="tags.length"
               >
                 <span
                   v-for="(tag, index) in tags"
                   :key="index"
-                  class="block max-w-fit px-2 py-1 bg-accent border-none bg-opacity-50 rounded-sm gap-2 hover:bg-opacity-65 hover:cursor-pointer transition-colors duration-200 ease-in-out text-white mb-2"
+                  class="block max-w-fit px-2 py-1 bg-accent border-none bg-opacity-50 rounded-sm gap-2 hover:bg-opacity-65 hover:cursor-pointer transition-colors duration-200 ease-in-out text-white"
                   v-on:click="removeTag(index)"
                 >
                   <i class="fa-solid fa-square-xmark fa-lg mr-2"></i>
@@ -196,7 +196,7 @@
               <!-- Input field to add new tags -->
               <input
                 type="text"
-                placeholder="Separate with enter or comma"
+                placeholder="Press enter or comma to create tag"
                 class="input input-bordered rounded-none w-full"
                 v-on:keydown="checkForComma($event)"
                 v-model="new_tag"
@@ -300,7 +300,6 @@
     middleware: ["1-protected"],
   });
   const lucia = useLucia();
-  const discord = useDiscord();
   const route = useRoute();
   const server_id = route.params.id;
   const syncing = ref<boolean>(false);
@@ -460,7 +459,7 @@
   };
 
   // Method to check for comma key press
-  const checkForComma = (event: any) => {
+  const checkForComma = (event: KeyboardEvent) => {
     if (event.key === "," || event.code === "Comma" || event.code === "Enter") {
       event.preventDefault(); // Prevent comma from being entered
       addTag(); // If a comma is entered, add the tag
@@ -468,7 +467,7 @@
   };
 
   // Method to remove a tag from the array
-  const removeTag = (index: any) => {
+  const removeTag = (index: number) => {
     tags.value.splice(index, 1);
   };
 </script>
