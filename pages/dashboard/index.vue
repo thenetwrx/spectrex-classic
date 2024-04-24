@@ -100,7 +100,7 @@
         class="select select-bordered rounded-none w-full"
         v-on:change="(event) => {
           const target = event.target as HTMLSelectElement;
-          navigateTo(target || '/')
+          navigateTo(target?.value || '/')
         }"
       >
         <option disabled selected>Select server</option>
