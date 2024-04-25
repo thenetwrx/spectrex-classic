@@ -35,9 +35,7 @@
           </p>
 
           <DashboardCardContainer>
-            <DashboardCardHeader>
-              <p class="text-xl">Language<span class="text-error">*</span></p>
-            </DashboardCardHeader>
+            <DashboardCardHeader title="Language" :required="true" />
             <DashboardCardContent>
               <select
                 v-model="language"
@@ -55,9 +53,7 @@
           </DashboardCardContainer>
 
           <DashboardCardContainer>
-            <DashboardCardHeader>
-              <p class="text-xl">Category<span class="text-error">*</span></p>
-            </DashboardCardHeader>
+            <DashboardCardHeader title="Category" :required="true" />
             <DashboardCardContent>
               <select
                 v-model="category"
@@ -76,9 +72,7 @@
           </DashboardCardContainer>
 
           <DashboardCardContainer>
-            <DashboardCardHeader>
-              <p class="text-xl">Tags</p>
-            </DashboardCardHeader>
+            <DashboardCardHeader title="Tags" />
             <DashboardCardContent>
               <div
                 class="flex flex-wrap gap-2 w-fit max-sm:max-w-fit overflow-x-auto mb-2"
@@ -108,30 +102,23 @@
           </DashboardCardContainer>
 
           <DashboardCardContainer>
-            <DashboardCardHeader>
-              <p class="text-xl">
-                Description<span class="text-error">*</span>
-              </p>
-            </DashboardCardHeader>
+            <DashboardCardHeader title="Description" :required="true" />
             <DashboardCardContent>
               <textarea
                 type="text"
                 placeholder="A very interesting server..."
                 v-model="description"
-                class="textarea textarea-bordered rounded-none w-full"
+                class="textarea textarea-bordered rounded-none h-40 max-h-[42rem] w-full"
               ></textarea>
             </DashboardCardContent>
           </DashboardCardContainer>
 
           <DashboardCardContainer>
-            <DashboardCardHeader>
-              <p class="text-xl">
-                Invite Link<span class="text-error">* </span>
-                <span class="text-sm opacity-75"
-                  >(make sure it's a permanent invite!)
-                </span>
-              </p>
-            </DashboardCardHeader>
+            <DashboardCardHeader
+              title="Invite Link"
+              :required="true"
+              messsage="(make sure it's a permanent invite!)"
+            />
             <DashboardCardContent>
               <input
                 type="text"
@@ -143,11 +130,7 @@
           </DashboardCardContainer>
 
           <DashboardCardContainer>
-            <DashboardCardHeader>
-              <p class="text-xl">
-                Primarily NSFW<span class="text-error">*</span>
-              </p>
-            </DashboardCardHeader>
+            <DashboardCardHeader title="Primarily NSFW" :required="true" />
             <DashboardCardContent>
               <div class="form-control items-start">
                 <label class="label cursor-pointer gap-2">
@@ -227,7 +210,6 @@
   const route = useRoute();
   const server_id = route.params.id;
 
-  const is_public = ref<boolean>();
   const language = ref<string>("");
   const category = ref<string>("");
   const description = ref<string>("");

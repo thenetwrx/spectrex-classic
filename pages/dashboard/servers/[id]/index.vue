@@ -95,14 +95,11 @@
           </div>
 
           <DashboardCardContainer>
-            <DashboardCardHeader>
-              <p class="text-xl">
-                Public<span class="text-error">* </span>
-                <span class="text-sm opacity-75">
-                  (whether or not this server will be publicly listed)
-                </span>
-              </p>
-            </DashboardCardHeader>
+            <DashboardCardHeader
+              title="Public"
+              :required="true"
+              message="(whether or not this server will be publicly listed)"
+            />
             <DashboardCardContent>
               <div class="form-control items-start">
                 <label class="label cursor-pointer gap-2">
@@ -129,12 +126,14 @@
                 </label>
               </div>
             </DashboardCardContent>
+            <DashboardCardSave
+              :callback="() => edit('public', { public: is_public })"
+              :matches="() => server?.result?.public === is_public"
+            />
           </DashboardCardContainer>
 
           <DashboardCardContainer>
-            <DashboardCardHeader>
-              <p class="text-xl">Language<span class="text-error">*</span></p>
-            </DashboardCardHeader>
+            <DashboardCardHeader title="Language" :required="true" />
             <DashboardCardContent>
               <select
                 v-model="language"
@@ -149,12 +148,14 @@
                 <option value="ru">русский</option>
               </select>
             </DashboardCardContent>
+            <DashboardCardSave
+              :callback="() => edit('language', { language })"
+              :matches="() => server?.result?.language === language"
+            />
           </DashboardCardContainer>
 
           <DashboardCardContainer>
-            <DashboardCardHeader>
-              <p class="text-xl">Category<span class="text-error">*</span></p>
-            </DashboardCardHeader>
+            <DashboardCardHeader title="Category" :required="true" />
             <DashboardCardContent>
               <select
                 v-model="category"
@@ -170,12 +171,14 @@
                 <option value="Other">Other</option>
               </select>
             </DashboardCardContent>
+            <DashboardCardSave
+              :callback="() => edit('category', { category })"
+              :matches="() => server?.result?.category === category"
+            />
           </DashboardCardContainer>
 
           <DashboardCardContainer>
-            <DashboardCardHeader>
-              <p class="text-xl">Tags</p>
-            </DashboardCardHeader>
+            <DashboardCardHeader title="Tags" />
             <DashboardCardContent>
               <div
                 class="flex flex-wrap gap-2 w-fit max-sm:max-w-fit overflow-x-auto mb-2"
@@ -193,7 +196,6 @@
                 </span>
               </div>
 
-              <!-- Input field to add new tags -->
               <input
                 type="text"
                 placeholder="Press enter or comma to create tag"
@@ -202,33 +204,46 @@
                 v-model="new_tag"
               />
             </DashboardCardContent>
+            <DashboardCardSave
+              :callback="() => edit('tags', { tags })"
+              :matches="
+                () => {
+                  // Check if lengths are not equal
+                  if (server?.result?.tags.length !== tags.length) return false;
+
+                  // Compare elements at each position
+                  for (let i = 0; i < server.result.tags.length; i++) {
+                    if (server.result.tags[i] !== tags[i]) return false;
+                  }
+
+                  return true;
+                }
+              "
+            />
           </DashboardCardContainer>
 
           <DashboardCardContainer>
-            <DashboardCardHeader>
-              <p class="text-xl">
-                Description<span class="text-error">*</span>
-              </p>
-            </DashboardCardHeader>
+            <DashboardCardHeader title="Description" :required="true" />
             <DashboardCardContent>
               <textarea
                 type="text"
                 placeholder="A very interesting server..."
                 v-model="description"
-                class="textarea textarea-bordered rounded-none w-full"
+                class="textarea textarea-bordered rounded-none h-40 max-h-[42rem] w-full"
               ></textarea>
             </DashboardCardContent>
+            <DashboardCardSave
+              :callback="() => edit('description', { description })"
+              :matches="() => server?.result?.description === description"
+            />
           </DashboardCardContainer>
 
           <DashboardCardContainer>
-            <DashboardCardHeader>
-              <p class="text-xl">
-                Invite Link<span class="text-error">* </span>
-                <span class="text-sm opacity-75"
-                  >(make sure it's a permanent invite!)
-                </span>
-              </p>
-            </DashboardCardHeader>
+            <DashboardCardHeader
+              title="Invite Link"
+              :required="true"
+              message="(make sure it's a permanent invite!)"
+            />
             <DashboardCardContent>
               <input
                 type="text"
@@ -237,14 +252,14 @@
                 class="input input-bordered rounded-none w-full"
               />
             </DashboardCardContent>
+            <DashboardCardSave
+              :callback="() => edit('invite_link', { invite_link })"
+              :matches="() => server?.result?.invite_link === invite_link"
+            />
           </DashboardCardContainer>
 
           <DashboardCardContainer>
-            <DashboardCardHeader>
-              <p class="text-xl">
-                Primarily NSFW<span class="text-error">*</span>
-              </p>
-            </DashboardCardHeader>
+            <DashboardCardHeader title="Primarily NSFW" :required="true" />
             <DashboardCardContent>
               <div class="form-control items-start">
                 <label class="label cursor-pointer gap-2">
@@ -271,6 +286,10 @@
                 </label>
               </div>
             </DashboardCardContent>
+            <DashboardCardSave
+              :callback="() => edit('nsfw', { nsfw })"
+              :matches="() => server?.result?.nsfw === nsfw"
+            />
           </DashboardCardContainer>
 
           <DashboardCardContainer>
@@ -283,10 +302,6 @@
               </button>
             </div>
           </DashboardCardContainer>
-
-          <button v-on:click="edit" class="btn btn-primary btn-sm my-6 ml-auto">
-            Save Changes
-          </button>
         </div>
       </DashboardMainContent>
     </DashboardMainContainer>
@@ -304,13 +319,13 @@
   const server_id = route.params.id;
   const syncing = ref<boolean>(false);
 
-  const is_public = ref<boolean>();
-  const language = ref<string>("");
-  const category = ref<string>("");
-  const description = ref<string>("");
-  const invite_link = ref<string>("");
-  const nsfw = ref<boolean>();
-  const tags = ref<Array<string>>([]);
+  const is_public = ref<boolean | null>(null);
+  const language = ref<string | null>(null);
+  const category = ref<string | null>(null);
+  const description = ref<string | null>(null);
+  const invite_link = ref<string | null>(null);
+  const nsfw = ref<boolean | null>(null);
+  const tags = ref<string[]>([]);
   const new_tag = ref<string>("");
   const bump = ref<{ pending: boolean; on_cooldown: boolean }>({
     pending: false,
@@ -374,20 +389,13 @@
     syncing.value = false;
   };
 
-  const edit = async () => {
-    const response = await fetch(`/api/v1/servers/${server_id}`, {
+  const edit = async (name: string, data: Record<string, any>) => {
+    const response = await fetch(`/api/v1/servers/${server_id}/${name}`, {
       method: "PATCH",
       headers: new Headers({ "content-type": "application/json" }),
-      body: JSON.stringify({
-        public: is_public.value,
-        language: language.value,
-        category: category.value,
-        tags: tags.value,
-        description: description.value,
-        nsfw: nsfw.value,
-        invite_link: invite_link.value,
-      }),
+      body: JSON.stringify(data),
     });
+
     if (response.status === 401) {
       await $fetch("/api/v1/auth/logout", {
         method: "POST",
@@ -397,8 +405,7 @@
       navigateTo("/");
     }
 
-    if (response.ok) alert("Changes have been saved");
-    else {
+    if (!response.ok) {
       const json = await response.json();
       alert(json.message);
     }
@@ -445,29 +452,31 @@
     }
   };
 
-  // Method to add a tag to the array
   const addTag = () => {
     if (new_tag.value.trim() !== "") {
-      if (tags.value.length >= 5)
+      if (tags.value.length >= 5) {
         return alert("You already have too many tags (max of 5)");
+      }
 
-      if (new_tag.value.trim().length > 16)
+      if (new_tag.value.trim().length > 16) {
         return alert("Tag has too many characters (max of 16)");
-      tags.value.push(new_tag.value.trim().toLowerCase());
+      }
+
+      // Create a new array by concatenating existing tags with the new tag
+      tags.value = [...tags.value, new_tag.value.trim().toLowerCase()];
       new_tag.value = ""; // Clear the input field after adding tag
     }
   };
 
+  const removeTag = (index: number) => {
+    // Create a new array excluding the tag at the specified index
+    tags.value = tags.value.filter((_, i) => i !== index);
+  };
   // Method to check for comma key press
   const checkForComma = (event: KeyboardEvent) => {
     if (event.key === "," || event.code === "Comma" || event.code === "Enter") {
       event.preventDefault(); // Prevent comma from being entered
       addTag(); // If a comma is entered, add the tag
     }
-  };
-
-  // Method to remove a tag from the array
-  const removeTag = (index: number) => {
-    tags.value.splice(index, 1);
   };
 </script>

@@ -10,10 +10,6 @@ export default defineEventHandler(async (event) => {
     setResponseStatus(event, 400);
     return { message: "A public selection must be made" };
   }
-  if (body.description?.length >= 128) {
-    setResponseStatus(event, 400);
-    return { message: "Description has too many characters (max of 128)" };
-  }
 
   // 2. Require being logged in
   if (!event.context.user) {
@@ -50,7 +46,6 @@ export default defineEventHandler(async (event) => {
       .update(users_table)
       .set({
         public: body.public,
-        description: body.description || null,
         updated_at: Date.now().toString(),
       })
       .where(eq(users_table.id, users[0].id));

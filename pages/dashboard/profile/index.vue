@@ -34,9 +34,7 @@
 
         <div class="flex flex-col gap-2">
           <DashboardCardContainer>
-            <DashboardCardHeader>
-              <p class="text-xl">Public</p>
-            </DashboardCardHeader>
+            <DashboardCardHeader title="Public" />
             <DashboardCardContent>
               <div class="flex flex-col">
                 <div class="form-control items-start">
@@ -65,12 +63,14 @@
                 </div>
               </div>
             </DashboardCardContent>
+            <DashboardCardSave
+              :callback="() => edit('public', { public: is_public })"
+              :matches="() => lucia?.user.public === is_public"
+            />
           </DashboardCardContainer>
 
           <DashboardCardContainer>
-            <DashboardCardHeader>
-              <p class="text-xl">Description</p>
-            </DashboardCardHeader>
+            <DashboardCardHeader title="Description" />
             <DashboardCardContent>
               <textarea
                 type="text"
@@ -79,11 +79,11 @@
                 class="textarea textarea-bordered rounded-none w-full"
               ></textarea>
             </DashboardCardContent>
+            <DashboardCardSave
+              :callback="() => edit('description', { description })"
+              :matches="() => lucia?.user.description === description"
+            />
           </DashboardCardContainer>
-
-          <button v-on:click="edit" class="btn btn-primary btn-sm my-6 ml-auto">
-            Save Changes
-          </button>
         </div>
       </DashboardMainContent>
     </DashboardMainContainer>
@@ -118,10 +118,9 @@
     }
 
     if (response.ok) {
-      alert("Profile synced with Discord");
-      const data = await useRequestFetch()("/api/v1/auth/information");
+      const data: any = await useRequestFetch()("/api/v1/auth/information");
       if (data) {
-        lucia.value = data as any;
+        lucia.value = data;
       } else lucia.value = null;
     } else {
       const json = await response.json();
@@ -130,15 +129,13 @@
     syncing.value = false;
   };
 
-  const edit = async () => {
-    const response = await fetch("/api/v1/users/me/profile", {
+  const edit = async (name: string, data: Record<string, any>) => {
+    const response = await fetch(`/api/v1/users/me/profile/${name}`, {
       method: "PATCH",
       headers: new Headers({ "content-type": "application/json" }),
-      body: JSON.stringify({
-        public: is_public.value,
-        description: description.value,
-      }),
+      body: JSON.stringify(data),
     });
+
     if (response.status === 401) {
       await $fetch("/api/v1/auth/logout", {
         method: "POST",
@@ -149,10 +146,9 @@
     }
 
     if (response.ok) {
-      alert("Changes have been saved");
-      const data = await useRequestFetch()("/api/v1/auth/information");
+      const data: any = await useRequestFetch()("/api/v1/auth/information");
       if (data) {
-        lucia.value = data as any;
+        lucia.value = data;
       } else lucia.value = null;
     } else {
       const json = await response.json();

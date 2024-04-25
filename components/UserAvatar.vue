@@ -12,7 +12,7 @@
     </div>
     <div class="h-full" v-else>
       <div class="rounded-full w-full h-full bg-secondary flex flex-col">
-        <span class="text-xl opacity-50 m-auto">{{
+        <span class="opacity-50 m-auto">{{
           resource?.username.slice(0, 2).toUpperCase() || "?"
         }}</span>
       </div>

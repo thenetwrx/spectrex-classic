@@ -10,11 +10,9 @@
 
         <div class="flex flex-col gap-2">
           <DashboardCardContainer>
-            <DashboardCardHeader>
-              <p class="text-xl">Premium</p>
-            </DashboardCardHeader>
+            <DashboardCardHeader title="Premium" />
             <DashboardCardContent>
-              <p class="opacity-75" v-if="lucia?.user?.premium_since !== null">
+              <p class="opacity-75" v-if="lucia?.user.premium_since !== null">
                 Thanks for being a Spectrex Supporter. You have
                 <span class="font-bold">exclusive benefits</span>!
               </p>
@@ -22,23 +20,16 @@
                 Not found. You're missing out on
                 <span class="font-bold">exclusive benefits</span>!
               </p>
-
-              <NuxtLink
-                href="/premium"
-                class="btn btn-primary btn-sm mt-auto ml-auto"
-                :class="
-                  lucia?.user?.premium_since !== null ? 'btn-disabled' : ''
-                "
-              >
-                Buy Now
-              </NuxtLink>
             </DashboardCardContent>
+            <DashboardCardLink
+              link="/premium"
+              message="Buy Now"
+              :disabled="lucia?.user.premium_since !== null"
+            />
           </DashboardCardContainer>
 
           <DashboardCardContainer>
-            <DashboardCardHeader>
-              <p class="text-xl">Email Preferences</p>
-            </DashboardCardHeader>
+            <DashboardCardHeader title="Email Preferences" />
             <DashboardCardContent>
               <div class="form-control">
                 <label class="label w-fit gap-2 cursor-pointer">
@@ -63,11 +54,19 @@
                 </label>
               </div>
             </DashboardCardContent>
+            <DashboardCardSave
+              :callback="
+                () =>
+                  edit('monthly_server_reports', {
+                    monthly_server_reports,
+                  })
+              "
+              :matches="
+                () =>
+                  lucia?.user.monthly_server_reports === monthly_server_reports
+              "
+            />
           </DashboardCardContainer>
-
-          <button v-on:click="edit" class="btn btn-primary btn-sm my-6 ml-auto">
-            Save Changes
-          </button>
         </div>
       </DashboardMainContent>
     </DashboardMainContainer>
@@ -86,14 +85,13 @@
   const is_public = ref<boolean | null>(null);
   const monthly_server_reports = ref<boolean | null>(null);
 
-  const edit = async () => {
-    const response = await fetch("/api/v1/users/me/account", {
+  const edit = async (name: string, data: Record<string, any>) => {
+    const response = await fetch(`/api/v1/users/me/account/${name}`, {
       method: "PATCH",
       headers: new Headers({ "content-type": "application/json" }),
-      body: JSON.stringify({
-        monthly_server_reports: monthly_server_reports.value,
-      }),
+      body: JSON.stringify(data),
     });
+
     if (response.status === 401) {
       await $fetch("/api/v1/auth/logout", {
         method: "POST",
@@ -104,10 +102,9 @@
     }
 
     if (response.ok) {
-      alert("Changes have been saved");
-      const data = await useRequestFetch()("/api/v1/auth/information");
+      const data: any = await useRequestFetch()("/api/v1/auth/information");
       if (data) {
-        lucia.value = data as any;
+        lucia.value = data;
       } else lucia.value = null;
     } else {
       const json = await response.json();

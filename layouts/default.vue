@@ -51,7 +51,6 @@
   const isMobileSidebarOpen = ref<boolean>(false);
 
   const lucia = useLucia();
-  const discord = useDiscord();
 
   const logout = async () => {
     await $fetch("/api/v1/auth/logout", {
@@ -180,7 +179,8 @@
           <div class="dropdown dropdown-end" v-if="lucia?.user">
             <div tabindex="0" class="btn btn-ghost avatar">
               <UserAvatar :resource="lucia.user" class="w-8 h-8" />
-              <i class="fa-solid fa-caret-down"></i>
+              <!-- <span>{{ lucia.user.username }}</span> -->
+              <i class="fa-solid fa-angle-down"></i>
             </div>
             <ul
               tabindex="0"
