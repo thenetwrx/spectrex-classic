@@ -4,9 +4,7 @@
     <DashboardMainContainer>
       <DashboardMainSidebar active="admin" />
       <DashboardMainContent>
-        <div class="flex flex-row items-center pb-6">
-          <h2 class="text-lg font-semibold">Admin Panel (User Management)</h2>
-
+        <DashboardMainContentHeader title="Admin Panel" class="pb-6">
           <div class="flex flex-row gap-1 ml-auto">
             <button
               class="btn btn-ghost btn-sm"
@@ -22,7 +20,7 @@
               <i v-else class="fa-solid fa-arrows-rotate"></i>
             </button>
           </div>
-        </div>
+        </DashboardMainContentHeader>
 
         <ResourcePending v-if="users_pending" />
         <ResourceNotFound v-else-if="!users?.result" :message="users_error" />

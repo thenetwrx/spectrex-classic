@@ -4,12 +4,8 @@
     <DashboardMainContainer>
       <DashboardMainSidebar active="servers" />
       <DashboardMainContent>
-        <div
-          class="flex flex-row sm:items-center w-full max-sm:flex-col-reverse max-sm:gap-2"
-        >
-          <h2 class="text-lg font-semibold">Manage Server</h2>
-
-          <div class="flex flex-row gap-1 ml-auto">
+        <DashboardMainContentHeader title="Manage Server">
+          <DashboardMainContentHeaderButtons>
             <ClientOnly>
               <button
                 class="btn btn-ghost btn-sm"
@@ -20,7 +16,7 @@
                 "
                 v-on:click="_bump"
               >
-                <span v-if="bump.pending"> Bumping </span>
+                <span v-if="bump.pending">Bumping</span>
                 <span v-else>
                   <template v-if="!bump.on_cooldown">Bump</template>
                   <template v-else>
@@ -67,8 +63,8 @@
               ></span>
               <i v-else class="fa-solid fa-arrows-rotate"></i>
             </button>
-          </div>
-        </div>
+          </DashboardMainContentHeaderButtons>
+        </DashboardMainContentHeader>
 
         <ResourcePending v-if="server_pending" />
         <ResourceNotFound
@@ -79,230 +75,237 @@
           v-else-if="server.result.owner_id !== lucia?.user?.id"
           message="Unauthorized"
         />
-        <div class="flex flex-col gap-2" v-else>
+        <template v-else>
           <p class="opacity-75 pb-6">
             {{ server.result.name }} with
             {{ server.result.approximate_member_count }} members
           </p>
-          <div
-            class="alert bg-accent flex items-start flex-row max-md:flex-col bg-opacity-50 text-opacity-75 rounded-md"
-          >
-            <span class="max-w-lg">
-              <i class="fa-solid fa-circle-info px-2"></i>
-              {{ server.result.invite_uses.length }} people have used your
-              invite!</span
-            >
-          </div>
 
-          <DashboardCardContainer>
-            <DashboardCardHeader
-              title="Public"
-              :required="true"
-              message="(whether or not this server will be publicly listed)"
-            />
-            <DashboardCardContent>
-              <div class="form-control items-start">
-                <label class="label cursor-pointer gap-2">
-                  <input
-                    type="radio"
-                    name="radio-is_public"
-                    class="radio"
-                    v-model="is_public"
-                    :value="true"
-                  />
-                  <span class="label-text">Yes</span>
-                </label>
-              </div>
-              <div class="form-control items-start">
-                <label class="label cursor-pointer gap-2">
-                  <input
-                    type="radio"
-                    name="radio-is_public"
-                    class="radio"
-                    v-model="is_public"
-                    :value="false"
-                  />
-                  <span class="label-text">No</span>
-                </label>
-              </div>
-            </DashboardCardContent>
-            <DashboardCardSave
-              :callback="() => edit('public', { public: is_public })"
-              :matches="() => server?.result?.public === is_public"
-            />
-          </DashboardCardContainer>
-
-          <DashboardCardContainer>
-            <DashboardCardHeader title="Language" :required="true" />
-            <DashboardCardContent>
-              <select
-                v-model="language"
-                class="select select-bordered rounded-none w-full"
-              >
-                <option disabled selected value="">Select language</option>
-                <option value="unspecified">Unspecified</option>
-                <option value="en">English</option>
-                <option value="es">Español</option>
-                <option value="it">Italiano</option>
-                <option value="ja">日本語</option>
-                <option value="ru">русский</option>
-              </select>
-            </DashboardCardContent>
-            <DashboardCardSave
-              :callback="() => edit('language', { language })"
-              :matches="() => server?.result?.language === language"
-            />
-          </DashboardCardContainer>
-
-          <DashboardCardContainer>
-            <DashboardCardHeader title="Category" :required="true" />
-            <DashboardCardContent>
-              <select
-                v-model="category"
-                class="select select-bordered rounded-none w-full"
-              >
-                <option disabled selected value="">Select category</option>
-                <option value="Community">Community</option>
-                <option value="Music">Music</option>
-                <option value="Gaming">Gaming</option>
-                <option value="Anime">Anime</option>
-                <option value="Technology">Technology</option>
-                <option value="Movies">Movies</option>
-                <option value="Other">Other</option>
-              </select>
-            </DashboardCardContent>
-            <DashboardCardSave
-              :callback="() => edit('category', { category })"
-              :matches="() => server?.result?.category === category"
-            />
-          </DashboardCardContainer>
-
-          <DashboardCardContainer>
-            <DashboardCardHeader title="Tags" />
-            <DashboardCardContent>
-              <div
-                class="flex flex-wrap gap-2 w-fit max-sm:max-w-fit overflow-x-auto mb-2"
-                v-if="tags.length"
-              >
-                <span
-                  v-for="(tag, index) in tags"
-                  :key="index"
-                  class="block max-w-fit px-2 py-1 bg-accent border-none bg-opacity-50 rounded-sm gap-2 hover:bg-opacity-65 hover:cursor-pointer transition-colors duration-200 ease-in-out text-white"
-                  v-on:click="removeTag(index)"
-                >
-                  <i class="fa-solid fa-square-xmark fa-lg mr-2"></i>
-                  <span class="text-accent">#</span>
-                  {{ tag }}
-                </span>
-              </div>
-
-              <input
-                type="text"
-                placeholder="Press enter or comma to create tag"
-                class="input input-bordered rounded-none w-full"
-                v-on:keydown="checkForComma($event)"
-                v-model="new_tag"
-              />
-            </DashboardCardContent>
-            <DashboardCardSave
-              :callback="() => edit('tags', { tags })"
-              :matches="
-                () => {
-                  // Check if lengths are not equal
-                  if (server?.result?.tags.length !== tags.length) return false;
-
-                  // Compare elements at each position
-                  for (let i = 0; i < server.result.tags.length; i++) {
-                    if (server.result.tags[i] !== tags[i]) return false;
-                  }
-
-                  return true;
-                }
-              "
-            />
-          </DashboardCardContainer>
-
-          <DashboardCardContainer>
-            <DashboardCardHeader title="Description" :required="true" />
-            <DashboardCardContent>
-              <textarea
-                type="text"
-                placeholder="A very interesting server..."
-                v-model="description"
-                class="textarea textarea-bordered rounded-none h-40 max-h-[42rem] w-full"
-              ></textarea>
-            </DashboardCardContent>
-            <DashboardCardSave
-              :callback="() => edit('description', { description })"
-              :matches="() => server?.result?.description === description"
-            />
-          </DashboardCardContainer>
-
-          <DashboardCardContainer>
-            <DashboardCardHeader
-              title="Invite Link"
-              :required="true"
-              message="(make sure it's a permanent invite!)"
-            />
-            <DashboardCardContent>
-              <input
-                type="text"
-                placeholder="https://discord.gg/fortnite"
-                v-model="invite_link"
-                class="input input-bordered rounded-none w-full"
-              />
-            </DashboardCardContent>
-            <DashboardCardSave
-              :callback="() => edit('invite_link', { invite_link })"
-              :matches="() => server?.result?.invite_link === invite_link"
-            />
-          </DashboardCardContainer>
-
-          <DashboardCardContainer>
-            <DashboardCardHeader title="Primarily NSFW" :required="true" />
-            <DashboardCardContent>
-              <div class="form-control items-start">
-                <label class="label cursor-pointer gap-2">
-                  <input
-                    type="radio"
-                    name="radio-nsfw"
-                    class="radio"
-                    v-model="nsfw"
-                    :value="true"
-                  />
-                  <span class="label-text">Yes</span>
-                </label>
-              </div>
-              <div class="form-control items-start">
-                <label class="label cursor-pointer gap-2">
-                  <input
-                    type="radio"
-                    name="radio-nsfw"
-                    class="radio"
-                    v-model="nsfw"
-                    :value="false"
-                  />
-                  <span class="label-text">No</span>
-                </label>
-              </div>
-            </DashboardCardContent>
-            <DashboardCardSave
-              :callback="() => edit('nsfw', { nsfw })"
-              :matches="() => server?.result?.nsfw === nsfw"
-            />
-          </DashboardCardContainer>
-
-          <DashboardCardContainer>
+          <DashboardMainStack>
             <div
-              class="bg-error bg-opacity-65 w-full p-4 flex flex-row items-center rounded-md"
+              class="alert bg-accent flex items-start flex-row max-md:flex-col bg-opacity-50 text-opacity-75 rounded-md"
             >
-              <p class="text-xl">Remove Listing</p>
-              <button v-on:click="_delete" class="btn btn-error btn-sm ml-auto">
-                Confirm
-              </button>
+              <span class="max-w-lg">
+                <i class="fa-solid fa-circle-info px-2"></i>
+                {{ server.result.invite_uses.length }} people have used your
+                invite!</span
+              >
             </div>
-          </DashboardCardContainer>
-        </div>
+
+            <DashboardCardContainer>
+              <DashboardCardHeader
+                title="Public"
+                :required="true"
+                message="(whether or not this server will be publicly listed)"
+              />
+              <DashboardCardContent>
+                <div class="form-control items-start">
+                  <label class="label cursor-pointer gap-2">
+                    <input
+                      type="radio"
+                      name="radio-is_public"
+                      class="radio"
+                      v-model="is_public"
+                      :value="true"
+                    />
+                    <span class="label-text">Yes</span>
+                  </label>
+                </div>
+                <div class="form-control items-start">
+                  <label class="label cursor-pointer gap-2">
+                    <input
+                      type="radio"
+                      name="radio-is_public"
+                      class="radio"
+                      v-model="is_public"
+                      :value="false"
+                    />
+                    <span class="label-text">No</span>
+                  </label>
+                </div>
+              </DashboardCardContent>
+              <DashboardCardSave
+                :callback="() => edit('public', { public: is_public })"
+                :matches="() => server?.result?.public === is_public"
+              />
+            </DashboardCardContainer>
+
+            <DashboardCardContainer>
+              <DashboardCardHeader title="Language" :required="true" />
+              <DashboardCardContent>
+                <select
+                  v-model="language"
+                  class="select select-bordered rounded-none w-full"
+                >
+                  <option disabled selected value="">Select language</option>
+                  <option value="unspecified">Unspecified</option>
+                  <option value="en">English</option>
+                  <option value="es">Español</option>
+                  <option value="it">Italiano</option>
+                  <option value="ja">日本語</option>
+                  <option value="ru">русский</option>
+                </select>
+              </DashboardCardContent>
+              <DashboardCardSave
+                :callback="() => edit('language', { language })"
+                :matches="() => server?.result?.language === language"
+              />
+            </DashboardCardContainer>
+
+            <DashboardCardContainer>
+              <DashboardCardHeader title="Category" :required="true" />
+              <DashboardCardContent>
+                <select
+                  v-model="category"
+                  class="select select-bordered rounded-none w-full"
+                >
+                  <option disabled selected value="">Select category</option>
+                  <option value="Community">Community</option>
+                  <option value="Music">Music</option>
+                  <option value="Gaming">Gaming</option>
+                  <option value="Anime">Anime</option>
+                  <option value="Technology">Technology</option>
+                  <option value="Movies">Movies</option>
+                  <option value="Other">Other</option>
+                </select>
+              </DashboardCardContent>
+              <DashboardCardSave
+                :callback="() => edit('category', { category })"
+                :matches="() => server?.result?.category === category"
+              />
+            </DashboardCardContainer>
+
+            <DashboardCardContainer>
+              <DashboardCardHeader title="Tags" />
+              <DashboardCardContent>
+                <div
+                  class="flex flex-wrap gap-2 w-fit max-sm:max-w-fit overflow-x-auto mb-2"
+                  v-if="tags.length"
+                >
+                  <span
+                    v-for="(tag, index) in tags"
+                    :key="index"
+                    class="block max-w-fit px-2 py-1 bg-accent border-none bg-opacity-50 rounded-sm gap-2 hover:bg-opacity-65 hover:cursor-pointer transition-colors duration-200 ease-in-out text-white"
+                    v-on:click="removeTag(index)"
+                  >
+                    <i class="fa-solid fa-square-xmark fa-lg mr-2"></i>
+                    <span class="text-accent">#</span>
+                    {{ tag }}
+                  </span>
+                </div>
+
+                <input
+                  type="text"
+                  placeholder="Press enter or comma to create tag"
+                  class="input input-bordered rounded-none w-full"
+                  v-on:keydown="checkForComma($event)"
+                  v-model="new_tag"
+                />
+              </DashboardCardContent>
+              <DashboardCardSave
+                :callback="() => edit('tags', { tags })"
+                :matches="
+                  () => {
+                    // Check if lengths are not equal
+                    if (server?.result?.tags.length !== tags.length)
+                      return false;
+
+                    // Compare elements at each position
+                    for (let i = 0; i < server.result.tags.length; i++) {
+                      if (server.result.tags[i] !== tags[i]) return false;
+                    }
+
+                    return true;
+                  }
+                "
+              />
+            </DashboardCardContainer>
+
+            <DashboardCardContainer>
+              <DashboardCardHeader title="Description" :required="true" />
+              <DashboardCardContent>
+                <textarea
+                  type="text"
+                  placeholder="A very interesting server..."
+                  v-model="description"
+                  class="textarea textarea-bordered rounded-none h-40 max-h-[42rem] w-full"
+                ></textarea>
+              </DashboardCardContent>
+              <DashboardCardSave
+                :callback="() => edit('description', { description })"
+                :matches="() => server?.result?.description === description"
+              />
+            </DashboardCardContainer>
+
+            <DashboardCardContainer>
+              <DashboardCardHeader
+                title="Invite Link"
+                :required="true"
+                message="(make sure it's a permanent invite!)"
+              />
+              <DashboardCardContent>
+                <input
+                  type="text"
+                  placeholder="https://discord.gg/fortnite"
+                  v-model="invite_link"
+                  class="input input-bordered rounded-none w-full"
+                />
+              </DashboardCardContent>
+              <DashboardCardSave
+                :callback="() => edit('invite_link', { invite_link })"
+                :matches="() => server?.result?.invite_link === invite_link"
+              />
+            </DashboardCardContainer>
+
+            <DashboardCardContainer>
+              <DashboardCardHeader title="Primarily NSFW" :required="true" />
+              <DashboardCardContent>
+                <div class="form-control items-start">
+                  <label class="label cursor-pointer gap-2">
+                    <input
+                      type="radio"
+                      name="radio-nsfw"
+                      class="radio"
+                      v-model="nsfw"
+                      :value="true"
+                    />
+                    <span class="label-text">Yes</span>
+                  </label>
+                </div>
+                <div class="form-control items-start">
+                  <label class="label cursor-pointer gap-2">
+                    <input
+                      type="radio"
+                      name="radio-nsfw"
+                      class="radio"
+                      v-model="nsfw"
+                      :value="false"
+                    />
+                    <span class="label-text">No</span>
+                  </label>
+                </div>
+              </DashboardCardContent>
+              <DashboardCardSave
+                :callback="() => edit('nsfw', { nsfw })"
+                :matches="() => server?.result?.nsfw === nsfw"
+              />
+            </DashboardCardContainer>
+
+            <DashboardCardContainer>
+              <div
+                class="bg-error bg-opacity-65 w-full p-4 flex flex-row items-center rounded-md"
+              >
+                <p class="text-xl">Remove Listing</p>
+                <button
+                  v-on:click="_delete"
+                  class="btn btn-error btn-sm ml-auto"
+                >
+                  Confirm
+                </button>
+              </div>
+            </DashboardCardContainer>
+          </DashboardMainStack>
+        </template>
       </DashboardMainContent>
     </DashboardMainContainer>
   </Container>

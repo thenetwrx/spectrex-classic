@@ -4,9 +4,7 @@
     <DashboardMainContainer>
       <DashboardMainSidebar active="admin" />
       <DashboardMainContent>
-        <div class="flex flex-row items-center pb-6">
-          <h2 class="text-lg font-semibold">Admin Panel</h2>
-        </div>
+        <DashboardMainContentHeader title="Admin Panel" class="pb-6" />
 
         <div class="grid md:grid-cols-1 lg:grid-cols-2 gap-3">
           <NuxtLink

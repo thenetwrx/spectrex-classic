@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-[#0a0a0a] flex flex-col py-2 px-6 border-t border-secondary">
+  <div class="bg-base-200 flex flex-col py-2 px-6 border-t border-secondary">
     <NuxtLink
       class="btn btn-primary btn-sm w-fit ml-auto"
       :class="disabled ? 'btn-disabled' : ''"

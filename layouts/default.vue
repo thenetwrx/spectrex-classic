@@ -180,7 +180,7 @@
             <div tabindex="0" class="btn btn-ghost avatar">
               <UserAvatar :resource="lucia.user" class="w-8 h-8" />
               <!-- <span>{{ lucia.user.username }}</span> -->
-              <i class="fa-solid fa-angle-down"></i>
+              <i class="fa-solid fa-caret-down"></i>
             </div>
             <ul
               tabindex="0"

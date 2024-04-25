@@ -4,16 +4,21 @@
     <DashboardMainContainer>
       <DashboardMainSidebar active="servers" />
       <DashboardMainContent>
-        <div class="flex flex-row items-center">
-          <h2 class="text-lg font-semibold">Manage Server</h2>
-
-          <div class="flex flex-row gap-1 ml-auto">
+        <DashboardMainContentHeader title="Manage Server">
+          <DashboardMainContentHeaderButtons>
             <NuxtLink class="btn btn-ghost btn-sm" href="/dashboard">
               Nevermind
               <i class="fa-solid fa-arrow-left"></i>
             </NuxtLink>
-          </div>
-        </div>
+          </DashboardMainContentHeaderButtons>
+        </DashboardMainContentHeader>
+
+        <p class="opacity-75 pb-6">
+          Submitting a Discord server to Spectrex means you agree to the
+          <NuxtLink href="/legal/guidelines" class="text-accent hover:underline"
+            >Guidelines</NuxtLink
+          >.
+        </p>
 
         <ResourcePending v-if="server_pending" />
         <ResourceNotFound
@@ -24,148 +29,141 @@
           v-else-if="server.result.owner_id !== lucia?.user?.id"
           message="Unauthorized"
         />
-        <div class="flex flex-col gap-2" v-else>
-          <p class="opacity-75 pb-6">
-            Submitting a Discord server to Spectrex means you agree to the
-            <NuxtLink
-              href="/legal/guidelines"
-              class="text-accent hover:underline"
-              >Guidelines</NuxtLink
-            >.
-          </p>
-
-          <DashboardCardContainer>
-            <DashboardCardHeader title="Language" :required="true" />
-            <DashboardCardContent>
-              <select
-                v-model="language"
-                class="select select-bordered rounded-none w-full"
-              >
-                <option disabled selected value="">Select language</option>
-                <option value="unspecified">Unspecified</option>
-                <option value="en">English</option>
-                <option value="es">Español</option>
-                <option value="it">Italiano</option>
-                <option value="ja">日本語</option>
-                <option value="ru">русский</option>
-              </select>
-            </DashboardCardContent>
-          </DashboardCardContainer>
-
-          <DashboardCardContainer>
-            <DashboardCardHeader title="Category" :required="true" />
-            <DashboardCardContent>
-              <select
-                v-model="category"
-                class="select select-bordered rounded-none w-full"
-              >
-                <option disabled selected value="">Select category</option>
-                <option value="Community">Community</option>
-                <option value="Music">Music</option>
-                <option value="Gaming">Gaming</option>
-                <option value="Anime">Anime</option>
-                <option value="Technology">Technology</option>
-                <option value="Movies">Movies</option>
-                <option value="Other">Other</option>
-              </select>
-            </DashboardCardContent>
-          </DashboardCardContainer>
-
-          <DashboardCardContainer>
-            <DashboardCardHeader title="Tags" />
-            <DashboardCardContent>
-              <div
-                class="flex flex-wrap gap-2 w-fit max-sm:max-w-fit overflow-x-auto mb-2"
-                v-if="tags.length"
-              >
-                <span
-                  v-for="(tag, index) in tags"
-                  :key="index"
-                  class="block max-w-fit px-2 py-1 bg-accent border-none bg-opacity-50 rounded-sm gap-2 hover:bg-opacity-65 hover:cursor-pointer transition-colors duration-200 ease-in-out text-white"
-                  v-on:click="removeTag(index)"
+        <template v-else>
+          <DashboardMainStack>
+            <DashboardCardContainer>
+              <DashboardCardHeader title="Language" :required="true" />
+              <DashboardCardContent>
+                <select
+                  v-model="language"
+                  class="select select-bordered rounded-none w-full"
                 >
-                  <i class="fa-solid fa-square-xmark fa-lg mr-2"></i>
-                  <span class="text-accent">#</span>
-                  {{ tag }}
-                </span>
-              </div>
+                  <option disabled selected value="">Select language</option>
+                  <option value="unspecified">Unspecified</option>
+                  <option value="en">English</option>
+                  <option value="es">Español</option>
+                  <option value="it">Italiano</option>
+                  <option value="ja">日本語</option>
+                  <option value="ru">русский</option>
+                </select>
+              </DashboardCardContent>
+            </DashboardCardContainer>
 
-              <!-- Input field to add new tags -->
-              <input
-                type="text"
-                placeholder="Press enter or comma to create tag"
-                class="input input-bordered rounded-none w-full"
-                v-on:keydown="checkForComma($event)"
-                v-model="new_tag"
+            <DashboardCardContainer>
+              <DashboardCardHeader title="Category" :required="true" />
+              <DashboardCardContent>
+                <select
+                  v-model="category"
+                  class="select select-bordered rounded-none w-full"
+                >
+                  <option disabled selected value="">Select category</option>
+                  <option value="Community">Community</option>
+                  <option value="Music">Music</option>
+                  <option value="Gaming">Gaming</option>
+                  <option value="Anime">Anime</option>
+                  <option value="Technology">Technology</option>
+                  <option value="Movies">Movies</option>
+                  <option value="Other">Other</option>
+                </select>
+              </DashboardCardContent>
+            </DashboardCardContainer>
+
+            <DashboardCardContainer>
+              <DashboardCardHeader title="Tags" />
+              <DashboardCardContent>
+                <div
+                  class="flex flex-wrap gap-2 w-fit max-sm:max-w-fit overflow-x-auto mb-2"
+                  v-if="tags.length"
+                >
+                  <span
+                    v-for="(tag, index) in tags"
+                    :key="index"
+                    class="block max-w-fit px-2 py-1 bg-accent border-none bg-opacity-50 rounded-sm gap-2 hover:bg-opacity-65 hover:cursor-pointer transition-colors duration-200 ease-in-out text-white"
+                    v-on:click="removeTag(index)"
+                  >
+                    <i class="fa-solid fa-square-xmark fa-lg mr-2"></i>
+                    <span class="text-accent">#</span>
+                    {{ tag }}
+                  </span>
+                </div>
+
+                <!-- Input field to add new tags -->
+                <input
+                  type="text"
+                  placeholder="Press enter or comma to create tag"
+                  class="input input-bordered rounded-none w-full"
+                  v-on:keydown="checkForComma($event)"
+                  v-model="new_tag"
+                />
+              </DashboardCardContent>
+            </DashboardCardContainer>
+
+            <DashboardCardContainer>
+              <DashboardCardHeader title="Description" :required="true" />
+              <DashboardCardContent>
+                <textarea
+                  type="text"
+                  placeholder="A very interesting server..."
+                  v-model="description"
+                  class="textarea textarea-bordered rounded-none h-40 max-h-[42rem] w-full"
+                ></textarea>
+              </DashboardCardContent>
+            </DashboardCardContainer>
+
+            <DashboardCardContainer>
+              <DashboardCardHeader
+                title="Invite Link"
+                :required="true"
+                messsage="(make sure it's a permanent invite!)"
               />
-            </DashboardCardContent>
-          </DashboardCardContainer>
+              <DashboardCardContent>
+                <input
+                  type="text"
+                  placeholder="https://discord.gg/fortnite"
+                  v-model="invite_link"
+                  class="input input-bordered rounded-none w-full"
+                />
+              </DashboardCardContent>
+            </DashboardCardContainer>
 
-          <DashboardCardContainer>
-            <DashboardCardHeader title="Description" :required="true" />
-            <DashboardCardContent>
-              <textarea
-                type="text"
-                placeholder="A very interesting server..."
-                v-model="description"
-                class="textarea textarea-bordered rounded-none h-40 max-h-[42rem] w-full"
-              ></textarea>
-            </DashboardCardContent>
-          </DashboardCardContainer>
+            <DashboardCardContainer>
+              <DashboardCardHeader title="Primarily NSFW" :required="true" />
+              <DashboardCardContent>
+                <div class="form-control items-start">
+                  <label class="label cursor-pointer gap-2">
+                    <input
+                      type="radio"
+                      name="radio-nsfw"
+                      class="radio"
+                      v-model="nsfw"
+                      :value="true"
+                    />
+                    <span class="label-text">Yes</span>
+                  </label>
+                </div>
+                <div class="form-control items-start">
+                  <label class="label cursor-pointer gap-2">
+                    <input
+                      type="radio"
+                      name="radio-nsfw"
+                      class="radio"
+                      v-model="nsfw"
+                      :value="false"
+                    />
+                    <span class="label-text">No</span>
+                  </label>
+                </div>
+              </DashboardCardContent>
+            </DashboardCardContainer>
 
-          <DashboardCardContainer>
-            <DashboardCardHeader
-              title="Invite Link"
-              :required="true"
-              messsage="(make sure it's a permanent invite!)"
-            />
-            <DashboardCardContent>
-              <input
-                type="text"
-                placeholder="https://discord.gg/fortnite"
-                v-model="invite_link"
-                class="input input-bordered rounded-none w-full"
-              />
-            </DashboardCardContent>
-          </DashboardCardContainer>
-
-          <DashboardCardContainer>
-            <DashboardCardHeader title="Primarily NSFW" :required="true" />
-            <DashboardCardContent>
-              <div class="form-control items-start">
-                <label class="label cursor-pointer gap-2">
-                  <input
-                    type="radio"
-                    name="radio-nsfw"
-                    class="radio"
-                    v-model="nsfw"
-                    :value="true"
-                  />
-                  <span class="label-text">Yes</span>
-                </label>
-              </div>
-              <div class="form-control items-start">
-                <label class="label cursor-pointer gap-2">
-                  <input
-                    type="radio"
-                    name="radio-nsfw"
-                    class="radio"
-                    v-model="nsfw"
-                    :value="false"
-                  />
-                  <span class="label-text">No</span>
-                </label>
-              </div>
-            </DashboardCardContent>
-          </DashboardCardContainer>
-
-          <button
-            v-on:click="submit"
-            class="btn btn-primary btn-sm my-6 ml-auto"
-          >
-            Submit
-          </button>
-        </div>
+            <button
+              v-on:click="submit"
+              class="btn btn-primary btn-sm my-6 ml-auto"
+            >
+              Submit
+            </button>
+          </DashboardMainStack>
+        </template>
       </DashboardMainContent>
     </DashboardMainContainer>
   </Container>

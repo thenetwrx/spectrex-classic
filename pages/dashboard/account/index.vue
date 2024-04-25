@@ -4,11 +4,9 @@
     <DashboardMainContainer>
       <DashboardMainSidebar active="account" />
       <DashboardMainContent>
-        <div class="flex flex-row items-center pb-6">
-          <h2 class="text-lg font-semibold">Manage Account</h2>
-        </div>
+        <DashboardMainContentHeader title="Manage Account" class="pb-6" />
 
-        <div class="flex flex-col gap-2">
+        <DashboardMainStack>
           <DashboardCardContainer>
             <DashboardCardHeader title="Premium" />
             <DashboardCardContent>
@@ -67,7 +65,7 @@
               "
             />
           </DashboardCardContainer>
-        </div>
+        </DashboardMainStack>
       </DashboardMainContent>
     </DashboardMainContainer>
   </Container>

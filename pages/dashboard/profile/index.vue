@@ -4,10 +4,8 @@
     <DashboardMainContainer>
       <DashboardMainSidebar active="profile" />
       <DashboardMainContent>
-        <div class="flex flex-row items-center pb-6">
-          <h2 class="text-lg font-semibold">Manage Profile</h2>
-
-          <div class="flex flex-row gap-1 ml-auto">
+        <DashboardMainContentHeader title="Manage Profile" class="pb-6">
+          <DashboardMainContentHeaderButtons>
             <NuxtLink
               class="btn btn-ghost btn-sm"
               :class="!lucia?.user ? 'btn-disabled' : ''"
@@ -29,10 +27,10 @@
               ></span>
               <i v-else class="fa-solid fa-arrows-rotate"></i>
             </button>
-          </div>
-        </div>
+          </DashboardMainContentHeaderButtons>
+        </DashboardMainContentHeader>
 
-        <div class="flex flex-col gap-2">
+        <DashboardMainStack>
           <DashboardCardContainer>
             <DashboardCardHeader title="Public" />
             <DashboardCardContent>
@@ -84,7 +82,7 @@
               :matches="() => lucia?.user.description === description"
             />
           </DashboardCardContainer>
-        </div>
+        </DashboardMainStack>
       </DashboardMainContent>
     </DashboardMainContainer>
   </Container>

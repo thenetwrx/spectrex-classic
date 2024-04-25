@@ -4,11 +4,7 @@
     <DashboardMainContainer>
       <DashboardMainSidebar active="admin" />
       <DashboardMainContent>
-        <div
-          class="flex flex-row sm:items-center w-full max-sm:flex-col-reverse max-sm:gap-2"
-        >
-          <h2 class="text-lg font-semibold">Admin Panel (User Management)</h2>
-
+        <DashboardMainContentHeader title="Admin Panel (User Management)">
           <div class="flex flex-row gap-1 ml-auto">
             <button
               class="btn btn-ghost btn-sm"
@@ -24,7 +20,7 @@
               <i v-else class="fa-solid fa-arrows-rotate"></i>
             </button>
           </div>
-        </div>
+        </DashboardMainContentHeader>
 
         <ResourcePending v-if="user_pending" />
         <ResourceNotFound
