@@ -150,8 +150,8 @@
       lucia.value = null;
       navigateTo("/");
     }
-
-    refresh_servers();
     syncing.value = false;
+    await refresh_servers();
+    useNuxtApp().$toast.info("Your servers have been synced with Discord");
   };
 </script>
