@@ -47,7 +47,7 @@
         >
           <li class="flex flex-col px-4">
             <div
-              class="relative bg-base-200 h-48 overflow-hidden rounded-2xl shadow-lg sm:h-60 lg:h-40 mb-10 flex flex-col"
+              class="relative bg-base-200 border border-secondary h-48 overflow-hidden rounded-2xl shadow-lg sm:h-60 lg:h-40 mb-10 flex flex-col"
             >
               <i class="fa-solid fa-credit-card fa-2xl m-auto"></i>
             </div>
@@ -59,7 +59,7 @@
 
           <li class="flex flex-col px-4">
             <div
-              class="relative bg-base-200 h-48 overflow-hidden rounded-2xl shadow-lg sm:h-60 lg:h-40 mb-10 flex flex-col"
+              class="relative bg-base-200 border border-secondary h-48 overflow-hidden rounded-2xl shadow-lg sm:h-60 lg:h-40 mb-10 flex flex-col"
             >
               <i class="fa fa-solid fa-smile fa-2xl m-auto"></i>
             </div>
@@ -73,7 +73,7 @@
 
           <li class="flex flex-col px-4">
             <div
-              class="relative bg-base-200 h-48 overflow-hidden rounded-2xl shadow-lg sm:h-60 lg:h-40 mb-10 flex flex-col"
+              class="relative bg-base-200 border border-secondary h-48 overflow-hidden rounded-2xl shadow-lg sm:h-60 lg:h-40 mb-10 flex flex-col"
             >
               <i class="fa-solid fa-shield fa-2xl m-auto"></i>
             </div>
@@ -94,12 +94,14 @@
           <div
             class="flex flex-col gap-4 w-full max-w-4xl px-4 mx-auto py-12 text-start"
           >
-            <div class="collapse collapse-arrow bg-base-200">
+            <div
+              class="collapse collapse-arrow bg-base-200 border border-secondary"
+            >
               <input type="radio" name="accordion" :checked="true" />
               <div class="collapse-title text-xl max-md:text-lg font-medium">
                 Is it safe to connect my Discord account to your site?
               </div>
-              <div class="collapse-content opacity-75">
+              <div class="collapse-content opacity-75 flex flex-col gap-4">
                 <p>
                   We take your privacy seriously. When you log in with Discord,
                   we only request the minimum information necessary to display
@@ -107,9 +109,21 @@
                   site. We cannot access your direct messages, server content,
                   or any other private Discord data.
                 </p>
+
+                <p>
+                  Additionally, as part of our registration process, we require
+                  your email address. Please note that we handle your email
+                  address with the utmost care and only use it for the intended
+                  purposes, such as account verification or communication
+                  related to your use of our services. Rest assured, we do not
+                  share your email address with third parties without your
+                  explicit consent.
+                </p>
               </div>
             </div>
-            <div class="collapse collapse-arrow bg-base-200">
+            <div
+              class="collapse collapse-arrow bg-base-200 border border-secondary"
+            >
               <input type="radio" name="accordion" />
               <div class="collapse-title text-xl max-md:text-lg font-medium">
                 Is it really free to list my server?
@@ -126,7 +140,9 @@
                 </p>
               </div>
             </div>
-            <div class="collapse collapse-arrow bg-base-200">
+            <div
+              class="collapse collapse-arrow bg-base-200 border border-secondary"
+            >
               <input type="radio" name="accordion" />
               <div class="collapse-title text-xl max-md:text-lg font-medium">
                 Are all listed servers safe to join?
@@ -139,7 +155,9 @@
                 </p>
               </div>
             </div>
-            <div class="collapse collapse-arrow bg-base-200">
+            <div
+              class="collapse collapse-arrow bg-base-200 border border-secondary"
+            >
               <input type="radio" name="accordion" />
               <div class="collapse-title text-xl max-md:text-lg font-medium">
                 What happens if my server violates your guidelines?
@@ -157,7 +175,9 @@
                 </p>
               </div>
             </div>
-            <div class="collapse collapse-arrow bg-base-200">
+            <div
+              class="collapse collapse-arrow bg-base-200 border border-secondary"
+            >
               <input type="radio" name="accordion" />
               <div class="collapse-title text-xl max-md:text-lg font-medium">
                 How do I report a server that violates your guidelines?
@@ -170,7 +190,9 @@
                 </p>
               </div>
             </div>
-            <div class="collapse collapse-arrow bg-base-200">
+            <div
+              class="collapse collapse-arrow bg-base-200 border border-secondary"
+            >
               <input type="radio" name="accordion" />
               <div class="collapse-title text-xl max-md:text-lg font-medium">
                 Do you offer analytics or insights about my server listing?
@@ -183,7 +205,9 @@
                 </p>
               </div>
             </div>
-            <div class="collapse collapse-arrow bg-base-200">
+            <div
+              class="collapse collapse-arrow bg-base-200 border border-secondary"
+            >
               <input type="radio" name="accordion" />
               <div class="collapse-title text-xl max-md:text-lg font-medium">
                 My question isn't answered here
