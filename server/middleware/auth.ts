@@ -40,7 +40,7 @@ export default defineEventHandler(async (event) => {
     }
 
     // Assuming session.provider_access_token_refreshed_at is in milliseconds
-    const refreshedTimeMs = Number(session?.provider_access_token_refreshed_at);
+    const refreshedTimeMs = session?.provider_access_token_refreshed_at!;
     const oneDayMs = 24 * 60 * 60 * 1000; // 1 day in milliseconds
 
     // Calculate the time one day after the refreshed time
@@ -67,10 +67,9 @@ export default defineEventHandler(async (event) => {
           .update(sessions_table)
           .set({
             provider_access_token: cryptr.encrypt(response.accessToken),
-            provider_access_token_refreshed_at: Date.now().toString(),
-            provider_access_token_expires_at: response.accessTokenExpiresAt
-              .getTime()
-              .toString(),
+            provider_access_token_refreshed_at: Date.now(),
+            provider_access_token_expires_at:
+              response.accessTokenExpiresAt.getTime(),
             provider_refresh_token: cryptr.encrypt(response.refreshToken),
           })
           .where(eq(sessions_table.id, sessionId));

@@ -1,4 +1,4 @@
-import { Lucia, TimeSpan } from "lucia";
+import { Lucia, TimeSpan, User } from "lucia";
 import { DrizzlePostgreSQLAdapter } from "@lucia-auth/adapter-drizzle";
 import db from "./database";
 import { Discord } from "arctic";
@@ -44,21 +44,21 @@ interface DatabaseUserAttributes {
   username: string;
   display_name: string | null;
   avatar: string | null;
-  premium_since: string | null;
+  premium_since: number | null;
   email: string;
   public: boolean;
   description: string | null;
   admin: boolean;
   banned: boolean;
-  created_at: string;
-  updated_at: string;
+  created_at: number;
+  updated_at: number;
   monthly_server_reports: boolean;
 }
 
 interface DatabaseSessionAttributes {
   provider_access_token: string; // Must be encrypted
-  provider_access_token_refreshed_at: string;
-  provider_access_token_expires_at: string;
+  provider_access_token_refreshed_at: number;
+  provider_access_token_expires_at: number;
   provider_refresh_token: string; // Must be encrypted
-  created_at: string;
+  created_at: number;
 }

@@ -131,7 +131,7 @@ export default defineEventHandler(async (event) => {
       return { message: "Server is already approved" };
     }
 
-    const now = Date.now().toString();
+    const now = Date.now();
 
     await db
       .update(servers_table)

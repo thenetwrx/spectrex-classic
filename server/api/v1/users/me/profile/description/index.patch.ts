@@ -46,7 +46,7 @@ export default defineEventHandler(async (event) => {
       .update(users_table)
       .set({
         description: body.description || null,
-        updated_at: Date.now().toString(),
+        updated_at: Date.now(),
       })
       .where(eq(users_table.id, users[0].id));
 

@@ -46,8 +46,6 @@ export default defineEventHandler(async (event) => {
       return { message: "Server is not approved" };
     }
 
-    const now = Date.now().toString();
-
     await db
       .update(servers_table)
       .set({
@@ -59,7 +57,7 @@ export default defineEventHandler(async (event) => {
         description: null,
         invite_link: null,
         nsfw: false,
-        updated_at: now,
+        updated_at: Date.now(),
       })
       .where(eq(servers_table.id, servers[0].id));
 

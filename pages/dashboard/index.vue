@@ -35,9 +35,7 @@
             v-for="(server, index) in servers?.result
               ?.filter((server) => server.approved_at !== null)
               .sort((a, b) => a.name.localeCompare(b.name))
-              .sort(
-                (c, d) => Number(c.bumped_at || 0) - Number(d.bumped_at || 0)
-              )"
+              .sort((c, d) => c.bumped_at! - d.bumped_at!)"
             :key="index"
             class="flex flex-row bg-base-200 hover:bg-base-300 rounded-md cursor-pointer transition-colors duration-200 p-4"
             :href="'/dashboard/servers/' + server.id"

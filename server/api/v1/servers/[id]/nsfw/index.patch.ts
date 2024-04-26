@@ -57,7 +57,7 @@ export default defineEventHandler(async (event) => {
       .update(servers_table)
       .set({
         nsfw: body.nsfw,
-        updated_at: Date.now().toString(),
+        updated_at: Date.now(),
       })
       .where(eq(servers_table.id, servers[0].id));
 

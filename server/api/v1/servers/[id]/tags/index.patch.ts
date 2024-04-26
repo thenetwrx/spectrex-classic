@@ -63,6 +63,7 @@ export default defineEventHandler(async (event) => {
       .update(servers_table)
       .set({
         tags: body.tags || [],
+        updated_at: Date.now(),
       })
       .where(eq(servers_table.id, servers[0].id));
 

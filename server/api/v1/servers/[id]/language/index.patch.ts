@@ -64,14 +64,8 @@ export default defineEventHandler(async (event) => {
     await db
       .update(servers_table)
       .set({
-        public: body.public,
         language: body.language,
-        category: body.category,
-        tags: body.tags,
-        description: body.description,
-        invite_link: body.invite_link,
-        nsfw: body.nsfw,
-        updated_at: Date.now().toString(),
+        updated_at: Date.now(),
       })
       .where(eq(servers_table.id, servers[0].id));
 

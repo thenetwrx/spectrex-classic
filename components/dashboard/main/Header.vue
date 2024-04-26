@@ -21,7 +21,7 @@
           You logged in on
           <NuxtTime
             v-if="lucia?.session?.created_at"
-            :datetime="new Date(Number(lucia.session.created_at))"
+            :datetime="new Date(lucia.session.created_at)"
             time-style="full"
             date-style="full"
           />

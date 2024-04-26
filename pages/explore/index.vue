@@ -1,6 +1,6 @@
 <template>
   <Container class="max-w-6xl flex flex-col">
-    <p class="text-4xl font-bold mb-4">Explore</p>
+    <h1 class="text-center text-5xl font-bold pb-12">Explore</h1>
 
     <div class="flex flex-wrap gap-2 overflow-x-auto mb-6">
       <NuxtLink
@@ -15,7 +15,7 @@
         <span :class="category === undefined ? 'text-white' : 'text-accent'"
           >/</span
         >
-        All Categories
+        Everything
       </NuxtLink>
       <NuxtLink
         v-for="_category in popular_categories"
@@ -44,14 +44,32 @@
         of <span class="font-bold">{{ servers?.amount }}</span> servers
       </p>
 
-      <button
-        class="btn btn-ghost btn-sm ml-auto"
-        v-if="!refreshing"
-        v-on:click="refresh"
-      >
-        <span>Refresh</span>
-        <i class="fa-solid fa-arrows-rotate"></i>
-      </button>
+      <div class="dropdown dropdown-end ml-auto">
+        <div tabindex="0" role="button" class="btn btn-secondary btn-sm m-1">
+          Sort by
+          <i class="fa-solid fa-angle-down"></i>
+        </div>
+        <ul
+          tabindex="0"
+          class="dropdown-content z-[1] menu p-2 shadow bg-secondary rounded-md w-52"
+        >
+          <li v-on:click="sort = 'bumped_at'">
+            <a
+              ><i class="fa-solid fa-check" v-if="sort === 'bumped_at'"></i
+              >Bumped Recently</a
+            >
+          </li>
+          <li v-on:click="sort = 'approximate_member_count'">
+            <a
+              ><i
+                class="fa-solid fa-check"
+                v-if="sort === 'approximate_member_count'"
+              ></i
+              >Member Count</a
+            >
+          </li>
+        </ul>
+      </div>
     </div>
     <ResourcePending v-if="servers_pending" />
     <ResourceNotFound
@@ -145,15 +163,14 @@
 
             <div class="flex flex-row items-center w-full gap-2">
               <p class="opacity-25">
-                {{
-                  formatDistance(new Date(), new Date(Number(server.bumped_at)))
-                }}
+                {{ formatDistance(new Date(), new Date(server.bumped_at!)) }}
                 ago
               </p>
               <NuxtLink
                 class="ml-auto btn btn-sm btn-primary px-5"
                 :href="'/api/v1/servers/' + server.id + '/join'"
                 :external="true"
+                :prefetch="false"
               >
                 Join
               </NuxtLink>
@@ -210,37 +227,27 @@
     "Movies",
     "Other",
   ]);
+  const sort = ref<"bumped_at" | "approximate_member_count">("bumped_at");
   const category = computed(() => {
     go_to_page(0);
     return route.query.category;
   });
-  const refreshing = ref<boolean>(false);
 
   const go_to_page = async (num: number) => {
     page.value = num;
-  };
-  const refresh = async () => {
-    refreshing.value = true;
-    go_to_page(0);
-    await refresh_servers();
-    refreshing.value = false;
   };
 
   const page = ref<number>(0);
   const max_per_page = ref<number>(20);
 
-  const {
-    data: servers,
-    pending: servers_pending,
-    refresh: refresh_servers,
-  } = useFetch<{
+  const { data: servers, pending: servers_pending } = useFetch<{
     message: string | null;
     result:
       | (typeof servers_table.$inferSelect & { expanded: boolean })[]
       | null;
     amount: number;
   }>("/api/v1/servers/all/feed", {
-    query: { page, category },
+    query: { page, category, sort, limit: max_per_page },
     retry: false,
   });
 

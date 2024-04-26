@@ -62,7 +62,7 @@
                 </td>
 
                 <td>
-                  {{ new Date(Number(server.created_at)).toDateString() }}
+                  {{ new Date(server.created_at).toDateString() }}
                 </td>
               </tr>
             </tbody>

@@ -62,7 +62,7 @@
                   <span class="badge badge-ghost badge-sm" v-else> None </span>
                 </td>
                 <td>
-                  {{ new Date(Number(user.created_at)).toDateString() }}
+                  {{ new Date(user.created_at).toDateString() }}
                 </td>
               </tr>
             </tbody>

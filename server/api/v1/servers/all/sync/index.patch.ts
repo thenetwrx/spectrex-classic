@@ -65,7 +65,7 @@ export default defineEventHandler(async (event) => {
         if (server) {
           if (server.banned) continue;
 
-          const now = Date.now().toString();
+          const now = Date.now();
 
           await db
             .update(servers_table)
@@ -74,23 +74,23 @@ export default defineEventHandler(async (event) => {
               owner_id: event.context.user.id,
               owner_provider_id: event.context.user.provider_id,
               approximate_member_count:
-                server_from_discord.approximate_member_count.toString(),
+                server_from_discord.approximate_member_count,
               approximate_presence_count:
-                server_from_discord.approximate_presence_count.toString(),
+                server_from_discord.approximate_presence_count,
               name: server_from_discord.name,
               icon: server_from_discord.icon,
             })
             .where(eq(servers_table.id, server.id));
         } else {
-          const now = Date.now().toString();
+          const now = Date.now();
 
           await db.insert(servers_table).values({
             id: generateId(32),
             provider_id: server_from_discord.id,
             approximate_member_count:
-              server_from_discord.approximate_member_count.toString(),
+              server_from_discord.approximate_member_count,
             approximate_presence_count:
-              server_from_discord.approximate_presence_count.toString(),
+              server_from_discord.approximate_presence_count,
             created_at: now,
             updated_at: now,
             owner_id: event.context.user.id,

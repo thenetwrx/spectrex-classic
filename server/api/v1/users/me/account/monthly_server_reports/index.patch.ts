@@ -46,6 +46,7 @@ export default defineEventHandler(async (event) => {
       .update(users_table)
       .set({
         monthly_server_reports: body.monthly_server_reports,
+        updated_at: Date.now(),
       })
       .where(eq(users_table.id, users[0].id));
 

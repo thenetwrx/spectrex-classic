@@ -68,13 +68,13 @@ export default defineEventHandler(async (event) => {
           await db
             .update(servers_table)
             .set({
-              updated_at: Date.now().toString(),
+              updated_at: Date.now(),
               owner_id: event.context.user.id,
               owner_provider_id: event.context.user.provider_id,
               approximate_member_count:
-                server_from_discord.approximate_member_count.toString(),
+                server_from_discord.approximate_member_count,
               approximate_presence_count:
-                server_from_discord.approximate_presence_count.toString(),
+                server_from_discord.approximate_presence_count,
               name: server_from_discord.name,
               icon: server_from_discord.icon,
             })

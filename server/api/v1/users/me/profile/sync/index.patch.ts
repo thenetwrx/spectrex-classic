@@ -57,7 +57,7 @@ export default defineEventHandler(async (event) => {
         avatar: provider_user.avatar,
         display_name: provider_user.global_name,
         email: provider_user.email!,
-        updated_at: Date.now().toString(),
+        updated_at: Date.now(),
       })
       .where(eq(users_table.id, users[0].id));
 

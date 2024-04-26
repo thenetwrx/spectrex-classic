@@ -24,7 +24,7 @@
                       formatDistance(
                         new Date(),
                         new Date(
-                          Number(server?.result?.bumped_at || 0) +
+                          server?.result?.bumped_at! +
                             (lucia?.user.premium_since !== null
                               ? 3600000
                               : 7200000)
@@ -358,7 +358,7 @@
     () => {
       if (server.value?.result) {
         bump.value.on_cooldown =
-          Number(server.value?.result?.bumped_at || 0) +
+          server.value?.result?.bumped_at! +
             (lucia.value?.user.premium_since !== null ? 3600000 : 7200000) <=
           Date.now()
             ? false

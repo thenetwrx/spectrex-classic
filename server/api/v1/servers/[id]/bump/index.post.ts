@@ -48,10 +48,10 @@ export default defineEventHandler(async (event) => {
     }
 
     // Compare the timestamps
-    const now = Date.now().toString();
+    const now = Date.now();
     const cooldown =
       event.context.user.premium_since !== null ? 3600000 : 7200000;
-    if (Number(servers[0].bumped_at || 0) + cooldown <= Number(now)) {
+    if (servers[0].bumped_at! + cooldown <= now) {
       await db
         .update(servers_table)
         .set({ bumped_at: now, updated_at: now })
@@ -60,8 +60,7 @@ export default defineEventHandler(async (event) => {
       return;
     }
 
-    const timeLeftMilliseconds =
-      Number(now) - Number(servers[0].bumped_at || 0) - cooldown;
+    const timeLeftMilliseconds = now - servers[0].bumped_at! - cooldown;
     const timeLeftMessage = `Bump is on cooldown`;
 
     setResponseStatus(event, 403);

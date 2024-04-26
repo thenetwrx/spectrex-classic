@@ -41,12 +41,10 @@ export default defineEventHandler(async (event) => {
 
       const session = await lucia.createSession(existing_user[0].id, {
         provider_access_token: cryptr.encrypt(tokens.accessToken),
-        provider_access_token_refreshed_at: Date.now().toString(),
-        provider_access_token_expires_at: tokens.accessTokenExpiresAt
-          .getTime()
-          .toString(),
+        provider_access_token_refreshed_at: Date.now(),
+        provider_access_token_expires_at: tokens.accessTokenExpiresAt.getTime(),
         provider_refresh_token: cryptr.encrypt(tokens.refreshToken),
-        created_at: Date.now().toString(),
+        created_at: Date.now(),
       });
       const cookie = lucia.createSessionCookie(session.id);
 
@@ -67,7 +65,7 @@ export default defineEventHandler(async (event) => {
 
     const user_id = generateId(32);
 
-    const now = Date.now().toString();
+    const now = Date.now();
     const created_user = await db
       .insert(users_table)
       .values({
@@ -89,12 +87,10 @@ export default defineEventHandler(async (event) => {
 
     const session = await lucia.createSession(created_user[0].id, {
       provider_access_token: cryptr.encrypt(tokens.accessToken),
-      provider_access_token_refreshed_at: Date.now().toString(),
-      provider_access_token_expires_at: tokens.accessTokenExpiresAt
-        .getTime()
-        .toString(),
+      provider_access_token_refreshed_at: Date.now(),
+      provider_access_token_expires_at: tokens.accessTokenExpiresAt.getTime(),
       provider_refresh_token: cryptr.encrypt(tokens.refreshToken),
-      created_at: Date.now().toString(),
+      created_at: Date.now(),
     });
     const cookie = lucia.createSessionCookie(session.id);
 
