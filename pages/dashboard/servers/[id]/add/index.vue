@@ -114,7 +114,7 @@
               <DashboardCardHeader
                 title="Invite Link"
                 :required="true"
-                messsage="(make sure it's a permanent invite!)"
+                message="(make sure it's a permanent invite!)"
               />
               <DashboardCardContent>
                 <input
