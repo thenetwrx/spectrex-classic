@@ -33,12 +33,12 @@
   });
 
   useSeoMeta({
-    ogTitle: "Spectrex - Find YOUR Discord server",
+    ogTitle: "Spectrex: Discover, connect and engage with people!",
     description:
       "Grow your Discord community or find your next online home. Our server list advocates for equal exposure, helping servers connect with the right audience.",
     ogDescription:
       "Grow your Discord community or find your next online home. Our server list advocates for equal exposure, helping servers connect with the right audience.",
-    ogImage: "https://spectrex.app/images/logo_black.png",
+    ogImage: "https://spectrex.app/images/logo.png",
     ogSiteName: "Spectrex",
     ogType: "website",
     ogUrl: "https://spectrex.app",
