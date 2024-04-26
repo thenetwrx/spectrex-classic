@@ -88,7 +88,7 @@
   });
 
   const report = async () => {
-    if (Number(issue_type.value) === IssueType.Server)
+    if (issue_type.value === "server")
       return useNuxtApp().$toast.error(
         "Please report issues inside of the server to Discord instead"
       );

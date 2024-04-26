@@ -13,7 +13,7 @@ export default defineEventHandler(async (event) => {
   const body = await readBody(event);
 
   // 1. Check variables on server side to prevent abuse
-  if (typeof body?.issue_type !== "number") {
+  if (!body?.issue_type.length) {
     setResponseStatus(event, 400);
     return { message: "Issue type must be selected" };
   }
