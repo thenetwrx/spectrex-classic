@@ -74,6 +74,18 @@
 </style>
 
 <template>
+  <ClientOnly>
+    <Toaster
+      position="top-center"
+      :expand="true"
+      theme="dark"
+      :toastOptions="{
+        style: {
+          background: '#0a0a0a',
+        },
+      }"
+    />
+  </ClientOnly>
   <div class="container-fluid min-h-screen flex flex-col">
     <!-- Mobile Sidebar -->
     <div class="md:hidden fixed top-0 left-4 z-[9999]">

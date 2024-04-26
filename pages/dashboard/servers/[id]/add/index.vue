@@ -262,7 +262,7 @@
       }
     } else {
       const json = await response.json();
-      alert(json.message);
+      useNuxtApp().$toast.error(json.message);
     }
   };
 
@@ -276,29 +276,31 @@
     );
   };
 
-  // Method to add a tag to the array
   const addTag = () => {
     if (new_tag.value.trim() !== "") {
       if (tags.value.length >= 5)
-        return alert("You already have too many tags (max of 5)");
+        return useNuxtApp().$toast.error(
+          "You already have too many tags (max of 5)"
+        );
 
       if (new_tag.value.trim().length > 16)
-        return alert("Tag has too many characters (max of 16)");
-      tags.value.push(new_tag.value.trim().toLowerCase());
-      new_tag.value = ""; // Clear the input field after adding tag
+        return useNuxtApp().$toast.error(
+          "Tag has too many characters (max of 16)"
+        );
+
+      tags.value = [...tags.value, new_tag.value.trim().toLowerCase()];
+      new_tag.value = "";
     }
   };
 
-  // Method to check for comma key press
+  const removeTag = (index: number) => {
+    tags.value = tags.value.filter((_, i) => i !== index);
+  };
+
   const checkForComma = (event: KeyboardEvent) => {
     if (event.key === "," || event.code === "Comma" || event.code === "Enter") {
-      event.preventDefault(); // Prevent comma from being entered
-      addTag(); // If a comma is entered, add the tag
+      event.preventDefault();
+      addTag();
     }
-  };
-
-  // Method to remove a tag from the array
-  const removeTag = (index: number) => {
-    tags.value.splice(index, 1);
   };
 </script>

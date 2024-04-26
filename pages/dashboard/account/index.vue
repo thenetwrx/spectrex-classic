@@ -100,13 +100,14 @@
     }
 
     if (response.ok) {
+      useNuxtApp().$toast.info("Your changes have been saved");
       const data: any = await useRequestFetch()("/api/v1/auth/information");
       if (data) {
         lucia.value = data;
       } else lucia.value = null;
     } else {
       const json = await response.json();
-      alert(json.message);
+      useNuxtApp().$toast.error(json.message);
     }
   };
 

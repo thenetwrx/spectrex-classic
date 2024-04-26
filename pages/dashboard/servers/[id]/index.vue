@@ -390,6 +390,8 @@
       navigateTo("/");
     }
     syncing.value = false;
+    await refresh_server();
+    useNuxtApp().$toast.info("Your server has been synced with Discord");
   };
 
   const edit = async (name: string, data: Record<string, any>) => {
@@ -408,11 +410,13 @@
       navigateTo("/");
     }
 
-    if (!response.ok) {
+    if (response.ok) {
+      await refresh_server();
+      useNuxtApp().$toast.info("Your changes have been saved");
+    } else {
       const json = await response.json();
-      alert(json.message);
+      useNuxtApp().$toast.error(json.message);
     }
-    await refresh_server();
   };
 
   const _delete = async () => {
@@ -431,7 +435,7 @@
     if (response.ok) navigateTo("/dashboard");
     else {
       const json = await response.json();
-      alert(json.message);
+      useNuxtApp().$toast.error(json.message);
     }
   };
 
@@ -452,34 +456,35 @@
       }
       bump.value.pending = false;
       await refresh_server();
+      return useNuxtApp().$toast.info("Your server has been bumped");
     }
   };
 
   const addTag = () => {
     if (new_tag.value.trim() !== "") {
-      if (tags.value.length >= 5) {
-        return alert("You already have too many tags (max of 5)");
-      }
+      if (tags.value.length >= 5)
+        return useNuxtApp().$toast.error(
+          "You already have too many tags (max of 5)"
+        );
 
-      if (new_tag.value.trim().length > 16) {
-        return alert("Tag has too many characters (max of 16)");
-      }
+      if (new_tag.value.trim().length > 16)
+        return useNuxtApp().$toast.error(
+          "Tag has too many characters (max of 16)"
+        );
 
-      // Create a new array by concatenating existing tags with the new tag
       tags.value = [...tags.value, new_tag.value.trim().toLowerCase()];
-      new_tag.value = ""; // Clear the input field after adding tag
+      new_tag.value = "";
     }
   };
 
   const removeTag = (index: number) => {
-    // Create a new array excluding the tag at the specified index
     tags.value = tags.value.filter((_, i) => i !== index);
   };
-  // Method to check for comma key press
+
   const checkForComma = (event: KeyboardEvent) => {
     if (event.key === "," || event.code === "Comma" || event.code === "Enter") {
-      event.preventDefault(); // Prevent comma from being entered
-      addTag(); // If a comma is entered, add the tag
+      event.preventDefault();
+      addTag();
     }
   };
 </script>

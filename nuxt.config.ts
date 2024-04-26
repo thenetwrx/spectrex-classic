@@ -7,5 +7,8 @@ export default defineNuxtConfig({
     format: ["avif", "webp"],
     domains: ["https://cdn.discordapp.com"],
   },
+  build: {
+    transpile: ["vue-sonner"],
+  },
   ssr: true,
 });

@@ -238,14 +238,4 @@
   useHead({
     title: "Home",
   });
-
-  const categories = ref<Array<string>>([
-    "Community",
-    "Music",
-    "Gaming",
-    "Anime",
-    "Technology",
-    "Movies",
-    "Other",
-  ]);
 </script>

@@ -29,6 +29,7 @@ export default defineEventHandler(async (event) => {
         message: "An unknown Discord API error occurred, try again later",
       };
     }
+
     const provider_user: DiscordUser = await response.json();
 
     if (!provider_user) {

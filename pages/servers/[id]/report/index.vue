@@ -89,8 +89,8 @@
 
   const report = async () => {
     if (Number(issue_type.value) === IssueType.Server)
-      return alert(
-        "Please report issues inside of the server to Discord instead."
+      return useNuxtApp().$toast.error(
+        "Please report issues inside of the server to Discord instead"
       );
 
     const response = await fetch(`/api/v1/servers/${server_id}/report`, {
@@ -113,7 +113,7 @@
     if (response.ok) navigateTo("/thank-you-safety");
     else {
       const json = await response.json();
-      alert(json.message);
+      useNuxtApp().$toast.error(json.message);
     }
   };
 </script>
