@@ -33,7 +33,7 @@
         {{ _category }}
       </NuxtLink>
     </div>
-    <div class="flex flex-row items-center mb-3">
+    <div class="flex flex-row max-sm:flex-col-reverse sm:items-center mb-3">
       <p class="opacity-75 text-lg">
         Showing
         <span class="font-bold"
