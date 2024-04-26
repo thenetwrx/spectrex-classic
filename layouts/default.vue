@@ -196,7 +196,7 @@
             </div>
             <ul
               tabindex="0"
-              class="dropdown-content menu p-2 shadow bg-base-200 rounded-md w-52 mt-4"
+              class="dropdown-content z-[1] menu p-2 shadow bg-base-200 border border-secondary rounded-md w-48 mt-4"
             >
               <li>
                 <NuxtLink href="/dashboard">Dashboard</NuxtLink>

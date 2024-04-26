@@ -1,5 +1,10 @@
 import db from "~/server/utils/database";
 import { eq } from "drizzle-orm";
+import {
+  permitted_categories,
+  permitted_invite_links,
+  permitted_languages,
+} from "~/server/utils/schema";
 
 export default defineEventHandler(async (event) => {
   // Parameters
@@ -39,26 +44,12 @@ export default defineEventHandler(async (event) => {
     return { message: "An NSFW selection must be made" };
   }
 
-  if (
-    !["unspecified", "en", "es", "it", "ja", "ru"].some(
-      (code) => body.language === code
-    )
-  ) {
+  if (!permitted_languages.some((code) => body.language === code)) {
     setResponseStatus(event, 400);
     return { message: "Invalid language selection" };
   }
 
-  if (
-    ![
-      "Community",
-      "Music",
-      "Gaming",
-      "Anime",
-      "Technology",
-      "Movies",
-      "Other",
-    ].some((cat) => body.category === cat)
-  ) {
+  if (!permitted_categories.some((cat) => body.category === cat)) {
     setResponseStatus(event, 400);
     return { message: "Invalid category selection" };
   }
@@ -76,7 +67,7 @@ export default defineEventHandler(async (event) => {
   }
 
   if (
-    !["https://discord.gg/", "https://discord.com/invite/"].some((prefix) =>
+    !permitted_invite_links.some((prefix) =>
       body.invite_link.startsWith(prefix)
     )
   ) {

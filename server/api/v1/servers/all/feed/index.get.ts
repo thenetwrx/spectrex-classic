@@ -1,5 +1,6 @@
 import db from "~/server/utils/database";
 import { eq, and, not, isNull, getTableColumns, asc, desc } from "drizzle-orm";
+import { permitted_languages, permitted_sorting } from "~/server/utils/schema";
 
 export default defineEventHandler(async (event) => {
   // Parameters
@@ -7,6 +8,7 @@ export default defineEventHandler(async (event) => {
   const page = query.page?.toString();
   const limit = query.limit?.toString();
   const sort = query.sort?.toString();
+  const language = query.language?.toString();
 
   // 1. Check variables on server side to prevent abuse
   if (Number.isNaN(page)) {
@@ -44,11 +46,18 @@ export default defineEventHandler(async (event) => {
     setResponseStatus(event, 400);
     return { message: "Missing sort query", result: null };
   }
-  if (
-    !["bumped_at", "approximate_member_count"].some((type) => sort === type)
-  ) {
+  if (!permitted_sorting.some((type) => sort === type)) {
     setResponseStatus(event, 400);
     return { message: "Invalid sort query", result: null };
+  }
+
+  if (!language?.length) {
+    setResponseStatus(event, 400);
+    return { message: "Missing language query", result: null };
+  }
+  if (!["all", ...permitted_languages].some((type) => language === type)) {
+    setResponseStatus(event, 400);
+    return { message: "Invalid language query", result: null };
   }
 
   if (event.context.user?.banned) {
@@ -70,6 +79,7 @@ export default defineEventHandler(async (event) => {
           eq(servers_table.banned, false),
           eq(servers_table.public, true),
           not(isNull(servers_table.approved_at)),
+          language !== "all" ? eq(servers_table.language, language) : undefined,
           category?.length ? eq(servers_table.category, category!) : undefined
         )
       );
@@ -84,6 +94,7 @@ export default defineEventHandler(async (event) => {
           eq(servers_table.banned, false),
           eq(servers_table.public, true),
           not(isNull(servers_table.approved_at)),
+          language !== "all" ? eq(servers_table.language, language) : undefined,
           category?.length ? eq(servers_table.category, category!) : undefined
         )
       )

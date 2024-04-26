@@ -1,7 +1,10 @@
 import { eq } from "drizzle-orm";
 import { generateId } from "lucia";
 import db from "~/server/utils/database";
-import { server_reports_table } from "~/server/utils/schema";
+import {
+  permitted_issue_types,
+  server_reports_table,
+} from "~/server/utils/schema";
 
 export default defineEventHandler(async (event) => {
   // Parameters
@@ -19,7 +22,7 @@ export default defineEventHandler(async (event) => {
     return { message: "Description must not be empty" };
   }
 
-  if (![0, 1].some((type) => body.issue_type === type)) {
+  if (!permitted_issue_types.some((type) => body.issue_type === type)) {
     setResponseStatus(event, 400);
     return { message: "Invalid issue type selection" };
   }

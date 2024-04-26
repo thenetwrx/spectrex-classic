@@ -1,5 +1,6 @@
 import { eq } from "drizzle-orm";
 import db from "~/server/utils/database";
+import { permitted_categories } from "~/server/utils/schema";
 
 export default defineEventHandler(async (event) => {
   // Parameters
@@ -12,17 +13,7 @@ export default defineEventHandler(async (event) => {
     setResponseStatus(event, 400);
     return { message: "Category must be selected" };
   }
-  if (
-    ![
-      "Community",
-      "Music",
-      "Gaming",
-      "Anime",
-      "Technology",
-      "Movies",
-      "Other",
-    ].some((cat) => body.category === cat)
-  ) {
+  if (!permitted_categories.some((cat) => body.category === cat)) {
     setResponseStatus(event, 400);
     return { message: "Invalid category selection" };
   }

@@ -2,7 +2,7 @@
   <Container class="max-w-6xl flex flex-col">
     <h1 class="text-center text-5xl font-bold pb-12">Explore</h1>
 
-    <div class="flex flex-wrap gap-2 overflow-x-auto mb-6">
+    <div class="flex flex-wrap gap-2 overflow-x-auto mb-6 w-fit mx-auto">
       <NuxtLink
         href="/explore"
         class="block max-w-fit px-2 py-1 bg-accent border-none rounded-sm gap-2 hover:cursor-pointer text-white"
@@ -44,31 +44,65 @@
         of <span class="font-bold">{{ servers?.amount }}</span> servers
       </p>
 
-      <div class="dropdown dropdown-end ml-auto">
-        <div tabindex="0" role="button" class="btn btn-secondary btn-sm m-1">
-          Sort by
-          <i class="fa-solid fa-angle-down"></i>
+      <div class="flex flex-row items-center ml-auto">
+        <div class="dropdown dropdown-end ml-auto">
+          <div tabindex="0" role="button" class="btn btn-sm m-1">
+            Language
+            <i class="fa-solid fa-angle-down"></i>
+          </div>
+          <ul
+            tabindex="0"
+            class="dropdown-content z-[1] menu p-2 shadow bg-base-200 border border-secondary rounded-md w-48"
+          >
+            <li v-on:click="language = 'all'">
+              <span>
+                <i class="fa-solid fa-check" v-if="language === 'all'"></i>
+                All
+              </span>
+            </li>
+            <li v-on:click="language = 'unspecified'">
+              <span>
+                <i
+                  class="fa-solid fa-check"
+                  v-if="language === 'unspecified'"
+                ></i>
+                Unspecified
+              </span>
+            </li>
+            <li v-on:click="language = 'en'">
+              <span>
+                <i class="fa-solid fa-check" v-if="language === 'en'"></i>
+                English
+              </span>
+            </li>
+          </ul>
         </div>
-        <ul
-          tabindex="0"
-          class="dropdown-content z-[1] menu p-2 shadow bg-secondary rounded-md w-52"
-        >
-          <li v-on:click="sort = 'bumped_at'">
-            <a
-              ><i class="fa-solid fa-check" v-if="sort === 'bumped_at'"></i
-              >Bumped Recently</a
-            >
-          </li>
-          <li v-on:click="sort = 'approximate_member_count'">
-            <a
-              ><i
-                class="fa-solid fa-check"
-                v-if="sort === 'approximate_member_count'"
-              ></i
-              >Member Count</a
-            >
-          </li>
-        </ul>
+        <div class="dropdown dropdown-end ml-auto">
+          <div tabindex="0" role="button" class="btn btn-sm m-1">
+            Sort by
+            <i class="fa-solid fa-angle-down"></i>
+          </div>
+          <ul
+            tabindex="0"
+            class="dropdown-content z-[1] menu p-2 shadow bg-base-200 border border-secondary rounded-md w-48"
+          >
+            <li v-on:click="sort = 'bumped_at'">
+              <span>
+                <i class="fa-solid fa-check" v-if="sort === 'bumped_at'"></i>
+                Bumped Recently
+              </span>
+            </li>
+            <li v-on:click="sort = 'approximate_member_count'">
+              <span>
+                <i
+                  class="fa-solid fa-check"
+                  v-if="sort === 'approximate_member_count'"
+                ></i>
+                Member Count
+              </span>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
     <ResourcePending v-if="servers_pending" />
@@ -228,6 +262,7 @@
     "Other",
   ]);
   const sort = ref<"bumped_at" | "approximate_member_count">("bumped_at");
+  const language = ref<"all" | "unspecified" | "en">("all");
   const category = computed(() => {
     go_to_page(0);
     return route.query.category;
@@ -247,7 +282,7 @@
       | null;
     amount: number;
   }>("/api/v1/servers/all/feed", {
-    query: { page, category, sort, limit: max_per_page },
+    query: { page, category, language, sort, limit: max_per_page },
     retry: false,
   });
 

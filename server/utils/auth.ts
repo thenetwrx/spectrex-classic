@@ -1,9 +1,9 @@
-import { Lucia, TimeSpan, User } from "lucia";
-import { DrizzlePostgreSQLAdapter } from "@lucia-auth/adapter-drizzle";
+import { Lucia, TimeSpan } from "lucia";
 import db from "./database";
 import { Discord } from "arctic";
 import Cryptr from "cryptr";
 import { users_table, sessions_table } from "./schema";
+import { DrizzlePostgreSQLAdapter } from "@lucia-auth/adapter-drizzle";
 
 export const cryptr = new Cryptr(process.env.ENCRYPTION_KEY!);
 

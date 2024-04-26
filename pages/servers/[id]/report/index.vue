@@ -21,7 +21,7 @@
               v-model="issue_type"
               v-on:change="
                 () => {
-                  if (Number(issue_type) === IssueType.Server) {
+                  if (issue_type === 'server') {
                     report();
                     issue_type = '';
                   }
@@ -30,8 +30,8 @@
               class="select select-bordered rounded-none w-full"
             >
               <option disabled selected value="">Select issue</option>
-              <option :value="IssueType.Server">The Server</option>
-              <option :value="IssueType.Listing">The Listing</option>
+              <option value="server">The Server</option>
+              <option value="listing">The Listing</option>
             </select>
           </div>
           <div>
@@ -67,7 +67,7 @@
     Server,
     Listing,
   }
-  const issue_type = ref<string>("");
+  const issue_type = ref<"" | "server" | "listing">("");
   const description = ref<string>("");
 
   const {

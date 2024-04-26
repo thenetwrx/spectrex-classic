@@ -1,5 +1,6 @@
 import { eq } from "drizzle-orm";
 import db from "~/server/utils/database";
+import { permitted_invite_links } from "~/server/utils/schema";
 
 export default defineEventHandler(async (event) => {
   // Parameters
@@ -13,7 +14,7 @@ export default defineEventHandler(async (event) => {
     return { message: "Invite link must not be empty" };
   }
   if (
-    !["https://discord.gg/", "https://discord.com/invite/"].some((prefix) =>
+    !permitted_invite_links.some((prefix) =>
       body.invite_link.startsWith(prefix)
     )
   ) {

@@ -1,5 +1,6 @@
 import { eq } from "drizzle-orm";
 import db from "~/server/utils/database";
+import { permitted_languages } from "~/server/utils/schema";
 
 export default defineEventHandler(async (event) => {
   // Parameters
@@ -12,11 +13,7 @@ export default defineEventHandler(async (event) => {
     setResponseStatus(event, 400);
     return { message: "Language must be selected" };
   }
-  if (
-    !["unspecified", "en", "es", "it", "ja", "ru"].some(
-      (code) => body.language === code
-    )
-  ) {
+  if (!permitted_languages.some((code) => body.language === code)) {
     setResponseStatus(event, 400);
     return { message: "Invalid language selection" };
   }
