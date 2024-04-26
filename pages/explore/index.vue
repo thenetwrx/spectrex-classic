@@ -75,6 +75,30 @@
                 English
               </span>
             </li>
+            <li v-on:click="language = 'es'">
+              <span>
+                <i class="fa-solid fa-check" v-if="language === 'es'"></i>
+                Español
+              </span>
+            </li>
+            <li v-on:click="language = 'it'">
+              <span>
+                <i class="fa-solid fa-check" v-if="language === 'it'"></i>
+                Italiano
+              </span>
+            </li>
+            <li v-on:click="language = 'ja'">
+              <span>
+                <i class="fa-solid fa-check" v-if="language === 'ja'"></i>
+                日本語
+              </span>
+            </li>
+            <li v-on:click="language = 'ru'">
+              <span>
+                <i class="fa-solid fa-check" v-if="language === 'ru'"></i>
+                русский
+              </span>
+            </li>
           </ul>
         </div>
         <div class="dropdown dropdown-end ml-auto">
@@ -262,7 +286,9 @@
     "Other",
   ]);
   const sort = ref<"bumped_at" | "approximate_member_count">("bumped_at");
-  const language = ref<"all" | "unspecified" | "en">("all");
+  const language = ref<
+    "all" | "unspecified" | "en" | "es" | "it" | "ja" | "ru"
+  >("all");
   const category = computed(() => {
     go_to_page(0);
     return route.query.category;
