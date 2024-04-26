@@ -1,9 +1,9 @@
 <template>
-  <div class="flex flex-col gap-1 w-full md:max-w-xs">
+  <div class="flex flex-col gap-1 w-full md:max-w-xs max-md:pb-8">
     <NuxtLink
       class="transition-all duration-[150] rounded-md p-2"
       :class="
-        active === 'servers' ? 'bg-base-200' : 'hover:bg-base-200 opacity-75'
+        active === 'servers' ? 'bg-base-300' : 'hover:bg-base-200 opacity-75'
       "
       href="/dashboard"
     >
@@ -12,7 +12,7 @@
     <NuxtLink
       class="transition-all duration-[150] rounded-md p-2"
       :class="
-        active === 'account' ? 'bg-base-200 ' : 'hover:bg-base-200 opacity-75'
+        active === 'account' ? 'bg-base-300 ' : 'hover:bg-base-200 opacity-75'
       "
       href="/dashboard/account"
     >
@@ -21,7 +21,7 @@
     <NuxtLink
       class="transition-all duration-[150] rounded-md p-2"
       :class="
-        active === 'profile' ? 'bg-base-200 ' : 'hover:bg-base-200 opacity-75'
+        active === 'profile' ? 'bg-base-300 ' : 'hover:bg-base-200 opacity-75'
       "
       href="/dashboard/profile"
     >
@@ -31,7 +31,7 @@
       v-if="lucia?.user.admin"
       class="transition-all duration-[150] rounded-md p-2"
       :class="
-        active === 'admin' ? 'bg-base-200 ' : 'hover:bg-base-200 opacity-75'
+        active === 'admin' ? 'bg-base-300 ' : 'hover:bg-base-200 opacity-75'
       "
       href="/dashboard/admin"
     >

@@ -3,7 +3,9 @@
     <h2 class="text-center text-3xl font-bold">Become a Spectrex supporter</h2>
     <p class="text-center text-lg">And unlock exclusive benefits today!</p>
     <div class="flex flex-col items-center py-6">
-      <div class="card shadow-xl bg-base-200 ml-auto mr-auto">
+      <div
+        class="card shadow-xl bg-base-200 border border-secondary ml-auto mr-auto"
+      >
         <div class="card-body p-8">
           <div class="flex flex-col">
             <p class="font-bold text-4xl">$4.99</p>
@@ -37,7 +39,7 @@
     </div>
   </Container>
   <dialog class="modal" id="modal">
-    <div class="modal-box bg-base-200 flex flex-col">
+    <div class="modal-box bg-base-200 border border-secondary flex flex-col">
       <div class="flex flex-row gap-1 items-center w-full pb-4">
         <h3 class="text-lg font-bold">Support Spectrex</h3>
 

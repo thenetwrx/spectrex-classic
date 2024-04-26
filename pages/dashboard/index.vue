@@ -37,7 +37,7 @@
               .sort((a, b) => a.name.localeCompare(b.name))
               .sort((c, d) => c.bumped_at! - d.bumped_at!)"
             :key="index"
-            class="flex flex-row bg-base-200 hover:bg-base-300 rounded-md cursor-pointer transition-colors duration-200 p-4"
+            class="flex flex-row bg-base-200 hover:bg-base-300 border border-secondary rounded-md cursor-pointer transition-colors duration-200 p-4"
             :href="'/dashboard/servers/' + server.id"
           >
             <div class="flex flex-row items-center w-full">
@@ -53,7 +53,7 @@
             </div>
           </NuxtLink>
           <div
-            class="flex flex-row bg-base-200 hover:bg-base-300 rounded-md cursor-pointer transition-colors duration-200 p-4"
+            class="flex flex-row bg-base-200 hover:bg-base-300 border border-secondary rounded-md cursor-pointer transition-colors duration-200 p-4"
             v-on:click="
               () => {
                 if (!servers?.result?.length) syncDiscordServers();
@@ -70,7 +70,7 @@
     </DashboardMainContainer>
   </Container>
   <dialog class="modal" id="modal">
-    <div class="modal-box bg-base-200">
+    <div class="modal-box bg-base-200 border border-secondary">
       <div class="flex flex-row gap-1 items-center w-full">
         <h3 class="text-lg font-bold">Add server</h3>
         <button
