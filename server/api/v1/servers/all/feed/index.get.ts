@@ -7,6 +7,7 @@ export default defineEventHandler(async (event) => {
   const query = getQuery(event);
   const page = query.page?.toString();
   const limit = query.limit?.toString();
+  const category = query.category?.toString();
   const sort = query.sort?.toString();
   const language = query.language?.toString();
 
@@ -40,6 +41,17 @@ export default defineEventHandler(async (event) => {
     // max pages
     setResponseStatus(event, 400);
     return { message: "Exceeded limit query (20 maximum)", result: null };
+  }
+
+  if (!category?.length) {
+    setResponseStatus(event, 400);
+    return { message: "Missing category query", result: null };
+  }
+  if (
+    !["everything", ...permitted_categories].some((cat) => category === cat)
+  ) {
+    setResponseStatus(event, 400);
+    return { message: "Invalid category query", result: null };
   }
 
   if (!sort?.length) {
@@ -80,7 +92,9 @@ export default defineEventHandler(async (event) => {
           eq(servers_table.public, true),
           not(isNull(servers_table.approved_at)),
           language !== "all" ? eq(servers_table.language, language) : undefined,
-          category?.length ? eq(servers_table.category, category!) : undefined
+          category !== "everything"
+            ? eq(servers_table.category, category!)
+            : undefined
         )
       );
 
@@ -95,7 +109,9 @@ export default defineEventHandler(async (event) => {
           eq(servers_table.public, true),
           not(isNull(servers_table.approved_at)),
           language !== "all" ? eq(servers_table.language, language) : undefined,
-          category?.length ? eq(servers_table.category, category!) : undefined
+          category !== "everything"
+            ? eq(servers_table.category, category!)
+            : undefined
         )
       )
       .orderBy(

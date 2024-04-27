@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-row items-center">
+  <div class="flex flex-row max-sm:flex-col-reverse sm:items-center">
     <h2 class="text-lg font-semibold">{{ title }}</h2>
     <slot />
   </div>

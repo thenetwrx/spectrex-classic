@@ -3,23 +3,23 @@
     <h1 class="text-center text-5xl font-bold pb-12">Explore</h1>
 
     <div class="flex flex-wrap gap-2 overflow-x-auto mb-6 w-fit mx-auto">
-      <NuxtLink
-        href="/explore"
+      <button
+        v-on:click="() => handleQuery('category', undefined)"
         class="block max-w-fit px-2 py-1 bg-accent border-none rounded-sm gap-2 hover:cursor-pointer text-white"
         :class="
-          category === undefined
+          category === 'everything'
             ? 'bg-opacity-100'
             : 'bg-opacity-50 hover:bg-opacity-65 transition-colors duration-200 ease-in-out'
         "
       >
-        <span :class="category === undefined ? 'text-white' : 'text-accent'"
+        <span :class="category === 'everything' ? 'text-white' : 'text-accent'"
           >/</span
         >
         Everything
-      </NuxtLink>
-      <NuxtLink
+      </button>
+      <button
         v-for="_category in popular_categories"
-        :href="'/explore?category=' + _category"
+        v-on:click="() => handleQuery('category', _category)"
         class="block max-w-fit px-2 py-1 bg-accent border-none rounded-sm gap-2 hover:cursor-pointer text-white"
         :class="
           category === _category
@@ -31,7 +31,7 @@
           >/</span
         >
         {{ _category }}
-      </NuxtLink>
+      </button>
     </div>
     <div class="flex flex-row max-sm:flex-col-reverse sm:items-center mb-3">
       <p class="opacity-75 text-lg">
@@ -46,7 +46,7 @@
 
       <div class="flex flex-row items-center ml-auto">
         <div class="dropdown dropdown-end ml-auto">
-          <div tabindex="0" role="button" class="btn btn-sm m-1">
+          <div tabindex="0" role="button" class="btn btn-ghost btn-sm m-1">
             Language
             <i class="fa-solid fa-angle-down"></i>
           </div>
@@ -54,13 +54,13 @@
             tabindex="0"
             class="dropdown-content z-[1] menu p-2 shadow bg-base-200 border border-secondary rounded-md w-48"
           >
-            <li v-on:click="language = 'all'">
+            <li v-on:click="handleQuery('language', undefined)">
               <span>
                 <i class="fa-solid fa-check" v-if="language === 'all'"></i>
                 All
               </span>
             </li>
-            <li v-on:click="language = 'unspecified'">
+            <li v-on:click="handleQuery('language', 'unspecified')">
               <span>
                 <i
                   class="fa-solid fa-check"
@@ -69,31 +69,31 @@
                 Unspecified
               </span>
             </li>
-            <li v-on:click="language = 'en'">
+            <li v-on:click="handleQuery('language', 'en')">
               <span>
                 <i class="fa-solid fa-check" v-if="language === 'en'"></i>
                 English
               </span>
             </li>
-            <li v-on:click="language = 'es'">
+            <li v-on:click="handleQuery('language', 'es')">
               <span>
                 <i class="fa-solid fa-check" v-if="language === 'es'"></i>
                 Español
               </span>
             </li>
-            <li v-on:click="language = 'it'">
+            <li v-on:click="handleQuery('language', 'it')">
               <span>
                 <i class="fa-solid fa-check" v-if="language === 'it'"></i>
                 Italiano
               </span>
             </li>
-            <li v-on:click="language = 'ja'">
+            <li v-on:click="handleQuery('language', 'ja')">
               <span>
                 <i class="fa-solid fa-check" v-if="language === 'ja'"></i>
                 日本語
               </span>
             </li>
-            <li v-on:click="language = 'ru'">
+            <li v-on:click="handleQuery('language', 'ru')">
               <span>
                 <i class="fa-solid fa-check" v-if="language === 'ru'"></i>
                 русский
@@ -102,7 +102,7 @@
           </ul>
         </div>
         <div class="dropdown dropdown-end ml-auto">
-          <div tabindex="0" role="button" class="btn btn-sm m-1">
+          <div tabindex="0" role="button" class="btn btn-ghost btn-sm m-1">
             Sort by
             <i class="fa-solid fa-angle-down"></i>
           </div>
@@ -110,13 +110,13 @@
             tabindex="0"
             class="dropdown-content z-[1] menu p-2 shadow bg-base-200 border border-secondary rounded-md w-48"
           >
-            <li v-on:click="sort = 'bumped_at'">
+            <li v-on:click="handleQuery('sort', 'bumped_at')">
               <span>
                 <i class="fa-solid fa-check" v-if="sort === 'bumped_at'"></i>
                 Bumped Recently
               </span>
             </li>
-            <li v-on:click="sort = 'approximate_member_count'">
+            <li v-on:click="handleQuery('sort', 'approximate_member_count')">
               <span>
                 <i
                   class="fa-solid fa-check"
@@ -276,6 +276,7 @@
   });
 
   const route = useRoute();
+  const router = useRouter();
   const popular_categories = ref<Array<string>>([
     "Community",
     "Music",
@@ -285,14 +286,29 @@
     "Movies",
     "Other",
   ]);
-  const sort = ref<"bumped_at" | "approximate_member_count">("bumped_at");
-  const language = ref<
-    "all" | "unspecified" | "en" | "es" | "it" | "ja" | "ru"
-  >("all");
+  const language = computed(() => {
+    go_to_page(0);
+    return route.query.language || "all";
+  });
   const category = computed(() => {
     go_to_page(0);
-    return route.query.category;
+    return route.query.category || "everything";
   });
+  const sort = computed(() => {
+    go_to_page(0);
+    return route.query.sort || "bumped_at";
+  });
+
+  function handleQuery(paramName: string, paramValue: string | undefined) {
+    const query = { ...router.currentRoute.value.query }; // Get current query parameters
+
+    // Set the query parameter dynamically
+    if (paramValue?.length) query[paramName] = paramValue;
+    else delete query[paramName];
+
+    // Use router.push() with the updated query parameters
+    router.push({ query });
+  }
 
   const go_to_page = async (num: number) => {
     page.value = num;
