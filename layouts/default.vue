@@ -110,7 +110,7 @@
             href="/"
             class="flex flex-row items-center gap-1 h-fit text-xl py-3"
           >
-            <NuxtImg src="/images/logo.png" class="h-12" />
+            <img src="/images/logo.png" class="h-12" />
           </NuxtLink>
           <NuxtLink href="/explore" class="p-2 bg-secondary rounded-md">
             <span>Explore</span>
@@ -167,7 +167,7 @@
         class="py-4 px-2 max-md:px-4 h-16 bg-base-200 flex flex-row items-center gap-3"
       >
         <NuxtLink href="/" class="btn btn-ghost items-center px-3">
-          <NuxtImg src="/images/logo.png" class="h-10" />
+          <img src="/images/logo.png" class="h-10" />
         </NuxtLink>
         <NuxtLink
           href="/explore"
@@ -230,7 +230,7 @@
           href="/"
           class="flex flex-row items-center gap-1 h-fit text-xl"
         >
-          <NuxtImg src="/images/logo.png" class="h-12" />
+          <img src="/images/logo.png" class="h-12" />
           <span class="text-3xl">SPECTREX</span>
         </NuxtLink>
         <div class="flex flex-col gap-2">

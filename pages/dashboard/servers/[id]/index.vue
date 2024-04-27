@@ -48,12 +48,7 @@
             <button
               class="btn btn-ghost btn-sm"
               :class="syncing || !server?.result ? 'btn-disabled' : ''"
-              v-on:click="
-                async () => {
-                  await sync();
-                  await refresh_server();
-                }
-              "
+              v-on:click="sync"
             >
               <span v-if="syncing">Syncing</span>
               <span v-else>Sync</span>
