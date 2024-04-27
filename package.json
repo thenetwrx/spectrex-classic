@@ -1,5 +1,6 @@
 {
   "name": "nuxt-app",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -7,8 +8,7 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare",
-    "generate-types": "supabase gen types typescript --project-id qpvredklgeepeyxvjgch > database.types.ts"
+    "deploy": "git fetch origin && git reset --hard origin/master && pnpm install && pnpm run build && pm2 reload ecosystem.config.cjs --env production"
   },
   "dependencies": {
     "@lucia-auth/adapter-drizzle": "^1.0.7",
