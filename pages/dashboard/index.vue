@@ -148,7 +148,6 @@
       lucia.value = null;
       navigateTo("/");
     }
-    syncing.value = false;
 
     if (response.ok) {
       await refresh_servers();
@@ -157,5 +156,6 @@
       const json = await response.json();
       useNuxtApp().$toast.error(json.message);
     }
+    syncing.value = false;
   };
 </script>

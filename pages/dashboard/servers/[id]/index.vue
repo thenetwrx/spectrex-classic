@@ -384,7 +384,6 @@
       lucia.value = null;
       navigateTo("/");
     }
-    syncing.value = false;
 
     if (response.ok) {
       await refresh_server();
@@ -393,6 +392,7 @@
       const json = await response.json();
       useNuxtApp().$toast.error(json.message);
     }
+    syncing.value = false;
   };
 
   const edit = async (name: string, data: Record<string, any>) => {
