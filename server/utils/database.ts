@@ -4,9 +4,9 @@ import * as schema from "./schema";
 
 const pool = new Postgres.Pool({
   user: "postgres",
-  host: "localhost",
+  host: process.env.DATABASE_HOST,
   database: "spectrex",
-  password: "gDvQ514UXzUiDwa6",
+  password: process.env.DATABASE_PASSWORD,
   port: 5432,
 });
 const db = drizzle(pool, { schema });
