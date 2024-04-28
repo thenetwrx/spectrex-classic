@@ -3,7 +3,7 @@ import { drizzle } from "drizzle-orm/node-postgres";
 import * as schema from "./schema";
 
 const pool = new Postgres.Pool({
-  host: "127.0.0.1",
+  host: "localhost",
   database: "spectrex",
   port: 5432,
   user: "postgres",
