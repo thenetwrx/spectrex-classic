@@ -385,8 +385,14 @@
       navigateTo("/");
     }
     syncing.value = false;
-    await refresh_server();
-    useNuxtApp().$toast.info("Your server has been synced with Discord");
+
+    if (response.ok) {
+      await refresh_server();
+      useNuxtApp().$toast.info("Your server has been synced with Discord");
+    } else {
+      const json = await response.json();
+      useNuxtApp().$toast.error(json.message);
+    }
   };
 
   const edit = async (name: string, data: Record<string, any>) => {
@@ -450,8 +456,14 @@
         navigateTo("/");
       }
       bump.value.pending = false;
-      await refresh_server();
-      return useNuxtApp().$toast.info("Your server has been bumped");
+
+      if (response.ok) {
+        await refresh_server();
+        useNuxtApp().$toast.info("Your server has been bumped");
+      } else {
+        const json = await response.json();
+        useNuxtApp().$toast.error(json.message);
+      }
     }
   };
 

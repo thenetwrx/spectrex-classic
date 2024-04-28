@@ -8,7 +8,7 @@
     <template v-else>
       <p class="text-4xl">Report Form</p>
       <p class="opacity-75">
-        You are reporting the server "{{ server.result.name }}"
+        You're reporting the server "{{ server.result.name }}"
       </p>
       <div class="flex flex-col py-4 max-w-xl mx-auto">
         <div
