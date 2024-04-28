@@ -10,5 +10,15 @@ export default defineNuxtConfig({
   build: {
     transpile: ["vue-sonner"],
   },
+  vite: {
+    build: {
+      rollupOptions: {
+        output: {
+          inlineDynamicImports: true,
+          experimentalMinChunkSize: 500_000,
+        },
+      },
+    },
+  },
   ssr: true,
 });
