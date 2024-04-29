@@ -28,7 +28,9 @@
       `,
     ],
     titleTemplate: (titleChunk) => {
-      return titleChunk ? `${titleChunk} · Spectrex` : "Spectrex";
+      return titleChunk
+        ? `${titleChunk}`
+        : "Spectrex: Discover, connect and engage with people!";
     },
   });
 
