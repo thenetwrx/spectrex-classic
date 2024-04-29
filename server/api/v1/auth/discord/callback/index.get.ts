@@ -1,7 +1,7 @@
 import { OAuth2RequestError } from "arctic";
 import { generateId } from "lucia";
 import db from "~/server/utils/database";
-import DiscordUser from "~/types/DiscordUser";
+import DiscordUserPartial from "~/types/DiscordUserPartial";
 import { cryptr, discord } from "~/server/utils/auth";
 import { eq } from "drizzle-orm";
 
@@ -26,7 +26,8 @@ export default defineEventHandler(async (event) => {
         },
       }
     );
-    const provider_user: DiscordUser = await discord_user_response.json();
+    const provider_user: DiscordUserPartial =
+      await discord_user_response.json();
 
     const existing_user = await db
       .select({ id: users_table.id, banned: users_table.banned })

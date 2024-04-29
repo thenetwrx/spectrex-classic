@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import db from "~/server/utils/database";
-import DiscordUser from "~/types/DiscordUser";
+import DiscordUserPartial from "~/types/DiscordUserPartial";
 
 export default defineEventHandler(async (event) => {
   // 1. Require being logged in
@@ -30,7 +30,7 @@ export default defineEventHandler(async (event) => {
       };
     }
 
-    const provider_user: DiscordUser = await response.json();
+    const provider_user: DiscordUserPartial = await response.json();
 
     if (!provider_user) {
       setResponseStatus(event, 404);

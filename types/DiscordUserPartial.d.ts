@@ -1,4 +1,4 @@
-export default interface DiscordUser {
+export default interface DiscordUserPartial {
   id: string;
   username: string;
   avatar: string | null;
