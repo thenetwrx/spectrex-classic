@@ -19,6 +19,9 @@ export default defineEventHandler(async (event) => {
       .from(servers_table)
       .where(eq(servers_table.owner_id, event.context.user.id));
 
+    if (event.context.user.premium_since === null)
+      for (let i = 0; i < servers.length; i++) servers[i].invite_uses = null;
+
     setResponseStatus(event, 200);
     return {
       message: null,

@@ -1,6 +1,6 @@
 <template>
   <Container class="max-w-6xl flex flex-col">
-    <h1 class="text-center text-5xl font-bold pb-12">Explore</h1>
+    <h1 class="text-center text-4xl font-bold pb-12">Explore</h1>
 
     <div class="flex flex-wrap gap-2 overflow-x-auto mb-6 w-fit mx-auto">
       <button

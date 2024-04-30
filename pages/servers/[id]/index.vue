@@ -69,6 +69,7 @@
             class="btn btn-success text-white rounded-md px-6 ml-auto"
             :href="'/api/v1/servers/' + server.result.id + '/join'"
             :external="true"
+            :prefetch="false"
             >Join</NuxtLink
           >
         </ResourceCardHeader>

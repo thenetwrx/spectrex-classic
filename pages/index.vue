@@ -1,13 +1,35 @@
 <template>
   <Container class="max-w-7xl text-center">
     <div class="flex flex-col">
-      <h1 class="text-5xl">
-        Find <span class="font-bold underline">your</span> Discord server
-      </h1>
-      <h2 class="py-2 text-xl max-w-2xl mx-auto opacity-80">
-        Explore a universe of niche communities, passionate gamers, and
-        limitless options. Discover the perfect fit with our tailored listings.
-      </h2>
+      <div class="hero text-start pb-24">
+        <div class="hero-content gap-16 max-h-fit flex-col lg:flex-row-reverse">
+          <img src="/images/logo.png" class="max-w-sm rounded-lg shadow-2xl" />
+          <div>
+            <h1 class="text-5xl">
+              Find <span class="font-bold underline">your</span> Discord server
+            </h1>
+            <p class="py-6 max-w-3xl">
+              Explore a universe of niche communities, passionate gamers, and
+              limitless options. Discover the perfect fit with our tailored
+              listings.
+            </p>
+            <div class="flex flex-row gap-2 mx-auto pt-12">
+              <NuxtLink
+                class="btn btn-primary btn-sm rounded-badge"
+                href="/explore"
+              >
+                Find a server
+              </NuxtLink>
+              <NuxtLink
+                class="btn btn-secondary btn-sm rounded-badge"
+                href="/dashboard"
+              >
+                Add a server
+              </NuxtLink>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <!-- <div
         class="flex flex-wrap gap-2 w-fit max-sm:max-w-fit mx-auto overflow-x-auto py-2"
@@ -24,18 +46,6 @@
       <p class="ml-auto opacity-75">
         <i class="fa-solid fa-up-left"></i> select a category
       </p> -->
-
-      <div class="flex flex-row gap-2 mx-auto pt-12 pb-24">
-        <NuxtLink class="btn btn-primary btn-sm rounded-badge" href="/explore">
-          Find a server
-        </NuxtLink>
-        <NuxtLink
-          class="btn btn-secondary btn-sm rounded-badge"
-          href="/dashboard"
-        >
-          Add a server
-        </NuxtLink>
-      </div>
     </div>
 
     <NuxtLink href="#why">
@@ -145,13 +155,15 @@
               </div>
               <div class="collapse-content opacity-75">
                 <p>
-                  Listing your server is completely free, ensuring all servers
-                  have equal visibility. For a boost, our
-                  <NuxtLink class="text-accent hover:underline" href="/premium"
-                    >Premium</NuxtLink
-                  >
-                  one-time purchase allows more frequent bumps to keep your
-                  listing at the top.
+                  You can list up to 1 server for free, or up to 5 servers with
+                  a
+                  <NuxtLink href="/pricing" class="text-accent hover:underline"
+                    >Pro subscription</NuxtLink
+                  >. However, regardless of your subscription tier, all servers
+                  enjoy equal visibility. Listing your server remains free of
+                  charge, ensuring fairness for all. For enhanced visibility,
+                  our Pro subscription offers the ability for more frequent
+                  bumps to maintain your listing at the top.
                 </p>
               </div>
             </div>

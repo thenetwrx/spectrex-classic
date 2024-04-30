@@ -43,14 +43,11 @@ export default defineEventHandler(async (event) => {
 
     setResponseStatus(event, 200);
 
-    if (servers[0].owner_id !== event.context.user?.id) {
-      const { invite_link, invite_uses, ...servers_no_invite } = servers[0];
+    if (servers[0].owner_id !== event.context.user?.id)
+      servers[0].invite_link = null;
 
-      return {
-        message: null,
-        result: servers_no_invite,
-      };
-    }
+    if (event.context.user?.premium_since === null)
+      servers[0].invite_uses = null;
 
     return {
       message: null,

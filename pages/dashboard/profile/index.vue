@@ -68,7 +68,7 @@
           </DashboardCardContainer>
 
           <DashboardCardContainer>
-            <DashboardCardHeader title="Description" />
+            <DashboardCardHeader title="About me" />
             <DashboardCardContent>
               <textarea
                 type="text"

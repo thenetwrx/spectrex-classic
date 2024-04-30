@@ -102,22 +102,34 @@ export default defineEventHandler(async (event) => {
         bumped_at: servers_table.approved_at,
       })
       .from(servers_table)
-      .where(eq(servers_table.id, server_id));
+      .where(eq(servers_table.owner_id, event.context.user.id));
 
-    if (!servers.length) {
+    let count = 0;
+    const max_count = event.context.user.premium_since !== null ? 5 : 1;
+    for (const server of servers) {
+      if (server.approved_at) count++;
+      if (count === max_count) {
+        setResponseStatus(event, 403);
+        return { message: "Maximum number of servers listed" };
+      }
+    }
+
+    const server = servers.find((_server) => _server.id === server_id);
+
+    if (!server) {
       setResponseStatus(event, 404);
       return { message: "Server not found" };
     }
 
-    if (servers[0].owner_id !== event.context.user.id) {
+    if (server.owner_id !== event.context.user.id) {
       setResponseStatus(event, 403);
       return { message: "Unauthorized" };
     }
-    if (servers[0].banned) {
+    if (server.banned) {
       setResponseStatus(event, 403);
       return { message: "Server is banned from Spectrex" };
     }
-    if (servers[0].approved_at !== null) {
+    if (server.approved_at !== null) {
       setResponseStatus(event, 403);
       return { message: "Server is already approved" };
     }
@@ -128,7 +140,7 @@ export default defineEventHandler(async (event) => {
       .update(servers_table)
       .set({
         approved_at: now,
-        bumped_at: servers[0].bumped_at === null ? now : servers[0].bumped_at,
+        bumped_at: server.bumped_at === null ? now : server.bumped_at,
         public: true,
         language: body.language,
         category: body.category,
@@ -138,7 +150,7 @@ export default defineEventHandler(async (event) => {
         nsfw: body.nsfw,
         updated_at: now,
       })
-      .where(eq(servers_table.id, servers[0].id));
+      .where(eq(servers_table.id, server.id));
 
     return;
   } catch (err) {

@@ -145,11 +145,11 @@
               <span>Guidelines</span>
             </NuxtLink>
             <NuxtLink
-              href="/premium"
+              href="/pricing"
               v-on:click="isMobileSidebarOpen = false"
               class="p-2 bg-secondary rounded-md"
             >
-              <span>Premium</span>
+              <span>Pricing</span>
             </NuxtLink>
           </div>
           <div class="flex flex-col items-start gap-2 p-4 w-full">
@@ -211,9 +211,9 @@
           Guidelines
         </NuxtLink>
         <NuxtLink
-          href="/premium"
+          href="/pricing"
           class="text-[#a1a1a1] hover:text-[#fff] transition-all duration-300"
-          >Premium
+          >Pricing
         </NuxtLink>
 
         <div class="flex items-center gap-1 ml-auto">
@@ -273,12 +273,12 @@
           <NuxtLink
             href="/dashboard?utm_source=site&utm_medium=direct&utm_campaign=footer"
             class="hover:underline"
-            >Add your server</NuxtLink
+            >Add a server</NuxtLink
           >
           <NuxtLink
-            href="/premium?utm_source=site&utm_medium=direct&utm_campaign=footer"
+            href="/pricing?utm_source=site&utm_medium=direct&utm_campaign=footer"
             class="hover:underline"
-            >Premium</NuxtLink
+            >Pricing</NuxtLink
           >
         </div>
         <div class="flex flex-col gap-2">

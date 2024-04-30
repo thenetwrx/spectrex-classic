@@ -8,25 +8,6 @@
 
         <DashboardMainStack>
           <DashboardCardContainer>
-            <DashboardCardHeader title="Premium" />
-            <DashboardCardContent>
-              <p class="opacity-75" v-if="lucia?.user.premium_since !== null">
-                Thanks for being a Spectrex Supporter. You have
-                <span class="font-bold">exclusive benefits</span>!
-              </p>
-              <p class="opacity-75" v-else>
-                Not found. You're missing out on
-                <span class="font-bold">exclusive benefits</span>!
-              </p>
-            </DashboardCardContent>
-            <DashboardCardLink
-              link="/premium"
-              message="Buy Now"
-              :disabled="lucia?.user.premium_since !== null"
-            />
-          </DashboardCardContainer>
-
-          <DashboardCardContainer>
             <DashboardCardHeader title="Email Preferences" />
             <DashboardCardContent>
               <div class="form-control">

@@ -67,7 +67,7 @@ export const servers_table = pgTable("servers", {
   public: boolean("public").notNull().default(false),
   category: text("category"),
   updated_at: bigint("updated_at", { mode: "number" }).notNull(),
-  invite_uses: text("invite_uses").array().notNull().default([]),
+  invite_uses: text("invite_uses").array().default([]),
 });
 
 export const server_reports_table = pgTable("server_reports", {

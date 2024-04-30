@@ -50,7 +50,7 @@
 
         <ResourceCardContent>
           <div>
-            <p class="text-2xl pb-2">Description</p>
+            <p class="text-2xl pb-2">About me</p>
 
             <p class="break-words whitespace-pre-wrap opacity-75">
               {{ profile.result.description || "No description provided" }}
