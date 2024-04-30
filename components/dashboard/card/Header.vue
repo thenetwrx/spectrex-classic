@@ -1,9 +1,9 @@
 <template>
   <div class="bg-base-200 w-full pt-4 px-6 flex flex-col">
-    <p class="text-[22px] py-2">
+    <h2 class="text-[22px] py-2">
       {{ title }}<span class="text-error" v-if="required">* </span>
       <span class="text-sm opacity-75" v-if="message">{{ message }}</span>
-    </p>
+    </h2>
   </div>
 </template>
 

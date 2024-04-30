@@ -4,10 +4,10 @@
       <h1 class="text-5xl">
         Find <span class="font-bold underline">your</span> Discord server
       </h1>
-      <p class="py-2 text-xl max-w-2xl mx-auto opacity-80">
+      <h2 class="py-2 text-xl max-w-2xl mx-auto opacity-80">
         Explore a universe of niche communities, passionate gamers, and
         limitless options. Discover the perfect fit with our tailored listings.
-      </p>
+      </h2>
 
       <!-- <div
         class="flex flex-wrap gap-2 w-fit max-sm:max-w-fit mx-auto overflow-x-auto py-2"
@@ -25,7 +25,7 @@
         <i class="fa-solid fa-up-left"></i> select a category
       </p> -->
 
-      <div class="flex flex-row gap-2 mx-auto py-12">
+      <div class="flex flex-row gap-2 mx-auto pt-12 pb-24">
         <NuxtLink class="btn btn-primary btn-sm rounded-badge" href="/explore">
           Find a server
         </NuxtLink>
@@ -38,9 +38,13 @@
       </div>
     </div>
 
-    <div class="py-24 my-8">
+    <NuxtLink href="#why">
+      <i class="fa-solid fa-arrow-down fa-xl opacity-50"></i>
+    </NuxtLink>
+
+    <div class="py-24" id="why">
       <div class="max-w-6xl mx-auto flex flex-col">
-        <p class="text-3xl">Why choose Spectrex?</p>
+        <h3 class="text-3xl">Why choose us?</h3>
 
         <ol
           class="grid grid-cols-1 gap-y-10 lg:grid-cols-3 sm:grid-cols-2 lg:text-center py-12"
@@ -49,7 +53,14 @@
             <div
               class="relative bg-base-200 border border-secondary h-48 overflow-hidden rounded-2xl shadow-lg sm:h-60 lg:h-40 mb-10 flex flex-col"
             >
-              <i class="fa-solid fa-credit-card fa-2xl m-auto"></i>
+              <div class="relative m-auto">
+                <i
+                  class="fa-solid fa-ban fa-2xl absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10"
+                ></i>
+                <i
+                  class="fa-solid fa-dollar-sign absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                ></i>
+              </div>
             </div>
             <div>
               <p class="text-2xl">Free</p>
@@ -87,7 +98,11 @@
         </ol>
       </div>
 
-      <div class="py-24 my-8">
+      <NuxtLink href="#faq">
+        <i class="fa-solid fa-arrow-down fa-xl pt-16 opacity-50"></i>
+      </NuxtLink>
+
+      <div class="py-24" id="faq">
         <div class="max-w-6xl mx-auto flex flex-col">
           <p class="text-3xl">Frequently asked questions</p>
 

@@ -312,6 +312,9 @@
 
   const go_to_page = async (num: number) => {
     page.value = num;
+    if (process.client) {
+      window.scrollTo(0, 0);
+    }
   };
 
   const page = ref<number>(0);
@@ -327,14 +330,4 @@
     query: { page, category, language, sort, limit: max_per_page },
     retry: false,
   });
-
-  watch(
-    servers,
-    () => {
-      if (process.client) {
-        window.scrollTo(0, 0);
-      }
-    },
-    { immediate: true }
-  );
 </script>

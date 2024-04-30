@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col gap-1 w-full md:max-w-xs max-md:pb-8">
+  <div class="flex flex-col gap-1 w-full md:max-w-[16rem] max-md:pb-6">
     <NuxtLink
       class="transition-all duration-[150] rounded-md p-2"
       :class="

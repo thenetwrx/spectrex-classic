@@ -73,6 +73,17 @@
     font-weight: 400;
     font-style: normal;
   }
+
+  .sidebar-enter-active,
+  .sidebar-leave-active {
+    transition: all 0.3s ease-in-out;
+  }
+
+  .sidebar-enter-from,
+  .sidebar-leave-to {
+    transform: translateX(-20px);
+    opacity: 0;
+  }
 </style>
 
 <template>
@@ -90,6 +101,7 @@
   </ClientOnly>
   <div class="container-fluid min-h-screen flex flex-col">
     <!-- Mobile Sidebar -->
+
     <div class="md:hidden fixed top-0 left-4 z-[9999]">
       <button
         v-on:click="isMobileSidebarOpen = !isMobileSidebarOpen"
@@ -97,68 +109,83 @@
       >
         <i class="fas fa-bars"></i>
       </button>
-      <div
-        v-show="isMobileSidebarOpen"
-        v-on:click="isMobileSidebarOpen = false"
-        class="fixed inset-0 bg-black bg-opacity-50 z-[9999]"
-      ></div>
-      <div
-        v-show="isMobileSidebarOpen"
-        class="fixed inset-y-0 left-0 bg-base-200 w-64 z-[9999] flex flex-col justify-between animate-once animate-duration-300 animate-fade-right animate-ease-in-out"
-      >
-        <div class="flex flex-col gap-3 p-2">
-          <!-- Logo and Navigation Links -->
-          <NuxtLink
-            href="/"
-            class="flex flex-row items-center gap-1 h-fit text-xl py-3"
-          >
-            <img src="/images/logo.png" class="h-12" />
-          </NuxtLink>
-          <NuxtLink href="/explore" class="p-2 bg-secondary rounded-md">
-            <span>Explore</span>
-          </NuxtLink>
-          <NuxtLink
-            href="/legal/guidelines"
-            class="p-2 bg-secondary rounded-md"
-          >
-            <span>Guidelines</span>
-          </NuxtLink>
-          <NuxtLink href="/premium" class="p-2 bg-secondary rounded-md">
-            <span>Premium</span>
-          </NuxtLink>
-        </div>
-        <div class="flex flex-col items-start gap-2 p-4 w-full">
-          <div
-            class="join flex flex-row w-full items-center gap-1"
-            v-if="lucia?.user"
-          >
+      <Transition name="sidebar">
+        <div
+          v-if="isMobileSidebarOpen"
+          v-on:click="isMobileSidebarOpen = false"
+          class="fixed inset-0 bg-black bg-opacity-50 z-[9999]"
+        ></div>
+      </Transition>
+      <Transition name="sidebar">
+        <div
+          v-if="isMobileSidebarOpen"
+          class="fixed inset-y-0 left-0 bg-base-200 w-64 z-[9999] flex flex-col justify-between"
+        >
+          <div class="flex flex-col gap-3 p-2">
+            <!-- Logo and Navigation Links -->
             <NuxtLink
-              href="/dashboard"
-              data-theme="dark"
-              class="btn btn-secondary btn-sm flex-grow join-item"
+              href="/"
+              v-on:click="isMobileSidebarOpen = false"
+              class="flex flex-row items-center gap-1 h-fit text-xl py-3"
             >
-              <span>Dashboard</span>
+              <img src="/images/logo.png" class="h-12" />
             </NuxtLink>
-            <button
-              v-on:click="logout"
-              class="btn btn-secondary btn-sm join-item"
-              data-theme="dark"
+            <NuxtLink
+              href="/explore"
+              v-on:click="isMobileSidebarOpen = false"
+              class="p-2 bg-secondary rounded-md"
             >
-              <i class="fa-solid fa-arrow-right-from-bracket"></i>
-            </button>
+              <span>Explore</span>
+            </NuxtLink>
+            <NuxtLink
+              href="/legal/guidelines"
+              v-on:click="isMobileSidebarOpen = false"
+              class="p-2 bg-secondary rounded-md"
+            >
+              <span>Guidelines</span>
+            </NuxtLink>
+            <NuxtLink
+              href="/premium"
+              v-on:click="isMobileSidebarOpen = false"
+              class="p-2 bg-secondary rounded-md"
+            >
+              <span>Premium</span>
+            </NuxtLink>
           </div>
+          <div class="flex flex-col items-start gap-2 p-4 w-full">
+            <div
+              class="join flex flex-row w-full items-center gap-1"
+              v-if="lucia?.user"
+            >
+              <NuxtLink
+                href="/dashboard"
+                v-on:click="isMobileSidebarOpen = false"
+                data-theme="dark"
+                class="btn btn-secondary btn-sm flex-grow join-item"
+              >
+                <span>Dashboard</span>
+              </NuxtLink>
+              <button
+                v-on:click="logout"
+                class="btn btn-secondary btn-sm join-item"
+                data-theme="dark"
+              >
+                <i class="fa-solid fa-arrow-right-from-bracket"></i>
+              </button>
+            </div>
 
-          <NuxtLink
-            v-else
-            href="/api/v1/auth/discord"
-            :external="true"
-            class="btn btn-sm btn-secondary w-full"
-          >
-            <i class="fa-brands fa-discord"></i>
-            Login
-          </NuxtLink>
+            <NuxtLink
+              v-else
+              href="/api/v1/auth/discord"
+              :external="true"
+              class="btn btn-sm btn-secondary w-full"
+            >
+              <i class="fa-brands fa-discord"></i>
+              Login
+            </NuxtLink>
+          </div>
         </div>
-      </div>
+      </Transition>
     </div>
 
     <!-- Desktop Navbar -->
@@ -224,6 +251,7 @@
     </div>
 
     <slot />
+
     <div
       class="mt-auto w-full flex flex-col gap-12 bg-base-200 p-24 max-md:p-10 border-t-2 border-y-[#2D2D2D]"
     >

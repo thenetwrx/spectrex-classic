@@ -1,10 +1,12 @@
 <template>
   <div class="flex items-center justify-between mb-8">
-    <div class="flex flex-row items-center gap-2">
+    <div
+      class="flex flex-row items-center gap-2 max-md:flex-col max-md:items-start"
+    >
       <UserAvatar :resource="lucia?.user" />
       <div>
         <h2 class="text-lg">
-          Welcome back,
+          Hey there,
           <span
             :class="lucia?.user?.premium_since !== null ? 'text-[#ffbf28]' : ''"
           >
