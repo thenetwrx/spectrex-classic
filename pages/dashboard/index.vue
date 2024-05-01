@@ -89,7 +89,7 @@
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
-      <p class="opacity-75 py-2">
+      <p class="opacity-75 text-sm py-2">
         Not seeing a server? Your Discord account has to be the owner of it
         before you can add it.
       </p>
