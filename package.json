@@ -8,7 +8,7 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "deploy": "git fetch origin && git reset --hard origin/master && pnpm install && pnpm run build && pm2 reload ecosystem.config.cjs --env production"
+    "deploy": "git fetch origin && git reset --hard origin/master && pnpm install && pnpm run build && pm2 reload ecosystem.config.cjs"
   },
   "dependencies": {
     "@lucia-auth/adapter-drizzle": "^1.0.7",
