@@ -1,7 +1,7 @@
 module.exports = {
   apps: [
     {
-      name: "spectrex-site",
+      name: "spectrex",
       port: "3000",
       exec_mode: "cluster",
       instances: "max",
