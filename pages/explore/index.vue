@@ -110,7 +110,7 @@
             tabindex="0"
             class="dropdown-content z-[1] menu p-2 shadow bg-base-200 border border-secondary rounded-md w-48"
           >
-            <li v-on:click="handleQuery('sort', 'bumped_at')">
+            <li v-on:click="handleQuery('sort', undefined)">
               <span>
                 <i class="fa-solid fa-check" v-if="sort === 'bumped_at'"></i>
                 Bumped Recently

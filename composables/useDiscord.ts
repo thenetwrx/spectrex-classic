@@ -12,11 +12,11 @@ export default () => {
   };
 
   const bot = () => {
-    return `${oauth_base_url}/authorize?scope=bot+applications.commands&permissions=277025736769&client_id=1216792581577506826`;
+    return `${oauth_base_url}/authorize?client_id=1216792581577506826`;
   };
 
   const bot_to_server = (server_id: string) => {
-    return `${oauth_base_url}/authorize?scope=bot+applications.commands&permissions=277025736769&client_id=1216792581577506826&guild_id=${server_id}&disable_guild_select=true`;
+    return `${oauth_base_url}/authorize?client_id=1216792581577506826&guild_id=${server_id}&disable_guild_select=true`;
   };
 
   return {
