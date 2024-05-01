@@ -80,20 +80,22 @@
             <div
               class="alert bg-accent flex items-start flex-row max-md:flex-col bg-opacity-50 text-opacity-75 rounded-md"
             >
-              <span class="max-w-lg" v-if="server.result.invite_uses !== null">
+              <p class="max-w-lg">
                 <i class="fa-solid fa-circle-info px-2"></i>
-                {{ server.result.invite_uses.length }} people have used your
-                invite!</span
-              >
-              <span class="max-w-lg" v-else>
-                <i class="fa-solid fa-circle-info px-2"></i>
-                Want analytics on your invite's usage? Check out our
-                <NuxtLink
-                  href="/pricing?utm_source=dashboard&utm_medium=direct&utm_campaign=analytics"
-                  class="underline"
-                  >Pricing</NuxtLink
-                >!
-              </span>
+                <span v-if="server.result.invite_uses !== null">
+                  {{ server.result.invite_uses.length }} people have used your
+                  invite!</span
+                >
+                <span v-else>
+                  <i class="fa-solid fa-circle-info px-2"></i>
+                  Want analytics on your invite's usage? Check out our
+                  <NuxtLink
+                    href="/pricing?utm_source=dashboard&utm_medium=direct&utm_campaign=analytics"
+                    class="underline"
+                    >Pricing</NuxtLink
+                  >!
+                </span>
+              </p>
             </div>
 
             <DashboardCardContainer>

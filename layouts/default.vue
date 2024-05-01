@@ -178,6 +178,7 @@
               v-else
               href="/api/v1/auth/discord"
               :external="true"
+              :prefetch="false"
               class="btn btn-sm btn-secondary w-full"
             >
               <i class="fa-brands fa-discord"></i>
@@ -241,6 +242,7 @@
             v-else
             href="/api/v1/auth/discord"
             :external="true"
+            :prefetch="false"
             class="btn btn-sm btn-secondary px-4"
           >
             <i class="fa-brands fa-discord"></i>

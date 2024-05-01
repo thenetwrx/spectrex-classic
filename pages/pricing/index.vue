@@ -13,9 +13,9 @@
         <button
           onclick="modal.showModal()"
           class="btn btn-primary rounded-badge w-full mt-4 mb-6"
-          :class="lucia"
+          :class="lucia?.user.premium_since === null ? '' : 'btn-disabled'"
         >
-          Get Pro
+          {{ lucia?.user.premium_since === null ? "Get Pro" : "Purchased" }}
         </button>
 
         <div class="flex flex-col gap-1">
@@ -73,35 +73,37 @@
 
     <table class="w-full text-left max-sm:hidden">
       <thead>
-        <th></th>
-        <th
-          class="bg-base-200 h-fit p-6 border-t border-x border-secondary w-1/3 font-normal"
-        >
-          <h3 class="text-xl">Pro</h3>
-          <h2 class="font-bold text-2xl pt-2">$7.99 once</h2>
-          <p class="opacity-50">One time purchase</p>
-
-          <button
-            onclick="modal.showModal()"
-            class="btn btn-primary rounded-badge w-full mt-4"
-            :class="lucia?.user.premium_since !== null ? 'btn-disabled' : ''"
+        <tr>
+          <th class="bg-transparent"></th>
+          <th
+            class="bg-base-200 h-fit p-6 border-t border-x border-secondary w-1/3 font-normal"
           >
-            {{ lucia?.user.premium_since !== null ? "Purchased" : "Get Pro" }}
-          </button>
-        </th>
-        <th
-          class="bg-base-200 h-fit p-4 border-t border-x border-secondary w-1/3 font-normal"
-        >
-          <h3 class="text-xl">Free</h3>
-          <h2 class="font-bold text-2xl pt-2">No cost</h2>
-          <p class="opacity-50">Always free</p>
+            <h3 class="text-xl">Pro</h3>
+            <h2 class="font-bold text-2xl pt-2">$7.99 once</h2>
+            <p class="opacity-50">One time purchase</p>
 
-          <button
-            class="btn btn-primary btn-disabled rounded-badge w-full mt-4"
+            <button
+              onclick="modal.showModal()"
+              class="btn btn-primary rounded-badge w-full mt-4"
+              :class="lucia?.user.premium_since === null ? '' : 'btn-disabled'"
+            >
+              {{ lucia?.user.premium_since === null ? "Get Pro" : "Purchased" }}
+            </button>
+          </th>
+          <th
+            class="bg-base-200 h-fit p-4 border-t border-x border-secondary w-1/3 font-normal"
           >
-            Get Free
-          </button>
-        </th>
+            <h3 class="text-xl">Free</h3>
+            <h2 class="font-bold text-2xl pt-2">No cost</h2>
+            <p class="opacity-50">Always free</p>
+
+            <button
+              class="btn btn-primary btn-disabled rounded-badge w-full mt-4"
+            >
+              Get Free
+            </button>
+          </th>
+        </tr>
       </thead>
       <tbody>
         <!-- First row -->
