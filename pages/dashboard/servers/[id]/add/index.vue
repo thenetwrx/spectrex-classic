@@ -4,7 +4,7 @@
     <DashboardMainContainer>
       <DashboardMainSidebar active="servers" />
       <DashboardMainContent>
-        <DashboardMainContentHeader title="Manage Server">
+        <DashboardMainContentHeader title="Add Server">
           <DashboardMainContentHeaderButtons>
             <NuxtLink class="btn btn-ghost btn-sm" href="/dashboard">
               Nevermind
@@ -12,13 +12,6 @@
             </NuxtLink>
           </DashboardMainContentHeaderButtons>
         </DashboardMainContentHeader>
-
-        <p class="opacity-75 pb-6">
-          Submitting a Discord server to Spectrex means you agree to the
-          <NuxtLink href="/legal/guidelines" class="text-accent hover:underline"
-            >Guidelines</NuxtLink
-          >.
-        </p>
 
         <ResourcePending v-if="server_pending" />
         <ResourceNotFound
@@ -30,6 +23,11 @@
           message="Unauthorized"
         />
         <template v-else>
+          <p class="opacity-75 pb-6">
+            {{ server.result.name }} with
+            {{ server.result.approximate_member_count }} members
+          </p>
+
           <DashboardMainStack>
             <DashboardCardContainer>
               <DashboardCardHeader title="Language" :required="true" />

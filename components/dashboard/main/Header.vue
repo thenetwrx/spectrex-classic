@@ -17,7 +17,7 @@
             }}
           </span>
         </h2>
-        <p class="opacity-30">
+        <p class="opacity-40">
           You logged in on
           <NuxtTime
             v-if="lucia?.session?.created_at"
