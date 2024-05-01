@@ -85,7 +85,6 @@
                   invite!</span
                 >
                 <span v-else>
-                  <i class="fa-solid fa-circle-info px-2"></i>
                   Want analytics on your invite's usage? Check out our
                   <NuxtLink
                     href="/pricing?utm_source=dashboard&utm_medium=direct&utm_campaign=analytics"
