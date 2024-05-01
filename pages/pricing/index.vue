@@ -1,8 +1,8 @@
 <template>
   <Container class="max-w-5xl">
-    <h1 class="text-center text-4xl font-bold pb-20">Pricing</h1>
+    <h1 class="text-center text-4xl font-bold mb-20">Pricing</h1>
 
-    <div class="flex flex-col gap-6 sm:hidden pb-20">
+    <div class="flex flex-col gap-6 sm:hidden mb-20">
       <div
         class="bg-base-200 h-fit p-6 border border-secondary w-full font-normal"
       >
@@ -71,7 +71,7 @@
       </div>
     </div>
 
-    <table class="w-full text-left max-sm:hidden">
+    <table class="w-full text-left max-sm:hidden mb-20">
       <thead>
         <tr>
           <th class="bg-transparent"></th>
