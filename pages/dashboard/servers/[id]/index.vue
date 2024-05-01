@@ -25,9 +25,7 @@
                         new Date(),
                         new Date(
                           server?.result?.bumped_at! +
-                            (lucia?.user.premium_since !== null
-                              ? 3600000
-                              : 7200000)
+                            (lucia?.user.premium_since ? 3600000 : 7200000)
                         )
                       )
                     }}

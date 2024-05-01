@@ -49,7 +49,6 @@
               <div>
                 <i class="fa-solid fa-arrow-up-right-from-square ml-auto"></i>
               </div>
-              <!-- Server Details -->
             </div>
           </NuxtLink>
           <div

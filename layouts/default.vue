@@ -100,8 +100,6 @@
     />
   </ClientOnly>
   <div class="container-fluid min-h-screen flex flex-col">
-    <!-- Mobile Sidebar -->
-
     <div class="md:hidden fixed top-0 left-4 z-[9999]">
       <button
         v-on:click="isMobileSidebarOpen = !isMobileSidebarOpen"
@@ -122,7 +120,6 @@
           class="fixed inset-y-0 left-0 bg-base-200 w-64 z-[9999] flex flex-col justify-between"
         >
           <div class="flex flex-col gap-3 p-2">
-            <!-- Logo and Navigation Links -->
             <NuxtLink
               href="/"
               v-on:click="isMobileSidebarOpen = false"
@@ -189,7 +186,6 @@
       </Transition>
     </div>
 
-    <!-- Desktop Navbar -->
     <div
       class="hidden md:block w-full p-0 fixed top-0 z-[9999] animate-once animate-fade-down animate-ease-in-out border-b-2 border-y-[#2D2D2D]"
     >
@@ -221,7 +217,6 @@
           <div class="dropdown dropdown-end" v-if="lucia?.user">
             <div tabindex="0" class="btn btn-ghost avatar">
               <UserAvatar :resource="lucia.user" class="w-8 h-8" />
-              <!-- <span>{{ lucia.user.username }}</span> -->
               <i class="fa-solid fa-caret-down"></i>
             </div>
             <ul

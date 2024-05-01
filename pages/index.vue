@@ -30,22 +30,6 @@
           </div>
         </div>
       </div>
-
-      <!-- <div
-        class="flex flex-wrap gap-2 w-fit max-sm:max-w-fit mx-auto overflow-x-auto py-2"
-      >
-        <NuxtLink
-          v-for="category in categories"
-          :href="'/explore?category=' + category"
-          class="block max-w-fit px-2 py-1 bg-accent border-none bg-opacity-50 rounded-sm gap-2 hover:bg-opacity-65 hover:cursor-pointer transition-colors duration-200 ease-in-out text-white"
-        >
-          <span class="text-accent">/</span>
-          {{ category }}
-        </NuxtLink>
-      </div>
-      <p class="ml-auto opacity-75">
-        <i class="fa-solid fa-up-left"></i> select a category
-      </p> -->
     </div>
 
     <NuxtLink href="#why">

@@ -32,7 +32,6 @@
         />
         <div class="overflow-x-auto" v-else>
           <table class="table">
-            <!-- head -->
             <thead>
               <tr>
                 <th>Name</th>
@@ -41,7 +40,6 @@
               </tr>
             </thead>
             <tbody>
-              <!-- row 1 -->
               <tr v-for="server in servers.result">
                 <td class="w-52">
                   <NuxtLink :href="'/dashboard/admin/servers/' + server.id">

@@ -26,7 +26,6 @@
         <ResourceNotFound v-else-if="!users?.result" :message="users_error" />
         <div class="overflow-x-auto" v-else>
           <table class="table">
-            <!-- head -->
             <thead>
               <tr>
                 <th>Username</th>
@@ -36,7 +35,6 @@
               </tr>
             </thead>
             <tbody>
-              <!-- row 1 -->
               <tr v-for="user in users.result">
                 <td>
                   <NuxtLink :href="'/dashboard/admin/users/' + user.id">

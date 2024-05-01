@@ -87,7 +87,6 @@
                   </span>
                 </div>
 
-                <!-- Input field to add new tags -->
                 <input
                   type="text"
                   placeholder="Press enter or comma to create tag"

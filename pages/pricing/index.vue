@@ -13,9 +13,9 @@
         <button
           onclick="modal.showModal()"
           class="btn btn-primary rounded-badge w-full mt-4 mb-6"
-          :class="lucia?.user.premium_since === null ? '' : 'btn-disabled'"
+          :class="lucia?.user.premium_since ? 'btn-disabled' : ''"
         >
-          {{ lucia?.user.premium_since === null ? "Get Pro" : "Purchased" }}
+          {{ lucia?.user.premium_since ? "Purchased" : "Get Pro" }}
         </button>
 
         <div class="flex flex-col gap-1">
@@ -85,9 +85,9 @@
             <button
               onclick="modal.showModal()"
               class="btn btn-primary rounded-badge w-full mt-4"
-              :class="lucia?.user.premium_since === null ? '' : 'btn-disabled'"
+              :class="lucia?.user.premium_since ? 'btn-disabled' : ''"
             >
-              {{ lucia?.user.premium_since === null ? "Get Pro" : "Purchased" }}
+              {{ lucia?.user.premium_since ? "Purchased" : "Get Pro" }}
             </button>
           </th>
           <th
@@ -106,7 +106,6 @@
         </tr>
       </thead>
       <tbody>
-        <!-- First row -->
         <tr class="border-b border-secondary">
           <th
             scope="row"

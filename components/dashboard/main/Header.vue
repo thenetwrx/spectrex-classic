@@ -7,12 +7,10 @@
       <div>
         <h2 class="text-lg">
           Hey there,
-          <span
-            :class="lucia?.user?.premium_since !== null ? 'text-[#ffbf28]' : ''"
-          >
+          <span :class="lucia?.user.premium_since ? 'text-[#ffbf28]' : ''">
             <i
               class="fa-solid fa-crown"
-              v-if="lucia?.user?.premium_since !== null ? true : false"
+              v-if="lucia?.user.premium_since ? true : false"
             ></i>
             {{
               lucia?.user?.display_name || lucia?.user?.username || "Unknown"
