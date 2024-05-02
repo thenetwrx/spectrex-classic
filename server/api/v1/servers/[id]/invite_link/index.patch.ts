@@ -24,7 +24,7 @@ export default defineEventHandler(async (event) => {
   }
   if (body.invite_link.length >= 128) {
     setResponseStatus(event, 400);
-    return { message: "Invite link has too many characters (max of 128)" };
+    return { message: "Invite link is too long (max of 128 characters)" };
   }
 
   // 2. Require being logged in

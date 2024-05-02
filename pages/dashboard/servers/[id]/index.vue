@@ -259,7 +259,7 @@
 
                 <input
                   type="text"
-                  placeholder="Press enter or comma to create tag"
+                  placeholder="Press enter, comma or space to create a tag with given input"
                   class="input input-bordered rounded-none w-full"
                   v-on:keydown="checkForComma($event)"
                   v-model="new_tag"
@@ -570,7 +570,7 @@
 
       if (new_tag.value.trim().length > 16)
         return useNuxtApp().$toast.error(
-          "Tag has too many characters (max of 16)"
+          "Tag is too long (max of 16 characters)"
         );
 
       tags.value = [...tags.value, new_tag.value.trim().toLowerCase()];

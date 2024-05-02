@@ -35,7 +35,7 @@ export default defineEventHandler(async (event) => {
     }
     if (body.tags[i].length > 16) {
       setResponseStatus(event, 400);
-      return { message: `Tag #${i + 1} has too many characters (max of 16)` };
+      return { message: `Tag #${i + 1} is too long (max of 16 characters)` };
     }
   }
   if (!body.description?.length) {
@@ -76,12 +76,12 @@ export default defineEventHandler(async (event) => {
   if (body.description.length <= 128) {
     setResponseStatus(event, 400);
     return {
-      message: "Description does not have enough characters (minimum of 128)",
+      message: "Description is too short (minimum of 128 characters)",
     };
   }
   if (body.description.length >= 512) {
     setResponseStatus(event, 400);
-    return { message: "Description has too many characters (max of 512)" };
+    return { message: "Description is too long (max of 512 characters)" };
   }
 
   if (
@@ -96,7 +96,7 @@ export default defineEventHandler(async (event) => {
   }
   if (body.invite_link.length >= 128) {
     setResponseStatus(event, 400);
-    return { message: "Invite link has too many characters (max of 128)" };
+    return { message: "Invite link is too long (max of 128 characters)" };
   }
 
   // 2. Require being logged in

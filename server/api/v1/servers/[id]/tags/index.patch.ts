@@ -29,7 +29,7 @@ export default defineEventHandler(async (event) => {
     }
     if (body.tags[i].length > 16) {
       setResponseStatus(event, 400);
-      return { message: `Tag #${i + 1} has too many characters (max of 16)` };
+      return { message: `Tag #${i + 1} is too long (max of 16 characters)` };
     }
   }
 

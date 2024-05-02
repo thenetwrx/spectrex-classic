@@ -26,13 +26,13 @@ export default defineEventHandler(async (event) => {
   if (body.description.length <= 16) {
     setResponseStatus(event, 400);
     return {
-      message: "Description does not have enough characters (minimum of 16)",
+      message: "Description is too short (minimum of 16 characters)",
     };
   }
 
   if (body.description.length >= 128) {
     setResponseStatus(event, 400);
-    return { message: "Description has too many characters (max of 128)" };
+    return { message: "Description is too long (max of 128 characters)" };
   }
 
   // 2. Require being logged in
