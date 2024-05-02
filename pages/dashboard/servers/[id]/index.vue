@@ -141,12 +141,12 @@
                   class="select select-bordered rounded-none w-full"
                 >
                   <option disabled selected value="">Select language</option>
-                  <option
-                    v-for="_language in permitted_languages"
-                    :value="_language"
-                  >
-                    {{ _language }}
-                  </option>
+                  <option value="unspecified">Unspecified</option>
+                  <option value="en">English</option>
+                  <option value="es">Español</option>
+                  <option value="it">Italiano</option>
+                  <option value="ja">日本語</option>
+                  <option value="ru">русский</option>
                 </select>
               </DashboardCardContent>
               <DashboardCardSave
@@ -315,10 +315,7 @@
 
 <script setup lang="ts">
   import { formatDistance } from "date-fns";
-  import {
-    permitted_languages,
-    permitted_categories,
-  } from "~/server/utils/permit";
+  import { permitted_categories } from "~/server/utils/permit";
 
   definePageMeta({
     middleware: ["1-protected"],
