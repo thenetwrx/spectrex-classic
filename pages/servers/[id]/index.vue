@@ -117,7 +117,6 @@
   import useClipboard from "~/composables/useClipboard";
 
   const lucia = useLucia();
-  const discord = useDiscord();
   const route = useRoute();
   const server_id = route.params.id;
 
@@ -139,5 +138,6 @@
   const copy_current_url = async () => {
     const { toClipboard } = useClipboard();
     toClipboard(window.location.href);
+    useNuxtApp().$toast.success("Copied to clipboard");
   };
 </script>

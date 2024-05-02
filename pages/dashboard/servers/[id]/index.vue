@@ -481,7 +481,7 @@
 
     if (response.ok) {
       await refresh_server();
-      useNuxtApp().$toast.info("Your server has been synced with Discord");
+      useNuxtApp().$toast.success("Your server has been synced with Discord");
     } else {
       const json = await response.json();
       useNuxtApp().$toast.error(json.message);
@@ -507,7 +507,7 @@
 
     if (response.ok) {
       await refresh_server();
-      useNuxtApp().$toast.info("Your changes have been saved");
+      useNuxtApp().$toast.success("Your changes have been saved");
     } else {
       const json = await response.json();
       useNuxtApp().$toast.error(json.message);
@@ -553,7 +553,7 @@
 
       if (response.ok) {
         await refresh_server();
-        useNuxtApp().$toast.info("Your server has been bumped");
+        useNuxtApp().$toast.success("Your server has been bumped");
       } else {
         const json = await response.json();
         useNuxtApp().$toast.error(json.message);

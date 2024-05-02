@@ -163,7 +163,7 @@
 
     if (response.ok) {
       await refresh_servers();
-      useNuxtApp().$toast.info("Your servers have been synced with Discord");
+      useNuxtApp().$toast.success("Your servers have been synced with Discord");
     } else {
       const json = await response.json();
       useNuxtApp().$toast.error(json.message);

@@ -116,7 +116,7 @@
     }
 
     if (response.ok) {
-      useNuxtApp().$toast.info("Your profile has been synced with Discord");
+      useNuxtApp().$toast.success("Your profile has been synced with Discord");
       const data: any = await useRequestFetch()("/api/v1/auth/information");
       if (data) {
         lucia.value = data;
@@ -145,7 +145,7 @@
     }
 
     if (response.ok) {
-      useNuxtApp().$toast.info("Your changes have been saved");
+      useNuxtApp().$toast.success("Your changes have been saved");
       const data: any = await useRequestFetch()("/api/v1/auth/information");
       if (data) {
         lucia.value = data;

@@ -121,7 +121,7 @@
 
     if (response.ok) {
       await refresh_server();
-      useNuxtApp().$toast.info("Accepted server");
+      useNuxtApp().$toast.success("Accepted server");
     } else {
       const json = await response.json();
       useNuxtApp().$toast.error(json.message);
@@ -143,7 +143,7 @@
 
     if (response.ok) {
       await refresh_server();
-      useNuxtApp().$toast.info("Rejected server");
+      useNuxtApp().$toast.success("Rejected server");
     } else {
       const json = await response.json();
       useNuxtApp().$toast.error(json.message);
@@ -165,7 +165,7 @@
 
     if (response.ok) {
       await refresh_server();
-      useNuxtApp().$toast.info("Banned server");
+      useNuxtApp().$toast.success("Banned server");
     } else {
       const json = await response.json();
       useNuxtApp().$toast.error(json.message);
