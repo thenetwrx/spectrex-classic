@@ -120,7 +120,7 @@
             >
               <p>
                 <i class="fa-solid fa-triangle-exclamation px-2"></i>
-                Your server has been put up for review. Please check back later!
+                Your server is pending approval. Please check back later!
               </p>
             </div>
             <div
