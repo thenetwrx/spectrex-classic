@@ -40,7 +40,6 @@
                 "
               >
                 <span class="opacity-75">
-                  <i class="fa-solid fa-layer-group fa-xs"></i>
                   {{ server.result.category }}
                 </span>
               </div>

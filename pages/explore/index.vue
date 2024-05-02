@@ -13,7 +13,7 @@
         "
       >
         <span :class="category === 'everything' ? 'text-white' : 'text-accent'">
-          <i class="fa-solid fa-layer-group"></i>
+          /
         </span>
         Everything
       </button>
@@ -28,7 +28,7 @@
         "
       >
         <span :class="category === _category ? 'text-white' : 'text-accent'">
-          <i class="fa-solid fa-layer-group"></i>
+          /
         </span>
         {{ _category }}
       </button>
@@ -155,7 +155,6 @@
               <div class="flex flex-wrap gap-1 items-center">
                 <div class="bg-accent bg-opacity-50 px-1 rounded-md">
                   <span class="opacity-75">
-                    <i class="fa-solid fa-layer-group fa-xs"></i>
                     {{ server.category }}
                   </span>
                 </div>
