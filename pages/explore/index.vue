@@ -213,7 +213,7 @@
                 class="absolute inset-x-0 bottom-0 h-16"
                 :class="
                   server.expanded
-                    ? ''
+                    ? 'hidden'
                     : 'bg-gradient-to-b from-transparent to-[var(--fallback-b3,oklch(var(--b3)/var(--tw-bg-opacity)))]'
                 "
               ></div>

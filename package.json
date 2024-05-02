@@ -13,6 +13,7 @@
   "dependencies": {
     "@lucia-auth/adapter-drizzle": "^1.0.7",
     "arctic": "^1.5.0",
+    "bad-words": "^3.0.4",
     "clipboard": "^2.0.11",
     "cryptr": "^6.3.0",
     "date-fns": "^3.6.0",
@@ -28,6 +29,7 @@
   "devDependencies": {
     "@nuxt/image": "^1.4.0",
     "@nuxtjs/tailwindcss": "^6.11.4",
+    "@types/bad-words": "^3.0.3",
     "@types/node": "^20.11.30",
     "@types/pg": "^8.11.4",
     "@types/statuses": "^2.0.5",

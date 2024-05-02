@@ -12,7 +12,21 @@ export default defineEventHandler(async (event) => {
     setResponseStatus(event, 400);
     return { message: "You already have too many tags (max of 5)" };
   }
-  for (let i = 0; i > body.tags.length; i++) {
+  for (let i = 0; i < body.tags.length; i++) {
+    if (contains_urls(body.tags[i])) {
+      setResponseStatus(event, 400);
+      return {
+        message: `Tag #${i + 1} contains a link, please review our guidelines`,
+      };
+    }
+    if (contains_profanity(body.tags[i])) {
+      setResponseStatus(event, 400);
+      return {
+        message: `Tag #${
+          i + 1
+        } contains profanity, please review our guidelines`,
+      };
+    }
     if (body.tags[i].length > 16) {
       setResponseStatus(event, 400);
       return { message: `Tag #${i + 1} has too many characters (max of 16)` };

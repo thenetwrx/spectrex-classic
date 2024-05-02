@@ -1,10 +1,5 @@
 import db from "~/server/utils/database";
 import { eq } from "drizzle-orm";
-import {
-  permitted_categories,
-  permitted_invite_links,
-  permitted_languages,
-} from "~/server/utils/permit";
 
 export default defineEventHandler(async (event) => {
   // Parameters
@@ -25,7 +20,19 @@ export default defineEventHandler(async (event) => {
     setResponseStatus(event, 400);
     return { message: "You already have too many tags (max of 5)" };
   }
-  for (let i = 0; i > body.tags.length; i++) {
+  for (let i = 0; i < body.tags.length; i++) {
+    if (contains_urls(body.tags[i])) {
+      setResponseStatus(event, 400);
+      return {
+        message: `Tag #${i + 1} has a link, please review our guidelines`,
+      };
+    }
+    if (contains_profanity(body.tags[i])) {
+      setResponseStatus(event, 400);
+      return {
+        message: `Tag #${i + 1} has profanity, please review our guidelines`,
+      };
+    }
     if (body.tags[i].length > 16) {
       setResponseStatus(event, 400);
       return { message: `Tag #${i + 1} has too many characters (max of 16)` };
@@ -54,13 +61,24 @@ export default defineEventHandler(async (event) => {
     return { message: "Invalid category selection" };
   }
 
+  if (contains_urls(body.description)) {
+    setResponseStatus(event, 400);
+    return {
+      message: "Description contains a link, please review our guidelines",
+    };
+  }
+  if (contains_profanity(body.description)) {
+    setResponseStatus(event, 400);
+    return {
+      message: "Description contains profanity, please review our guidelines",
+    };
+  }
   if (body.description.length <= 128) {
     setResponseStatus(event, 400);
     return {
       message: "Description does not have enough characters (minimum of 128)",
     };
   }
-
   if (body.description.length >= 512) {
     setResponseStatus(event, 400);
     return { message: "Description has too many characters (max of 512)" };

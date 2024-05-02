@@ -1,7 +1,6 @@
 import { eq } from "drizzle-orm";
 import { generateId } from "lucia";
 import db from "~/server/utils/database";
-import { permitted_issue_types } from "~/server/utils/permit";
 
 export default defineEventHandler(async (event) => {
   // Parameters

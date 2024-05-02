@@ -1,21 +1,21 @@
 <template>
   <Container class="max-w-4xl">
-    <h2 class="text-center text-3xl font-bold">Privacy Policy</h2>
+    <h1 class="text-center text-3xl font-bold">Privacy Policy</h1>
     <div class="text-center text-lg pt-4">
       <p>Effective: 4/28/2024</p>
       <p>Last updated: 4/21/2024</p>
     </div>
     <div class="text-start flex flex-col gap-2 py-10">
-      <p class="text-4xl">Introduction</p>
+      <h1 class="text-4xl">Introduction</h1>
       <p class="opacity-75">
         Your privacy is important to us. It is Spectrex's policy to respect your
         privacy regarding any information we may collect from you across our
         website (spetrex.app) and other sites we own and operate.
       </p>
 
-      <p class="text-3xl">1. Information we collect</p>
+      <h2 class="text-3xl">1. Information we collect</h2>
       <div>
-        <p><span>- </span> How we collect information</p>
+        <h3 class="text-xl"><span>- </span> How we collect information</h3>
         <p class="opacity-75">
           We collect information by fair and lawful means, with your knowledge
           and consent. We also let you know why we're collecting it and how it
@@ -25,7 +25,7 @@
         </p>
       </div>
 
-      <p class="text-3xl">2. Use of information</p>
+      <h2 class="text-3xl">2. Use of information</h2>
       <p class="opacity-75">
         We use a combination of identifying and non-identifying information to
         understand who our visitors are, how they use our services, and how we
@@ -48,7 +48,7 @@
         >.
       </p>
 
-      <p class="text-3xl">3. Data processing and storage</p>
+      <h2 class="text-3xl">3. Data processing and storage</h2>
       <p class="opacity-75">
         We only retain personal information for as long as necessary to provide
         a service, or to improve our services in future. While we retain this
@@ -59,7 +59,7 @@
         data security.
       </p>
 
-      <p class="text-3xl">4. Cookies</p>
+      <h2 class="text-3xl">4. Cookies</h2>
       <p class="opacity-75">
         We use “cookies” to save encrypted login information across our site. A
         cookie is a small piece of data that our website stores on your
@@ -73,7 +73,7 @@
         third-party services we use on our site.
       </p>
 
-      <p class="text-3xl">5. Children’s Privacy</p>
+      <h2 class="text-3xl">5. Children’s Privacy</h2>
       <p class="opacity-75">
         This website does not knowingly target or collect personal information
         from children. As a parent/guardian, please contact us if you believe
@@ -83,7 +83,7 @@
         marketing or promotional purposes.
       </p>
 
-      <p class="text-3xl">Limits of our policy</p>
+      <h2 class="text-3xl">Limits of our policy</h2>
       <p class="opacity-75">
         This privacy policy only covers Spectrex's own collecting and handling
         of data. We only work with partners, affiliates and third-party
@@ -95,7 +95,7 @@
         for their respective privacy practices.
       </p>
 
-      <p class="text-3xl">Changes to this policy</p>
+      <h2 class="text-3xl">Changes to this policy</h2>
       <p class="opacity-75">
         At our discretion, we may update this policy to reflect current
         acceptable practices. We will take reasonable steps to let users know
@@ -104,7 +104,7 @@
         around data and personal information.
       </p>
 
-      <p class="text-3xl">Your rights and responsibilities</p>
+      <h2 class="text-3xl">Your rights and responsibilities</h2>
       <p class="opacity-75">
         As our user, you have the right to be informed about how your data is
         collected and used. You are entitled to know what data we collect about

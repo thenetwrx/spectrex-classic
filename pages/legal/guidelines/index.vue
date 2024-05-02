@@ -1,73 +1,86 @@
 <template>
   <Container class="max-w-4xl">
-    <h2 class="text-center text-3xl font-bold">Guidelines</h2>
-    <p class="text-center text-lg">Last modified: 3/31/2024</p>
+    <h1 class="text-center text-3xl font-bold">Guidelines</h1>
+    <div class="text-center text-lg pt-4">
+      <p>Effective: 5/02/2024</p>
+      <p>Last updated: 5/02/2024</p>
+    </div>
     <div class="text-start flex flex-col gap-2 py-10">
-      <p class="text-4xl">Introduction</p>
+      <h1 class="text-4xl">Introduction</h1>
       <p class="opacity-75">
-        This document covers proper etiquette when you submit content to
+        This document outlines the expected etiquette when submitting content to
         Spectrex.
       </p>
 
-      <p class="text-3xl">1. Inappropriate content</p>
+      <h2 class="text-3xl">1. Inappropriate content</h2>
       <p class="opacity-75">
-        The inclusion of profanity, vulgar language, NSFW (Not Safe For Work) or
-        sexual content within the meta-information (such as title, description,
-        and image), reviews, or any other visible content on Spectrex is
-        strictly prohibited. Such content will be promptly removed from the
-        platform. However, users are encouraged to repost their content using
-        appropriate and respectful language.
+        The use of profanity, vulgar language, NSFW or sexually explicit content
+        is strictly prohibited. This prohibition extends to all visible areas of
+        your submissions, encompassing titles, descriptions, images, and
+        reviews. Content that violates this rule will be promptly removed.
+        However, you are welcome to resubmit your content with respectful
+        language. Additionally, it is important to note that no form of links
+        may be included unless expressly requested by Spectrex for an invite
+        link to your server.
       </p>
 
-      <p class="text-3xl">2. Governing laws</p>
+      <h2 class="text-3xl">2. Governing laws</h2>
       <p class="opacity-75">
-        You may not violate any laws or regulations in your country of residence
-        or promote the violation of them.
+        Abide by all laws and regulations in your country of residence. Do not
+        promote illegal activities.
       </p>
 
-      <p class="text-3xl">3. Discord Community Guidelines</p>
+      <h2 class="text-3xl">3. Discord Community Guidelines</h2>
       <p class="opacity-75">
-        Servers violating the
+        Servers that violate the
         <NuxtLink
           href="https://discord.com/guidelines"
           class="text-accent hover:underline"
         >
           Discord Community Guidelines
         </NuxtLink>
-        are not allowed.
+        are prohibited.
       </p>
 
-      <p class="text-3xl">4. Automation</p>
+      <h2 class="text-3xl">4. External links</h2>
       <p class="opacity-75">
-        The use of bots or other scripts to automatically do actions on Spectrex
-        such as bumping a server ("auto-bump") is not allowed. Bumping, creating
-        reviews and etc. must be done manually.
+        External links, including URLs leading to websites, Discord servers, or
+        any other online platform, are strictly forbidden in server listings on
+        Spectrex unless explicitly requested by Spectrex to provide the invite
+        link to the server being listed. If Spectrex requires the invite link to
+        the server you are listing, you are only permitted to submit the invite
+        link to that specific server and not to any other server.
       </p>
 
-      <p class="text-3xl">5. Spam</p>
+      <h2 class="text-3xl">5. Automation</h2>
+      <p class="opacity-75">
+        Bots or scripts that automate actions on Spectrex (such as auto-bumping)
+        are not allowed. All interactions must be done manually.
+      </p>
+
+      <h2 class="text-3xl">6. Spam</h2>
       <p class="opacity-75">
         You may not list servers which serve for the sole purpose of redirecting
-        or advertising other servers or have no content (To our discretion).
+        or advertising other servers or have no content.
       </p>
 
-      <p class="text-3xl">6. Rewarding users</p>
+      <h2 class="text-3xl">7. Rewarding users</h2>
       <p class="opacity-75">
-        You may not reward or force users to do actions on Spectrex. For
-        instance, you may not reward your users for posting a nice review on a
-        server or force them to bump a server.
+        Do not incentivize or force users to perform actions on Spectrex (e.g.,
+        offering rewards for positive reviews or requiring server bumps).
       </p>
 
-      <p class="text-3xl">7. Reviews</p>
+      <h2 class="text-3xl">8. Reviews</h2>
       <p class="opacity-75">
-        You may not use multiple Discord accounts to submit multiple reviews.
-        Only 1 review per person.
+        You may only submit one review per server. Using multiple accounts to
+        post additional reviews is prohibited.
       </p>
 
-      <p class="text-3xl">8. Sexual content</p>
+      <h2 class="text-3xl">9. Sexual content</h2>
       <p class="opacity-75">
-        All servers which are mainly based on NSFW (Not safe for work) or sexual
-        content must be marked as "NSFW" on Spectrex. This does not exclude
-        section 1.
+        Servers primarily focused on NSFW or sexually explicit content must be
+        clearly marked as "NSFW" on Spectrex. This does not override the rule
+        against inappropriate content.
       </p>
     </div>
   </Container>

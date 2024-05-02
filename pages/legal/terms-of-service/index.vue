@@ -1,12 +1,12 @@
 <template>
   <Container class="max-w-4xl">
-    <h2 class="text-center text-3xl font-bold">Terms of Service</h2>
+    <h1 class="text-center text-3xl font-bold">Terms of Service</h1>
     <div class="text-center text-lg pt-4">
       <p>Effective: 4/28/2024</p>
       <p>Last updated: 4/21/2024</p>
     </div>
     <div class="text-start flex flex-col gap-2 py-10">
-      <p class="text-4xl">Introduction</p>
+      <h1 class="text-4xl">Introduction</h1>
       <p class="opacity-75">
         These Terms of Service ("Terms") govern your access to and use of
         Spectrex's website (spectrex.app), products, and services ("Products").
@@ -21,9 +21,9 @@
         >.
       </p>
 
-      <p class="text-3xl">1. Using Spectrex</p>
+      <h2 class="text-3xl">1. Using Spectrex</h2>
       <div>
-        <p><span>- </span> Who can use Spectrex</p>
+        <h3 class="text-xl"><span>- </span> Who can use Spectrex</h3>
         <p class="opacity-75">
           You may use our Products only if you can form a binding contract with
           Spectrex, and only in compliance with these Terms and all applicable
@@ -41,7 +41,7 @@
         </p>
       </div>
       <div>
-        <p><span>- </span> Our license to you</p>
+        <h3 class="text-xl"><span>- </span> Our license to you</h3>
         <p class="opacity-75">
           Subject to these Terms and our policies (including our Community
           guidelines), we grant you a limited, non-exclusive, non-transferable,
@@ -49,7 +49,7 @@
         </p>
       </div>
       <div>
-        <p><span>- </span> Commercial use of Spectrex</p>
+        <h3 class="text-xl"><span>- </span> Commercial use of Spectrex</h3>
         <p class="opacity-75">
           Unless otherwise expressly authorized herein or by us, you agree not
           to display, modify, sell, resell, exploit, transfer or upload for any
@@ -57,9 +57,9 @@
         </p>
       </div>
 
-      <p class="text-3xl">2. Your content</p>
+      <h2 class="text-3xl">2. Your content</h2>
       <div>
-        <p><span>- </span> Posting content</p>
+        <h3 class="text-xl"><span>- </span> Posting content</h3>
         <p class="opacity-75">
           Spectrex allows you to submit your server, including it's icon, name,
           member counts and ID. Anything you submit or otherwise make available
@@ -76,7 +76,9 @@
         </p>
       </div>
       <div>
-        <p><span>- </span> How Spectrex and other users can use your content</p>
+        <h3 class="text-xl">
+          <span>- </span> How Spectrex and other users can use your content
+        </h3>
         <p class="opacity-75">
           You grant Spectrex and our users a non-exclusive, royalty-free,
           transferable, sublicensable, worldwide license to use, store, display,
@@ -92,7 +94,7 @@
         </p>
       </div>
       <div>
-        <p><span>- </span> How long we keep your content</p>
+        <h3 class="text-xl"><span>- </span> How long we keep your content</h3>
         <p class="opacity-75">
           Following termination or deactivation of your account, or if you
           remove any User Content from Spectrex, we may retain your User Content
@@ -104,7 +106,7 @@
         </p>
       </div>
       <div>
-        <p><span>- </span> Feedback you provide</p>
+        <h3 class="text-xl"><span>- </span> Feedback you provide</h3>
         <p class="opacity-75">
           We value hearing from our users, and are always interested in learning
           about ways we can make Spectrex more awesome. If you choose to submit
@@ -116,7 +118,7 @@
         </p>
       </div>
 
-      <p class="text-3xl">3. Security</p>
+      <h2 class="text-3xl">3. Security</h2>
       <p class="opacity-75">
         We care about the security of our users. While we work to protect the
         security of your content and account, Spectrex cannot guarantee that
@@ -125,7 +127,7 @@
         immediately of any compromise or unauthorized use of your account.
       </p>
 
-      <p class="text-3xl">4. Third-party links, sites, and services</p>
+      <h2 class="text-3xl">4. Third-party links, sites, and services</h2>
       <p class="opacity-75">
         Our Products may contain (back)links to third-party websites,
         advertisers, services, special offers, or other events or activities
@@ -137,7 +139,7 @@
         access to any third-party website, service, or content.
       </p>
 
-      <p class="text-3xl">5. Termination</p>
+      <h2 class="text-3xl">5. Termination</h2>
       <p class="opacity-75">
         Spectrex may terminate or suspend this license at any time, with or
         without cause or notice to you. Upon termination, you continue to be
@@ -145,7 +147,7 @@
         service to anyone.
       </p>
 
-      <p class="text-3xl">6. Indemnity</p>
+      <h2 class="text-3xl">6. Indemnity</h2>
       <p class="opacity-75">
         You agree to indemnify and hold harmless Spectrex and its respective
         officers, directors, employees and agents, from and against any claims,
@@ -157,7 +159,7 @@
         breach of any of these Terms.
       </p>
 
-      <p class="text-3xl">7. Disclaimers</p>
+      <h2 class="text-3xl">7. Disclaimers</h2>
       <p class="opacity-75">
         The Products and all included content are provided on an "as is" basis
         without warranty of any kind, whether express or implied. SPECTREX
@@ -175,7 +177,7 @@
         us.
       </p>
 
-      <p class="text-3xl">8. Limitation of liability</p>
+      <h2 class="text-3xl">8. Limitation of liability</h2>
       <p class="opacity-75">
         TO THE MAXIMUM EXTENT PERMITTED BY LAW, SPECTREX SHALL NOT BE LIABLE FOR
         ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL OR PUNITIVE DAMAGES, OR
@@ -190,7 +192,7 @@
         TO THE PRODUCTS EXCEED ONE HUNDRED USD ($100).
       </p>
 
-      <p class="text-3xl">9. Dispute Resolution</p>
+      <h2 class="text-3xl">9. Dispute Resolution</h2>
       <p class="opacity-75">
         For any dispute you have with Spectrex, you agree to first contact us
         and attempt to resolve the dispute with us informally. If Spectrex has
@@ -208,14 +210,14 @@
         CLAIMS.
       </p>
 
-      <p class="text-3xl">10. Governing law and jurisdiction</p>
+      <h2 class="text-3xl">10. Governing law and jurisdiction</h2>
       <p class="opacity-75">
         These Terms shall be governed by the laws of The United States of
         America and are subject to the exclusive jurisdiction of the courts of
         Indianapolis, Indiana.
       </p>
 
-      <p class="text-3xl">11. General terms</p>
+      <h2 class="text-3xl">11. General terms</h2>
       <p class="opacity-75">
         Notification procedures and changes to these Terms Spectrex reserves the
         right to determine the form and means of providing notifications to you,
@@ -228,7 +230,7 @@
         using the Products.
       </p>
 
-      <p class="text-3xl">Assignment</p>
+      <h2 class="text-3xl">Assignment</h2>
       <p class="opacity-75">
         These Terms, and any rights and licenses granted hereunder, may not be
         transferred or assigned by you, but may be assigned by Spectrex without
@@ -236,7 +238,7 @@
         shall be null and void.
       </p>
 
-      <p class="text-3xl">Entire agreement/severability</p>
+      <h2 class="text-3xl">Entire agreement/severability</h2>
       <p class="opacity-75">
         These Terms, together with the Privacy policy and any amendments and any
         additional agreements you may enter into with Spectrex in connection
@@ -247,7 +249,7 @@
         will remain in full force and effect.
       </p>
 
-      <p class="text-3xl">No waiver</p>
+      <h2 class="text-3xl">No waiver</h2>
       <p class="opacity-75">
         No waiver of any term of these Terms shall be deemed a further or
         continuing waiver of such term or any other term, and Spectrex's failure

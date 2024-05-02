@@ -6,9 +6,21 @@ export default defineEventHandler(async (event) => {
   const body = await readBody(event);
 
   // 1. Check variables on server side to prevent abuse
+  if (contains_urls(body.description)) {
+    setResponseStatus(event, 400);
+    return {
+      message: "About me contains a link, please review our guidelines",
+    };
+  }
+  if (contains_profanity(body.description)) {
+    setResponseStatus(event, 400);
+    return {
+      message: "About me contains profanity, please review our guidelines",
+    };
+  }
   if (body.description?.length >= 128) {
     setResponseStatus(event, 400);
-    return { message: "Description has too many characters (max of 128)" };
+    return { message: "About me has too many characters (max of 128)" };
   }
 
   // 2. Require being logged in

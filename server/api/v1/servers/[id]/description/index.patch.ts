@@ -12,6 +12,18 @@ export default defineEventHandler(async (event) => {
     setResponseStatus(event, 400);
     return { message: "Description must not be empty" };
   }
+  if (contains_urls(body.description)) {
+    setResponseStatus(event, 400);
+    return {
+      message: "Description contains a link, please review our guidelines",
+    };
+  }
+  if (contains_profanity(body.description)) {
+    setResponseStatus(event, 400);
+    return {
+      message: "Description contains profanity, please review our guidelines",
+    };
+  }
   if (body.description.length <= 128) {
     setResponseStatus(event, 400);
     return {

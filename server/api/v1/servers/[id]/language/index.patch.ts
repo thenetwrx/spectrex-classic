@@ -1,6 +1,5 @@
 import { eq } from "drizzle-orm";
 import db from "~/server/utils/database";
-import { permitted_languages } from "~/server/utils/permit";
 
 export default defineEventHandler(async (event) => {
   // Parameters
