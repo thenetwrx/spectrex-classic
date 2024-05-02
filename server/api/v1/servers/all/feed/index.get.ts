@@ -1,6 +1,6 @@
 import db from "~/server/utils/database";
-import { eq, and, not, isNull, getTableColumns, asc, desc } from "drizzle-orm";
-import { permitted_languages, permitted_sorting } from "~/server/utils/schema";
+import { eq, and, not, isNull, getTableColumns, desc } from "drizzle-orm";
+import { permitted_languages, permitted_sorting } from "~/server/utils/permit";
 
 export default defineEventHandler(async (event) => {
   // Parameters

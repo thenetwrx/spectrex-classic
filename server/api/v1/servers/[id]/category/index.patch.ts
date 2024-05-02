@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import db from "~/server/utils/database";
-import { permitted_categories } from "~/server/utils/schema";
+import { permitted_categories } from "~/server/utils/permit";
 
 export default defineEventHandler(async (event) => {
   // Parameters

@@ -39,7 +39,10 @@
                   server.result.approved_at !== null
                 "
               >
-                <span class="opacity-75">{{ server.result.category }}</span>
+                <span class="opacity-75">
+                  <i class="fa-solid fa-layer-group fa-xs"></i>
+                  {{ server.result.category }}
+                </span>
               </div>
               <div class="bg-error bg-opacity-50 px-1 rounded-md" v-else>
                 <span class="opacity-75">Not Approved</span>

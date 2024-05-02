@@ -4,7 +4,7 @@ import {
   permitted_categories,
   permitted_invite_links,
   permitted_languages,
-} from "~/server/utils/schema";
+} from "~/server/utils/permit";
 
 export default defineEventHandler(async (event) => {
   // Parameters
