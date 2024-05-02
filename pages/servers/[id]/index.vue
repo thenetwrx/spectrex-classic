@@ -138,6 +138,6 @@
   const copy_current_url = async () => {
     const { toClipboard } = useClipboard();
     toClipboard(window.location.href);
-    useNuxtApp().$toast.success("Copied to clipboard");
+    useNuxtApp().$toast.success("Copied link to clipboard");
   };
 </script>
