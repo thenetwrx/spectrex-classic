@@ -583,7 +583,12 @@
   };
 
   const checkForComma = (event: KeyboardEvent) => {
-    if (event.key === "," || event.code === "Comma" || event.code === "Enter") {
+    if (
+      event.key === "," ||
+      event.code === "Comma" ||
+      event.code === "Enter" ||
+      event.code === "Space"
+    ) {
       event.preventDefault();
       addTag();
     }
