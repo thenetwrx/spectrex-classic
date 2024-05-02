@@ -33,7 +33,7 @@
         <div class="grid md:grid-cols-1 lg:grid-cols-2 gap-3" v-else>
           <NuxtLink
             v-for="(server, index) in servers?.result
-              ?.filter((server) => server.approved_at !== null)
+              ?.filter((server) => server.approved_at !== null || server.pending || server.rejected )
               .sort((a, b) => a.name.localeCompare(b.name))
               .sort((c, d) => c.bumped_at! - d.bumped_at!)"
             :key="index"
@@ -43,7 +43,15 @@
             <div class="flex flex-row items-center w-full">
               <div class="flex flex-col w-full">
                 <ServerIcon :resource="server" />
-                <span class="font-medium text-lg">{{ server.name }}</span>
+                <span class="font-medium text-lg">
+                  {{ server.name }}
+                  <a class="opacity-75 text-sm" v-if="server.pending"
+                    >(pending approval)</a
+                  >
+                  <a class="opacity-75 text-sm" v-else-if="server.rejected"
+                    >(rejected)</a
+                  >
+                </span>
               </div>
 
               <div>
@@ -103,7 +111,12 @@
         <option disabled selected>Select server</option>
         <option
           v-for="server in servers?.result
-            ?.filter((server) => server.approved_at === null)
+            ?.filter(
+              (server) =>
+                server.approved_at === null &&
+                !server.pending &&
+                !server.rejected
+            )
             .sort((a, b) => a.name.localeCompare(b.name))"
           :value="'/dashboard/servers/' + server.id + '/add'"
         >

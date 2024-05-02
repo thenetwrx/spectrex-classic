@@ -55,6 +55,7 @@ export default defineEventHandler(async (event) => {
         owner_provider_id: servers_table.owner_provider_id,
         banned: servers_table.banned,
         approved_at: servers_table.approved_at,
+        pending: servers_table.pending,
       })
       .from(servers_table)
       .where(eq(servers_table.id, server_id));
@@ -63,7 +64,7 @@ export default defineEventHandler(async (event) => {
       setResponseStatus(event, 404);
       return { message: "Server not found" };
     }
-    if (servers[0].approved_at === null) {
+    if (servers[0].approved_at === null || servers[0].pending) {
       // refuse existence if it's not approved
       setResponseStatus(event, 404);
       return { message: "Server not found" };

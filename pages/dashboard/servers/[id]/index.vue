@@ -59,6 +59,20 @@
           </DashboardMainContentHeaderButtons>
         </DashboardMainContentHeader>
 
+        <div
+          class="alert bg-error flex items-start flex-row max-md:flex-col bg-opacity-50 text-opacity-75 rounded-md mt-6"
+          v-if="server?.result?.banned"
+        >
+          <p>
+            <i class="fa-solid fa-triangle-exclamation px-2"></i>
+            This server has been banned. Please
+            <NuxtLink class="font-bold underline" href="/legal/guidelines"
+              >review our guidelines</NuxtLink
+            >
+            promptly to avoid further infractions!
+          </p>
+        </div>
+
         <ResourcePending v-if="server_pending" />
         <ResourceNotFound
           v-else-if="!server?.result"
@@ -68,6 +82,11 @@
           v-else-if="server.result.owner_id !== lucia?.user?.id"
           message="Unauthorized"
         />
+        <ResourceNotFound
+          v-else-if="server.result.banned"
+          message="Unauthorized"
+        />
+
         <template v-else>
           <p class="opacity-75 pb-6">
             {{ server.result.name }} with
@@ -77,8 +96,9 @@
           <DashboardMainStack>
             <div
               class="alert bg-accent flex items-start flex-row max-md:flex-col bg-opacity-50 text-opacity-75 rounded-md"
+              v-if="server.result.approved_at"
             >
-              <p class="max-w-lg">
+              <p>
                 <i class="fa-solid fa-circle-info px-2"></i>
                 <span v-if="server.result.invite_uses !== null">
                   {{ server.result.invite_uses.length }} people have used your
@@ -92,6 +112,27 @@
                     >Pricing</NuxtLink
                   >!
                 </span>
+              </p>
+            </div>
+            <div
+              class="alert bg-warning flex items-start flex-row max-md:flex-col bg-opacity-50 text-opacity-75 rounded-md"
+              v-else-if="server.result.pending"
+            >
+              <p>
+                <i class="fa-solid fa-triangle-exclamation px-2"></i>
+                Your server has been put up for review. Please check back later!
+              </p>
+            </div>
+            <div
+              class="alert bg-error flex items-start flex-row max-md:flex-col bg-opacity-50 text-opacity-75 rounded-md"
+              v-else-if="server.result.rejected"
+            >
+              <p>
+                <i class="fa-solid fa-triangle-exclamation px-2"></i>
+                Your server has been rejected. Please
+                <NuxtLink class="font-bold underline" href="/legal/guidelines"
+                  >review our guidelines</NuxtLink
+                >, remove the listing and re-apply!
               </p>
             </div>
 
@@ -110,6 +151,11 @@
                       class="radio"
                       v-model="is_public"
                       :value="true"
+                      :disabled="
+                        server.result.pending ||
+                        server.result.rejected ||
+                        server.result.banned
+                      "
                     />
                     <span class="label-text">Yes</span>
                   </label>
@@ -122,6 +168,11 @@
                       class="radio"
                       v-model="is_public"
                       :value="false"
+                      :disabled="
+                        server.result.pending ||
+                        server.result.rejected ||
+                        server.result.banned
+                      "
                     />
                     <span class="label-text">No</span>
                   </label>
@@ -138,6 +189,11 @@
               <DashboardCardContent>
                 <select
                   v-model="language"
+                  :disabled="
+                    server.result.pending ||
+                    server.result.rejected ||
+                    server.result.banned
+                  "
                   class="select select-bordered rounded-none w-full"
                 >
                   <option disabled selected value="">Select language</option>
@@ -160,6 +216,11 @@
               <DashboardCardContent>
                 <select
                   v-model="category"
+                  :disabled="
+                    server.result.pending ||
+                    server.result.rejected ||
+                    server.result.banned
+                  "
                   class="select select-bordered rounded-none w-full"
                 >
                   <option disabled selected value="">Select category</option>
@@ -202,6 +263,11 @@
                   class="input input-bordered rounded-none w-full"
                   v-on:keydown="checkForComma($event)"
                   v-model="new_tag"
+                  :disabled="
+                    server.result.pending ||
+                    server.result.rejected ||
+                    server.result.banned
+                  "
                 />
               </DashboardCardContent>
               <DashboardCardSave
@@ -230,6 +296,11 @@
                   type="text"
                   placeholder="A very interesting server..."
                   v-model="description"
+                  :disabled="
+                    server.result.pending ||
+                    server.result.rejected ||
+                    server.result.banned
+                  "
                   class="textarea textarea-bordered rounded-none h-40 max-h-[42rem] w-full"
                 ></textarea>
               </DashboardCardContent>
@@ -250,6 +321,11 @@
                   type="text"
                   placeholder="https://discord.gg/fortnite"
                   v-model="invite_link"
+                  :disabled="
+                    server.result.pending ||
+                    server.result.rejected ||
+                    server.result.banned
+                  "
                   class="input input-bordered rounded-none w-full"
                 />
               </DashboardCardContent>
@@ -270,6 +346,11 @@
                       class="radio"
                       v-model="nsfw"
                       :value="true"
+                      :disabled="
+                        server.result.pending ||
+                        server.result.rejected ||
+                        server.result.banned
+                      "
                     />
                     <span class="label-text">Yes</span>
                   </label>
@@ -282,6 +363,11 @@
                       class="radio"
                       v-model="nsfw"
                       :value="false"
+                      :disabled="
+                        server.result.pending ||
+                        server.result.rejected ||
+                        server.result.banned
+                      "
                     />
                     <span class="label-text">No</span>
                   </label>

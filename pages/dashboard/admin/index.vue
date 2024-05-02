@@ -13,7 +13,7 @@
           >
             <div class="flex flex-row items-center w-full">
               <div class="flex flex-col w-full">
-                <span class="font-medium text-lg">Server Management</span>
+                <span class="font-medium text-lg">Servers</span>
               </div>
 
               <div>
@@ -27,7 +27,7 @@
           >
             <div class="flex flex-row items-center w-full">
               <div class="flex flex-col w-full">
-                <span class="font-medium text-lg">User Management</span>
+                <span class="font-medium text-lg">Users</span>
               </div>
 
               <div>

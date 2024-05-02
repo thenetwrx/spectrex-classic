@@ -25,6 +25,7 @@ export default defineEventHandler(async (event) => {
         banned: servers_table.banned,
         approved_at: servers_table.approved_at,
         bumped_at: servers_table.bumped_at,
+        pending: servers_table.pending,
       })
       .from(servers_table)
       .where(eq(servers_table.id, server_id));
@@ -41,6 +42,10 @@ export default defineEventHandler(async (event) => {
     if (servers[0].banned) {
       setResponseStatus(event, 403);
       return { message: "Server is banned from Spectrex" };
+    }
+    if (servers[0].pending) {
+      setResponseStatus(event, 403);
+      return { message: "Server is pending approval" };
     }
     if (servers[0].approved_at === null) {
       setResponseStatus(event, 403);

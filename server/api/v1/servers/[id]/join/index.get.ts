@@ -23,6 +23,7 @@ export default defineEventHandler(async (event) => {
         approved_at: servers_table.approved_at,
         invite_link: servers_table.invite_link,
         invite_uses: servers_table.invite_uses,
+        pending: servers_table.pending,
       })
       .from(servers_table)
       .where(eq(servers_table.id, server_id));
@@ -42,6 +43,10 @@ export default defineEventHandler(async (event) => {
       setResponseStatus(event, 403);
       return { message: "Server is banned from Spectrex", result: null };
     }
+    if (servers[0].pending) {
+      setResponseStatus(event, 403);
+      return { message: "Server is pending approval" };
+    }
     if (servers[0].approved_at === null) {
       if (event.context.user?.id !== servers[0].owner_id) {
         setResponseStatus(event, 403);
@@ -49,7 +54,8 @@ export default defineEventHandler(async (event) => {
       }
     }
 
-    servers[0].invite_uses.push(Date.now().toString());
+    // use ? because we make invite_uses possibly null on client side, but database enforces not null
+    servers[0].invite_uses?.push(Date.now().toString());
     await db
       .update(servers_table)
       .set({

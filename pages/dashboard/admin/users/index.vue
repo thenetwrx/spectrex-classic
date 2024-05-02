@@ -4,7 +4,7 @@
     <DashboardMainContainer>
       <DashboardMainSidebar active="admin" />
       <DashboardMainContent>
-        <DashboardMainContentHeader title="Admin Panel" class="pb-6">
+        <DashboardMainContentHeader title="Admin Panel - Users" class="pb-6">
           <div class="flex flex-row gap-1 ml-auto">
             <button
               class="btn btn-ghost btn-sm"

@@ -30,9 +30,15 @@ export default defineEventHandler(async (event) => {
         return { message: "Unauthorized", result: null };
       }
     }
-    if (servers[0].banned) {
+    if (servers[0].banned && event.context.user?.id !== servers[0].owner_id) {
       setResponseStatus(event, 403);
       return { message: "Server is banned from Spectrex", result: null };
+    }
+    if (servers[0].pending) {
+      if (event.context.user?.id !== servers[0].owner_id) {
+        setResponseStatus(event, 403);
+        return { message: "Server is pending approval" };
+      }
     }
     if (servers[0].approved_at === null) {
       if (event.context.user?.id !== servers[0].owner_id) {

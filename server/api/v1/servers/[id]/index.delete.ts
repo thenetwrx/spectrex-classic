@@ -24,6 +24,8 @@ export default defineEventHandler(async (event) => {
         owner_id: servers_table.owner_id,
         banned: servers_table.banned,
         approved_at: servers_table.approved_at,
+        rejected: servers_table.rejected,
+        pending: servers_table.pending,
       })
       .from(servers_table)
       .where(eq(servers_table.id, server_id));
@@ -41,9 +43,14 @@ export default defineEventHandler(async (event) => {
       setResponseStatus(event, 403);
       return { message: "Server is banned from Spectrex" };
     }
-    if (!servers[0].approved_at) {
+    // refuse deletion if its not approved, pending or rejected
+    if (
+      !servers[0].approved_at &&
+      !servers[0].rejected &&
+      !servers[0].pending
+    ) {
       setResponseStatus(event, 403);
-      return { message: "Server is not approved" };
+      return { message: "Server is not listed" };
     }
 
     await db
@@ -58,6 +65,9 @@ export default defineEventHandler(async (event) => {
         invite_link: null,
         nsfw: false,
         updated_at: Date.now(),
+        pending: false,
+        submitted_at: null,
+        rejected: false,
       })
       .where(eq(servers_table.id, servers[0].id));
 

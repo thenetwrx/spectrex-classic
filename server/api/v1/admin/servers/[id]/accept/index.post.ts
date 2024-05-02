@@ -5,29 +5,14 @@ export default defineEventHandler(async (event) => {
   // Parameters
   const params = getRouterParams(event);
   const server_id = params.id;
-  const body = await readBody(event);
 
-  // 1. Check variables on server side to prevent abuse
-  if (!body.language?.length) {
-    setResponseStatus(event, 400);
-    return { message: "Language must be selected" };
-  }
-  if (!permitted_languages.some((code) => body.language === code)) {
-    setResponseStatus(event, 400);
-    return { message: "Invalid language selection" };
-  }
-
-  // 2. Require being logged in
-  if (!event.context.user) {
-    setResponseStatus(event, 401);
-    return { message: "Unauthorized" };
-  }
-  if (event.context.user.banned) {
+  // 1. Reject non-admins
+  if (!event.context.user?.admin) {
     setResponseStatus(event, 403);
-    return { message: "You're banned from Spectrex" };
+    return { message: "Unauthorized", result: null };
   }
 
-  // 3. Edit server
+  // 2. Edit server
   try {
     const servers = await db
       .select({
@@ -35,6 +20,7 @@ export default defineEventHandler(async (event) => {
         owner_id: servers_table.owner_id,
         banned: servers_table.banned,
         approved_at: servers_table.approved_at,
+        bumped_at: servers_table.bumped_at,
         pending: servers_table.pending,
       })
       .from(servers_table)
@@ -45,28 +31,25 @@ export default defineEventHandler(async (event) => {
       return { message: "Server not found" };
     }
 
-    if (servers[0].owner_id !== event.context.user.id) {
-      setResponseStatus(event, 403);
-      return { message: "Unauthorized" };
-    }
     if (servers[0].banned) {
       setResponseStatus(event, 403);
       return { message: "Server is banned from Spectrex" };
     }
-    if (servers[0].pending) {
+    if (servers[0].approved_at !== null) {
       setResponseStatus(event, 403);
-      return { message: "Server is pending approval" };
+      return { message: "Server is already approved" };
     }
-    if (servers[0].approved_at === null) {
-      setResponseStatus(event, 403);
-      return { message: "Server is not approved" };
-    }
+
+    const now = Date.now();
 
     await db
       .update(servers_table)
       .set({
-        language: body.language,
-        updated_at: Date.now(),
+        approved_at: now,
+        pending: false,
+        updated_at: now,
+        bumped_at: servers[0].bumped_at === null ? now : servers[0].bumped_at,
+        rejected: false,
       })
       .where(eq(servers_table.id, servers[0].id));
 

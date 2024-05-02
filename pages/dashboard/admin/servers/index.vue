@@ -4,10 +4,7 @@
     <DashboardMainContainer>
       <DashboardMainSidebar active="admin" />
       <DashboardMainContent>
-        <DashboardMainContentHeader
-          title="Admin Panel (Server Management)"
-          class="pb-6"
-        >
+        <DashboardMainContentHeader title="Admin Panel - Servers" class="pb-6">
           <div class="flex flex-row gap-1 ml-auto">
             <button
               class="btn btn-ghost btn-sm"
@@ -25,10 +22,19 @@
           </div>
         </DashboardMainContentHeader>
 
+        <input
+          type="text"
+          placeholder="Server ID"
+          v-model="id"
+          v-on:keydown="handle_event($event)"
+          class="input input-bordered rounded-none w-full mb-4"
+        />
+
+        <div class="divider">Pending servers</div>
         <ResourcePending v-if="servers_pending" />
         <ResourceNotFound
           v-else-if="!servers?.result"
-          :message="servers_error"
+          :message="servers_error?.data.message"
         />
         <div class="overflow-x-auto" v-else>
           <table class="table">
@@ -36,11 +42,17 @@
               <tr>
                 <th>Name</th>
                 <th>Owner ID</th>
-                <th>Created At</th>
+                <th>Submitted At</th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="server in servers.result">
+              <tr
+                v-for="server in servers.result.sort(
+                  (_server_1, _server_2) =>
+                    (_server_1.submitted_at || 0) -
+                    (_server_2.submitted_at || 0)
+                )"
+              >
                 <td class="w-52">
                   <NuxtLink :href="'/dashboard/admin/servers/' + server.id">
                     <div class="flex items-center gap-3">
@@ -60,7 +72,7 @@
                 </td>
 
                 <td>
-                  {{ new Date(server.created_at).toDateString() }}
+                  {{ new Date(server.submitted_at || 0).toDateString() }}
                 </td>
               </tr>
             </tbody>
@@ -82,6 +94,19 @@
   const lucia = useLucia();
   const refreshing = ref<boolean>(false);
 
+  const id = ref<string>("");
+
+  const navigate_to_server = () => {
+    return navigateTo("/dashboard/admin/servers/" + id.value);
+  };
+
+  const handle_event = (event: KeyboardEvent) => {
+    if (event.code === "Enter") {
+      event.preventDefault();
+      navigate_to_server();
+    }
+  };
+
   const {
     data: servers,
     pending: servers_pending,
@@ -90,5 +115,5 @@
   } = useFetch<{
     message: string | null;
     result: (typeof servers_table.$inferSelect)[] | null;
-  }>("/api/v1/admin/servers", { retry: false });
+  }>("/api/v1/admin/servers/pending", { retry: false });
 </script>

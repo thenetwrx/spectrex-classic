@@ -4,7 +4,7 @@
     <DashboardMainContainer>
       <DashboardMainSidebar active="admin" />
       <DashboardMainContent>
-        <DashboardMainContentHeader title="Admin Panel (User Management)">
+        <DashboardMainContentHeader title="Admin Panel - Users">
           <div class="flex flex-row gap-1 ml-auto">
             <button
               class="btn btn-ghost btn-sm"

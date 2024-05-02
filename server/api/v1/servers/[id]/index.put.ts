@@ -118,6 +118,8 @@ export default defineEventHandler(async (event) => {
         banned: servers_table.banned,
         approved_at: servers_table.approved_at,
         bumped_at: servers_table.approved_at,
+        rejected: servers_table.rejected,
+        pending: servers_table.pending,
       })
       .from(servers_table)
       .where(eq(servers_table.owner_id, event.context.user.id));
@@ -125,7 +127,7 @@ export default defineEventHandler(async (event) => {
     let count = 0;
     const max_count = event.context.user.premium_since !== null ? 5 : 1;
     for (const server of servers) {
-      if (server.approved_at) count++;
+      if (server.approved_at || server.pending || server.rejected) count++;
       if (count === max_count) {
         setResponseStatus(event, 403);
         return { message: "Maximum number of servers listed" };
@@ -147,6 +149,10 @@ export default defineEventHandler(async (event) => {
       setResponseStatus(event, 403);
       return { message: "Server is banned from Spectrex" };
     }
+    if (server.pending) {
+      setResponseStatus(event, 403);
+      return { message: "Server is already pending" };
+    }
     if (server.approved_at !== null) {
       setResponseStatus(event, 403);
       return { message: "Server is already approved" };
@@ -157,8 +163,7 @@ export default defineEventHandler(async (event) => {
     await db
       .update(servers_table)
       .set({
-        approved_at: now,
-        bumped_at: server.bumped_at === null ? now : server.bumped_at,
+        submitted_at: now,
         public: true,
         language: body.language,
         category: body.category,
@@ -167,6 +172,7 @@ export default defineEventHandler(async (event) => {
         invite_link: body.invite_link,
         nsfw: body.nsfw,
         updated_at: now,
+        pending: true,
       })
       .where(eq(servers_table.id, server.id));
 

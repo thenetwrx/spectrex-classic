@@ -7,11 +7,25 @@
         <DashboardMainContentHeader title="Add Server">
           <DashboardMainContentHeaderButtons>
             <NuxtLink class="btn btn-ghost btn-sm" href="/dashboard">
-              Nevermind
+              Back
               <i class="fa-solid fa-arrow-left"></i>
             </NuxtLink>
           </DashboardMainContentHeaderButtons>
         </DashboardMainContentHeader>
+
+        <div
+          class="alert bg-error flex items-start flex-row max-md:flex-col bg-opacity-50 text-opacity-75 rounded-md mt-6"
+          v-if="server?.result?.banned"
+        >
+          <p>
+            <i class="fa-solid fa-triangle-exclamation px-2"></i>
+            This server has been banned. Please
+            <NuxtLink class="font-bold underline" href="/legal/guidelines"
+              >review our guidelines</NuxtLink
+            >
+            promptly to avoid further infractions!
+          </p>
+        </div>
 
         <ResourcePending v-if="server_pending" />
         <ResourceNotFound
@@ -20,6 +34,10 @@
         />
         <ResourceNotFound
           v-else-if="server.result.owner_id !== lucia?.user?.id"
+          message="Unauthorized"
+        />
+        <ResourceNotFound
+          v-else-if="server.result.banned"
           message="Unauthorized"
         />
         <template v-else>
@@ -165,14 +183,18 @@
   </Container>
   <dialog class="modal" id="modal">
     <div
-      class="modal-box bg-base-200 border border-secondary flex flex-col gap-4"
+      class="modal-box bg-base-200 max-w-2xl border border-secondary flex flex-col gap-4"
     >
       <div class="flex flex-row gap-1 items-center w-full">
-        <h3 class="text-lg font-bold">Server added!</h3>
+        <h3 class="text-lg font-bold">Server submitted!</h3>
       </div>
       <p class="opacity-75">
-        Do you want to add the Spectrex Discord bot for a bump command in your
-        Discord server? It's 100% optional!
+        Your server has been put up for review and could take up to 24 hours to
+        process. We ask for your patientence as we work to keep Spectrex safe!
+      </p>
+      <p class="opacity-75">
+        While you wait, do you want to add the official Spectrex Discord bot for
+        a bump command in your Discord server?
       </p>
       <div class="flex flex-row gap-2 ml-auto">
         <button
@@ -180,16 +202,13 @@
           v-on:click="
             () => {
               invite_bot(server?.result?.provider_id || '0');
-              navigateTo('/dashboard/servers/' + server?.result?.id);
+              navigateTo('/dashboard');
             }
           "
         >
           Accept <i class="fa-solid fa-arrow-up-right-from-square ml-auto"></i>
         </button>
-        <NuxtLink
-          class="btn btn-sm btn-secondary"
-          :href="'/dashboard/servers/' + server?.result?.id"
-        >
+        <NuxtLink class="btn btn-sm btn-secondary" href="/dashboard">
           Decline
         </NuxtLink>
       </div>
