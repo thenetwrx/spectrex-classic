@@ -37,7 +37,7 @@ export default defineEventHandler(async (event) => {
     setResponseStatus(event, 400);
     return { message: "Invalid limit query (1-20)", result: null };
   }
-  if (Number(limit) > 20) {
+  if (Number(limit) > 21) {
     // max pages
     setResponseStatus(event, 400);
     return { message: "Exceeded limit query (20 maximum)", result: null };

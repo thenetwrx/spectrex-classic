@@ -234,7 +234,7 @@
                 ago
               </p>
               <NuxtLink
-                class="ml-auto btn btn-sm btn-primary px-5"
+                class="ml-auto btn btn-sm btn-primary px-10"
                 :href="'/api/v1/servers/' + server.id + '/join'"
                 :external="true"
                 :prefetch="false"
@@ -323,7 +323,7 @@
   };
 
   const page = ref<number>(0);
-  const max_per_page = ref<number>(20);
+  const max_per_page = ref<number>(21);
 
   const { data: servers, pending: servers_pending } = useFetch<{
     message: string | null;
