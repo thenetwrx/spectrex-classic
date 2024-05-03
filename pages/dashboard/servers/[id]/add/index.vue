@@ -202,13 +202,16 @@
           v-on:click="
             () => {
               invite_bot(server?.result?.provider_id || '0');
-              navigateTo('/dashboard');
+              navigateTo('/dashboard/servers/' + server?.result?.id);
             }
           "
         >
           Accept <i class="fa-solid fa-arrow-up-right-from-square ml-auto"></i>
         </button>
-        <NuxtLink class="btn btn-sm btn-secondary" href="/dashboard">
+        <NuxtLink
+          class="btn btn-sm btn-secondary"
+          :href="'/dashboard/servers/' + server?.result?.id"
+        >
           Decline
         </NuxtLink>
       </div>
