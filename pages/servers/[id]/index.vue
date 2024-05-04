@@ -69,6 +69,7 @@
           </div>
           <NuxtLink
             class="btn btn-success text-white rounded-md px-6 ml-auto"
+            target="_blank"
             :href="'/api/v1/servers/' + server.result.id + '/join'"
             :external="true"
             :prefetch="false"

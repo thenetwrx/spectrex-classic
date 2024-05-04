@@ -235,6 +235,7 @@
               </p>
               <NuxtLink
                 class="ml-auto btn btn-sm btn-primary px-10"
+                target="_blank"
                 :href="'/api/v1/servers/' + server.id + '/join'"
                 :external="true"
                 :prefetch="false"
