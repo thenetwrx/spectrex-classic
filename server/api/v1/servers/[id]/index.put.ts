@@ -42,10 +42,6 @@ export default defineEventHandler(async (event) => {
     setResponseStatus(event, 400);
     return { message: "Description must not be empty" };
   }
-  if (!body.invite_link?.length) {
-    setResponseStatus(event, 400);
-    return { message: "Invite link must not be empty" };
-  }
   if (typeof body.nsfw !== "boolean") {
     setResponseStatus(event, 400);
     return { message: "An NSFW selection must be made" };
@@ -84,21 +80,6 @@ export default defineEventHandler(async (event) => {
     return { message: "Description is too long (max of 512 characters)" };
   }
 
-  if (
-    !permitted_invite_links.some((prefix) =>
-      body.invite_link.startsWith(prefix)
-    )
-  ) {
-    setResponseStatus(event, 400);
-    return {
-      message: "Invite link is not valid, it must be a Discord invite link",
-    };
-  }
-  if (body.invite_link.length >= 128) {
-    setResponseStatus(event, 400);
-    return { message: "Invite link is too long (max of 128 characters)" };
-  }
-
   // 2. Require being logged in
   if (!event.context.user) {
     setResponseStatus(event, 401);
@@ -117,6 +98,7 @@ export default defineEventHandler(async (event) => {
         owner_id: servers_table.owner_id,
         banned: servers_table.banned,
         approved_at: servers_table.approved_at,
+        invite_link: servers_table.invite_link,
         bumped_at: servers_table.approved_at,
         rejected: servers_table.rejected,
         pending: servers_table.pending,
@@ -157,6 +139,10 @@ export default defineEventHandler(async (event) => {
       setResponseStatus(event, 403);
       return { message: "Server is already approved" };
     }
+    if (server.invite_link === null) {
+      setResponseStatus(event, 403);
+      return { message: "Server doesn't have invite link configured" };
+    }
 
     const now = Date.now();
 
@@ -169,7 +155,6 @@ export default defineEventHandler(async (event) => {
         category: body.category,
         tags: body.tags,
         description: body.description,
-        invite_link: body.invite_link,
         nsfw: body.nsfw,
         updated_at: now,
         pending: true,

@@ -61,6 +61,10 @@
           <p class="opacity-75">
             {{ server.result.tags.join(", ") || "No tags" }}
           </p>
+          <h2 class="text-xl">Invite link</h2>
+          <p class="opacity-75">
+            {{ server.result.invite_link || "No invite link" }}
+          </p>
           <div class="divider">Actions</div>
           <NuxtLink
             class="btn btn-sm btn-primary w-fit mb-4"

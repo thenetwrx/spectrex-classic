@@ -5,29 +5,8 @@ export default defineEventHandler(async (event) => {
   // Parameters
   const params = getRouterParams(event);
   const server_id = params.id;
-  const body = await readBody(event);
 
-  // 1. Check variables on server side to prevent abuse
-  if (!body.invite_link?.length) {
-    setResponseStatus(event, 400);
-    return { message: "Invite link must not be empty" };
-  }
-  if (
-    !permitted_invite_links.some((prefix) =>
-      body.invite_link.startsWith(prefix)
-    )
-  ) {
-    setResponseStatus(event, 400);
-    return {
-      message: "Invite link is not valid, it must be a Discord invite link",
-    };
-  }
-  if (body.invite_link.length >= 128) {
-    setResponseStatus(event, 400);
-    return { message: "Invite link is too long (max of 128 characters)" };
-  }
-
-  // 2. Require being logged in
+  // 1. Require being logged in
   if (!event.context.user) {
     setResponseStatus(event, 401);
     return { message: "Unauthorized" };
@@ -37,15 +16,14 @@ export default defineEventHandler(async (event) => {
     return { message: "You're banned from Spectrex" };
   }
 
-  // 3. Edit server
+  // 2. Check server
   try {
     const servers = await db
       .select({
         id: servers_table.id,
         owner_id: servers_table.owner_id,
         banned: servers_table.banned,
-        approved_at: servers_table.approved_at,
-        pending: servers_table.pending,
+        invite_link: servers_table.invite_link,
       })
       .from(servers_table)
       .where(eq(servers_table.id, server_id));
@@ -63,24 +41,14 @@ export default defineEventHandler(async (event) => {
       setResponseStatus(event, 403);
       return { message: "Server is banned from Spectrex" };
     }
-    if (servers[0].pending) {
-      setResponseStatus(event, 403);
-      return { message: "Server is pending approval" };
-    }
-    if (servers[0].approved_at === null) {
-      setResponseStatus(event, 403);
-      return { message: "Server is not approved" };
-    }
 
-    await db
-      .update(servers_table)
-      .set({
-        invite_link: body.invite_link,
-        updated_at: Date.now(),
-      })
-      .where(eq(servers_table.id, servers[0].id));
-
-    return;
+    return {
+      message:
+        servers[0].invite_link !== null
+          ? null
+          : "Invite link is not configured",
+      success: servers[0].invite_link !== null ? true : false,
+    };
   } catch (err) {
     console.log(err);
 

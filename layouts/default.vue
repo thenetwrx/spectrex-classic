@@ -190,9 +190,9 @@
       class="hidden md:block w-full p-0 fixed top-0 z-[9999] animate-once animate-fade-down animate-ease-in-out border-b-2 border-y-[#2D2D2D]"
     >
       <div
-        class="py-4 px-2 max-md:px-4 h-16 bg-base-200 flex flex-row items-center gap-3"
+        class="py-4 px-2 max-md:px-4 h-14 bg-base-200 flex flex-row items-center gap-3"
       >
-        <NuxtLink href="/" class="btn btn-ghost items-center px-3">
+        <NuxtLink href="/" class="px-3">
           <img src="/images/logo.png" class="h-10" />
         </NuxtLink>
         <NuxtLink

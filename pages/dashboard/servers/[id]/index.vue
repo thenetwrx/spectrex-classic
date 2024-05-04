@@ -249,9 +249,16 @@
                     v-for="(tag, index) in tags"
                     :key="index"
                     class="block max-w-fit px-2 py-1 bg-accent border-none bg-opacity-50 rounded-sm gap-2 hover:bg-opacity-65 hover:cursor-pointer transition-colors duration-200 ease-in-out text-white"
-                    v-on:click="removeTag(index)"
+                    v-on:click="
+                      server.result.approved_at !== null
+                        ? removeTag(index)
+                        : null
+                    "
                   >
-                    <i class="fa-solid fa-square-xmark fa-lg mr-2"></i>
+                    <i
+                      class="fa-solid fa-square-xmark fa-lg mr-2"
+                      v-if="server.result.approved_at !== null"
+                    ></i>
                     <span class="text-accent">#</span>
                     {{ tag }}
                   </span>
@@ -307,31 +314,6 @@
               <DashboardCardSave
                 :callback="() => edit('description', { description })"
                 :matches="() => server?.result?.description === description"
-              />
-            </DashboardCardContainer>
-
-            <DashboardCardContainer>
-              <DashboardCardHeader
-                title="Invite Link"
-                :required="true"
-                message="(make sure it's a permanent invite!)"
-              />
-              <DashboardCardContent>
-                <input
-                  type="text"
-                  placeholder="https://discord.gg/fortnite"
-                  v-model="invite_link"
-                  :disabled="
-                    server.result.pending ||
-                    server.result.rejected ||
-                    server.result.banned
-                  "
-                  class="input input-bordered rounded-none w-full"
-                />
-              </DashboardCardContent>
-              <DashboardCardSave
-                :callback="() => edit('invite_link', { invite_link })"
-                :matches="() => server?.result?.invite_link === invite_link"
               />
             </DashboardCardContainer>
 
@@ -415,7 +397,6 @@
   const language = ref<string | null>(null);
   const category = ref<string | null>(null);
   const description = ref<string | null>(null);
-  const invite_link = ref<string | null>(null);
   const nsfw = ref<boolean | null>(null);
   const tags = ref<string[]>([]);
   const new_tag = ref<string>("");
@@ -456,7 +437,6 @@
         is_public.value = server.value.result.public;
         language.value = server.value.result.language!;
         category.value = server.value.result.category!;
-        invite_link.value = server.value.result.invite_link!;
         description.value = server.value.result.description!;
         tags.value = server.value.result.tags;
         nsfw.value = server.value.result.nsfw;
