@@ -4,31 +4,24 @@
     <DashboardMainContainer>
       <DashboardMainSidebar active="servers" />
       <DashboardMainContent>
-        <div class="flex flex-row items-center">
-          <h2 class="text-lg font-semibold">Manage Servers</h2>
-          <button
-            class="btn btn-ghost btn-sm ml-auto"
-            :class="syncing ? 'btn-disabled' : ''"
-            v-on:click="syncDiscordServers"
-          >
-            <span v-if="syncing">Syncing</span>
-            <span v-else>Sync</span>
-            <span
-              v-if="syncing"
-              class="loading loading-spinner loading-xs"
-            ></span>
-            <i v-else class="fa-solid fa-arrows-rotate"></i>
-          </button>
-        </div>
+        <DashboardMainContentHeader title="Manage Servers" class="pb-6">
+          <DashboardMainContentHeaderButtons>
+            <button
+              class="btn btn-ghost btn-sm"
+              :class="syncing ? 'btn-disabled' : ''"
+              v-on:click="syncDiscordServers"
+            >
+              <span v-if="syncing">Syncing</span>
+              <span v-else>Sync</span>
+              <span
+                v-if="syncing"
+                class="loading loading-spinner loading-xs"
+              ></span>
+              <i v-else class="fa-solid fa-arrows-rotate"></i>
+            </button>
+          </DashboardMainContentHeaderButtons>
+        </DashboardMainContentHeader>
 
-        <p class="opacity-75 pb-6">
-          Want quick access to bumping your Discord server?
-          <NuxtLink
-            class="text-accent hover:underline"
-            :href="discord.invite.bot()"
-            >Add the Discord bot!</NuxtLink
-          >
-        </p>
         <ResourcePending v-if="servers_pending" />
         <div class="grid md:grid-cols-1 lg:grid-cols-2 gap-3" v-else>
           <NuxtLink
