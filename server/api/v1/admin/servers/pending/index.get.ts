@@ -5,7 +5,7 @@ export default defineEventHandler(async (event) => {
   // 1. Reject non-admins
   if (!event.context.user?.admin) {
     setResponseStatus(event, 403);
-    return { message: "Unauthorized", result: null };
+    return { message: "You must be an admin to do this", result: null };
   }
 
   // 2. Fetch users

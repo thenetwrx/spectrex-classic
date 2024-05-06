@@ -99,7 +99,7 @@
       }"
     />
   </ClientOnly>
-  <div class="container-fluid min-h-screen flex flex-col">
+  <div class="min-h-screen flex flex-col">
     <div class="md:hidden fixed top-0 left-4 z-[9999]">
       <button
         v-on:click="isMobileSidebarOpen = !isMobileSidebarOpen"

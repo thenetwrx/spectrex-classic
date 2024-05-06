@@ -83,7 +83,7 @@ export default defineEventHandler(async (event) => {
   // 2. Require being logged in
   if (!event.context.user) {
     setResponseStatus(event, 401);
-    return { message: "Unauthorized" };
+    return { message: "You must be logged in to do that" };
   }
   if (event.context.user.banned) {
     setResponseStatus(event, 403);
@@ -120,12 +120,12 @@ export default defineEventHandler(async (event) => {
 
     if (!server) {
       setResponseStatus(event, 404);
-      return { message: "Server not found" };
+      return { message: "That server doesn't seem to exist" };
     }
 
     if (server.owner_id !== event.context.user.id) {
       setResponseStatus(event, 403);
-      return { message: "Unauthorized" };
+      return { message: "You must be logged in to do that" };
     }
     if (server.banned) {
       setResponseStatus(event, 403);

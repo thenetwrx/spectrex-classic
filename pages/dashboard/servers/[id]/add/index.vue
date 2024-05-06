@@ -32,14 +32,6 @@
           v-else-if="!server?.result"
           :message="server_error?.data.message"
         />
-        <ResourceNotFound
-          v-else-if="server.result.owner_id !== lucia?.user?.id"
-          message="Unauthorized"
-        />
-        <ResourceNotFound
-          v-else-if="server.result.banned"
-          message="Unauthorized"
-        />
         <template v-else>
           <p class="opacity-75">
             {{ server.result.name }} with

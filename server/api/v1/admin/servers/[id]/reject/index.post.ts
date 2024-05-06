@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
   // 1. Reject non-admins
   if (!event.context.user?.admin) {
     setResponseStatus(event, 403);
-    return { message: "Unauthorized", result: null };
+    return { message: "You must be an admin to do this", result: null };
   }
 
   // 2. Edit server
@@ -28,7 +28,7 @@ export default defineEventHandler(async (event) => {
 
     if (!servers.length) {
       setResponseStatus(event, 404);
-      return { message: "Server not found" };
+      return { message: "That server doesn't seem to exist" };
     }
 
     if (servers[0].banned) {

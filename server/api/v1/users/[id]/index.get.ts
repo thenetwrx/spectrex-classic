@@ -32,18 +32,24 @@ export default defineEventHandler(async (event) => {
 
     if (!users.length) {
       setResponseStatus(event, 404);
-      return { message: "User not found", result: null };
+      return { message: "That profile doesn't seem to exist", result: null };
     }
 
     if (!users[0].public) {
       if (event.context.user?.id !== users[0].id) {
         setResponseStatus(event, 403);
-        return { message: "Unauthorized", result: null };
+        return {
+          message: "You don't have permission to access this profile",
+          result: null,
+        };
       }
     }
     if (users[0].banned) {
       setResponseStatus(event, 403);
-      return { message: "User is banned from Spectrex", result: null };
+      return {
+        message: "This user violated our guidelines and has been banned",
+        result: null,
+      };
     }
 
     setResponseStatus(event, 200);

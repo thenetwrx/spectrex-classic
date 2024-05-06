@@ -10,7 +10,7 @@ export default defineEventHandler(async (event) => {
   // 1. Require being logged in
   if (!event.context.user) {
     setResponseStatus(event, 401);
-    return { message: "Unauthorized", result: null };
+    return { message: "You must be logged in to do that", result: null };
   }
   if (event.context.user.banned) {
     setResponseStatus(event, 403);
@@ -89,7 +89,8 @@ export default defineEventHandler(async (event) => {
 
     setResponseStatus(event, 404);
     return {
-      message: "Server doesn't exist. Try syncing all servers first",
+      message:
+        "That server doesn't seem to exist. Try syncing all servers first",
     };
   } catch (err) {
     console.log(err);

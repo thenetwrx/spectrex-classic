@@ -104,9 +104,9 @@
             class="flex flex-col gap-4 w-full max-w-4xl px-4 mx-auto py-12 text-start"
           >
             <div
-              class="collapse collapse-arrow bg-base-200 border border-secondary"
+              class="collapse collapse-arrow border-b border-secondary rounded-none"
             >
-              <input type="radio" name="accordion" :checked="true" />
+              <input type="radio" name="accordion" />
               <div class="collapse-title text-xl max-md:text-lg font-medium">
                 Is it safe to connect my Discord account to your site?
               </div>
@@ -131,7 +131,7 @@
               </div>
             </div>
             <div
-              class="collapse collapse-arrow bg-base-200 border border-secondary"
+              class="collapse collapse-arrow border-b border-secondary rounded-none"
             >
               <input type="radio" name="accordion" />
               <div class="collapse-title text-xl max-md:text-lg font-medium">
@@ -152,7 +152,7 @@
               </div>
             </div>
             <div
-              class="collapse collapse-arrow bg-base-200 border border-secondary"
+              class="collapse collapse-arrow border-b border-secondary rounded-none"
             >
               <input type="radio" name="accordion" />
               <div class="collapse-title text-xl max-md:text-lg font-medium">
@@ -167,7 +167,7 @@
               </div>
             </div>
             <div
-              class="collapse collapse-arrow bg-base-200 border border-secondary"
+              class="collapse collapse-arrow border-b border-secondary rounded-none"
             >
               <input type="radio" name="accordion" />
               <div class="collapse-title text-xl max-md:text-lg font-medium">
@@ -187,7 +187,7 @@
               </div>
             </div>
             <div
-              class="collapse collapse-arrow bg-base-200 border border-secondary"
+              class="collapse collapse-arrow border-b border-secondary rounded-none"
             >
               <input type="radio" name="accordion" />
               <div class="collapse-title text-xl max-md:text-lg font-medium">
@@ -202,7 +202,7 @@
               </div>
             </div>
             <div
-              class="collapse collapse-arrow bg-base-200 border border-secondary"
+              class="collapse collapse-arrow border-b border-secondary rounded-none"
             >
               <input type="radio" name="accordion" />
               <div class="collapse-title text-xl max-md:text-lg font-medium">
@@ -217,7 +217,7 @@
               </div>
             </div>
             <div
-              class="collapse collapse-arrow bg-base-200 border border-secondary"
+              class="collapse collapse-arrow border-b border-secondary rounded-none"
             >
               <input type="radio" name="accordion" />
               <div class="collapse-title text-xl max-md:text-lg font-medium">

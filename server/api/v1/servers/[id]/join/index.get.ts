@@ -30,13 +30,16 @@ export default defineEventHandler(async (event) => {
 
     if (!servers.length) {
       setResponseStatus(event, 404);
-      return { message: "Server not found" };
+      return { message: "That server doesn't seem to exist" };
     }
 
     if (!servers[0].public) {
       if (event.context.user?.id !== servers[0].owner_id) {
         setResponseStatus(event, 403);
-        return { message: "Unauthorized", result: null };
+        return {
+          message: "You don't have permission to access this server",
+          result: null,
+        };
       }
     }
     if (servers[0].banned) {

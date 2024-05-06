@@ -28,7 +28,7 @@ export default defineEventHandler(async (event) => {
 
   if (Number.isNaN(limit)) {
     setResponseStatus(event, 400);
-    return { message: "Invalid page query", result: null };
+    return { message: "Invalid limit query", result: null };
   }
 
   if (Number(limit) < 1) {
@@ -71,8 +71,8 @@ export default defineEventHandler(async (event) => {
     return { message: "Invalid language query", result: null };
   }
 
+  // 2. Reject banned users
   if (event.context.user?.banned) {
-    // 2. Reject banned users
     setResponseStatus(event, 403);
     return { message: "You're banned from Spectrex", result: null };
   }

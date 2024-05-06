@@ -26,7 +26,7 @@ export default defineEventHandler(async (event) => {
   // 2. Require being logged in
   if (!event.context.user) {
     setResponseStatus(event, 401);
-    return { message: "Unauthorized" };
+    return { message: "You must be logged in to do that" };
   }
   if (event.context.user.banned) {
     setResponseStatus(event, 403);
