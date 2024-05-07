@@ -38,11 +38,11 @@ export default defineEventHandler(async (event) => {
   // 2. Require being logged in
   if (!event.context.user) {
     setResponseStatus(event, 401);
-    return { message: "You must be logged in to do that" };
+    return { message: generic_error_not_logged_in };
   }
   if (event.context.user.banned) {
     setResponseStatus(event, 403);
-    return { message: "You're banned from Spectrex" };
+    return { message: generic_error_banned };
   }
 
   // 3. Create server report
@@ -62,12 +62,12 @@ export default defineEventHandler(async (event) => {
 
     if (!servers.length) {
       setResponseStatus(event, 404);
-      return { message: "That server doesn't seem to exist" };
+      return { message: server_error_does_not_exist };
     }
     if (servers[0].approved_at === null || servers[0].pending) {
       // refuse existence if it's not approved
       setResponseStatus(event, 404);
-      return { message: "That server doesn't seem to exist" };
+      return { message: server_error_does_not_exist };
     }
     if (servers[0].owner_id === event.context.user.id) {
       setResponseStatus(event, 403);
@@ -75,7 +75,7 @@ export default defineEventHandler(async (event) => {
     }
     if (servers[0].banned) {
       setResponseStatus(event, 403);
-      return { message: "Server is banned from Spectrex" };
+      return { message: server_error_banned };
     }
 
     await db.insert(server_reports_table).values({
@@ -97,7 +97,7 @@ export default defineEventHandler(async (event) => {
 
     setResponseStatus(event, 500);
     return {
-      message: "An unknown error occurred, try again later",
+      message: generic_error_unknown_error,
     };
   }
 });

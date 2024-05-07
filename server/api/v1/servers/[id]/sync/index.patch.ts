@@ -1,5 +1,4 @@
 import { eq } from "drizzle-orm";
-import db from "~/server/utils/database";
 import DiscordServerPartial from "~/types/DiscordServerPartial";
 
 export default defineEventHandler(async (event) => {
@@ -10,11 +9,11 @@ export default defineEventHandler(async (event) => {
   // 1. Require being logged in
   if (!event.context.user) {
     setResponseStatus(event, 401);
-    return { message: "You must be logged in to do that", result: null };
+    return { message: generic_error_not_logged_in, result: null };
   }
   if (event.context.user.banned) {
     setResponseStatus(event, 403);
-    return { message: "You're banned from Spectrex", result: null };
+    return { message: generic_error_banned, result: null };
   }
 
   // 2. Sync server with Discord
@@ -33,21 +32,20 @@ export default defineEventHandler(async (event) => {
     if (!response.ok) {
       setResponseStatus(event, 500);
       return {
-        message: "An unknown Discord API error occurred, try again later",
+        message: generic_error_unknown_discord_error,
       };
     }
     const servers_from_discord: DiscordServerPartial[] = await response.json();
 
     if (!servers_from_discord.length) {
-      setResponseStatus(event, 404);
-      return {
-        message: "No servers found from Discord",
-      };
+      setResponseStatus(event, 204);
+      return;
     }
 
-    const servers = await db
+    const servers = await database
       .select({
         id: servers_table.id,
+        owner_id: servers_table.owner_id,
         banned: servers_table.banned,
         provider_id: servers_table.provider_id,
       })
@@ -57,7 +55,11 @@ export default defineEventHandler(async (event) => {
     if (servers[0]) {
       if (servers[0].banned) {
         setResponseStatus(event, 403);
-        return { message: "Server is banned from Spectrex", result: null };
+        return { message: server_error_banned };
+      }
+      if (servers[0].owner_id !== event.context.user.id) {
+        setResponseStatus(event, 403);
+        return { message: server_error_no_permission };
       }
 
       for (const server_from_discord of servers_from_discord) {
@@ -65,7 +67,7 @@ export default defineEventHandler(async (event) => {
           server_from_discord.owner &&
           server_from_discord.id === servers[0].provider_id
         ) {
-          await db
+          await database
             .update(servers_table)
             .set({
               updated_at: Date.now(),
@@ -79,23 +81,28 @@ export default defineEventHandler(async (event) => {
               icon: server_from_discord.icon,
             })
             .where(eq(servers_table.id, servers[0].id));
+
+          setResponseStatus(event, 204);
           return;
         }
       }
 
-      await db.delete(servers_table).where(eq(servers_table.id, servers[0].id));
+      await database
+        .delete(servers_table)
+        .where(eq(servers_table.id, servers[0].id));
+
+      setResponseStatus(event, 204);
       return;
     }
 
     setResponseStatus(event, 404);
     return {
-      message:
-        "That server doesn't seem to exist. Try syncing all servers first",
+      message: server_error_does_not_exist,
     };
   } catch (err) {
     console.log(err);
 
     setResponseStatus(event, 500);
-    return { message: "An unknown error occurred, try again later" };
+    return { message: generic_error_unknown_error };
   }
 });

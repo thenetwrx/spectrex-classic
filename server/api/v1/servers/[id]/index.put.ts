@@ -1,4 +1,3 @@
-import db from "~/server/utils/database";
 import { eq } from "drizzle-orm";
 
 export default defineEventHandler(async (event) => {
@@ -83,16 +82,16 @@ export default defineEventHandler(async (event) => {
   // 2. Require being logged in
   if (!event.context.user) {
     setResponseStatus(event, 401);
-    return { message: "You must be logged in to do that" };
+    return { message: generic_error_not_logged_in };
   }
   if (event.context.user.banned) {
     setResponseStatus(event, 403);
-    return { message: "You're banned from Spectrex" };
+    return { message: generic_error_banned };
   }
 
   // 3. Edit server
   try {
-    const servers = await db
+    const servers = await database
       .select({
         id: servers_table.id,
         owner_id: servers_table.owner_id,
@@ -120,33 +119,33 @@ export default defineEventHandler(async (event) => {
 
     if (!server) {
       setResponseStatus(event, 404);
-      return { message: "That server doesn't seem to exist" };
+      return { message: server_error_does_not_exist };
     }
 
     if (server.owner_id !== event.context.user.id) {
       setResponseStatus(event, 403);
-      return { message: "You must be logged in to do that" };
+      return { message: server_error_no_permission };
     }
     if (server.banned) {
       setResponseStatus(event, 403);
-      return { message: "Server is banned from Spectrex" };
+      return { message: server_error_banned };
     }
     if (server.pending) {
       setResponseStatus(event, 403);
-      return { message: "Server is already pending" };
+      return { message: server_error_already_pending };
     }
     if (server.approved_at !== null) {
       setResponseStatus(event, 403);
-      return { message: "Server is already approved" };
+      return { message: server_error_already_approved };
     }
     if (server.invite_link === null) {
       setResponseStatus(event, 403);
-      return { message: "Server doesn't have invite link configured" };
+      return { message: server_error_invite_link_not_configured };
     }
 
     const now = Date.now();
 
-    await db
+    await database
       .update(servers_table)
       .set({
         submitted_at: now,
@@ -167,7 +166,7 @@ export default defineEventHandler(async (event) => {
 
     setResponseStatus(event, 500);
     return {
-      message: "An unknown error occurred, try again later",
+      message: generic_error_unknown_error,
     };
   }
 });

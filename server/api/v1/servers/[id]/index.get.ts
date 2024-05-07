@@ -1,4 +1,3 @@
-import db from "~/server/utils/database";
 import { eq } from "drizzle-orm";
 
 export default defineEventHandler(async (event) => {
@@ -9,44 +8,44 @@ export default defineEventHandler(async (event) => {
   // 1. Reject banned users
   if (event.context.user?.banned) {
     setResponseStatus(event, 403);
-    return { message: "You're banned from Spectrex", result: null };
+    return { message: generic_error_banned, result: null };
   }
 
   // 2. Fetch guild
   try {
-    const servers = await db
+    const servers = await database
       .select()
       .from(servers_table)
       .where(eq(servers_table.id, server_id));
 
     if (!servers.length) {
       setResponseStatus(event, 404);
-      return { message: "That server doesn't seem to exist", result: null };
+      return { message: server_error_does_not_exist, result: null };
     }
 
     if (!servers[0].public) {
       if (event.context.user?.id !== servers[0].owner_id) {
         setResponseStatus(event, 403);
         return {
-          message: "You don't have permission to access this server",
+          message: server_error_no_permission,
           result: null,
         };
       }
     }
     if (servers[0].banned && event.context.user?.id !== servers[0].owner_id) {
       setResponseStatus(event, 403);
-      return { message: "Server is banned from Spectrex", result: null };
+      return { message: server_error_banned, result: null };
     }
     if (servers[0].pending) {
       if (event.context.user?.id !== servers[0].owner_id) {
         setResponseStatus(event, 403);
-        return { message: "Server is pending approval" };
+        return { message: server_error_pending_approval };
       }
     }
     if (servers[0].approved_at === null) {
       if (event.context.user?.id !== servers[0].owner_id) {
         setResponseStatus(event, 403);
-        return { message: "Server is not approved", result: null };
+        return { message: server_error_not_approved, result: null };
       }
     }
 
@@ -55,7 +54,10 @@ export default defineEventHandler(async (event) => {
     if (servers[0].owner_id !== event.context.user?.id)
       servers[0].invite_link = null;
 
-    if (event.context.user?.premium_since === null)
+    if (
+      event.context.user?.premium_since === null ||
+      servers[0].owner_id !== event.context.user?.id
+    )
       servers[0].invite_uses = null;
 
     return {
@@ -67,7 +69,7 @@ export default defineEventHandler(async (event) => {
 
     setResponseStatus(event, 500);
     return {
-      message: "An unknown error occurred, try again later",
+      message: generic_error_unknown_error,
       result: null,
     };
   }
