@@ -38,8 +38,8 @@ export default defineEventHandler(async (event) => {
     const servers_from_discord: DiscordServerPartial[] = await response.json();
 
     if (!servers_from_discord.length) {
-      setResponseStatus(event, 204);
-      return;
+      setResponseStatus(event, 500);
+      return generic_error_unknown_discord_error;
     }
 
     const servers = await database

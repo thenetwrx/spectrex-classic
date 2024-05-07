@@ -11,7 +11,7 @@ export default defineEventHandler(async (event) => {
 
     setResponseStatus(event, 500);
     return {
-      message: "An unknown error occurred, try again later",
+      message: generic_error_unknown_error,
     };
   }
 });

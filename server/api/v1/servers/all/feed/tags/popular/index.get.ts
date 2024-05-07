@@ -1,5 +1,4 @@
 import { and, desc, eq, isNull, not } from "drizzle-orm";
-import db from "~/server/utils/database";
 
 const get_popular_tags = (tags: string[][], limit: number): string[] => {
   // Flatten the array of arrays into a single array of tags
@@ -53,12 +52,12 @@ export default defineEventHandler(async (event) => {
   // 2. Reject banned users
   if (event.context.user?.banned) {
     setResponseStatus(event, 403);
-    return { message: "You're banned from Spectrex", result: null };
+    return { message: generic_error_banned, result: null };
   }
 
   // 3. Fetch servers
   try {
-    const result = await db
+    const result = await database
       .select({ tags: servers_table.tags })
       .from(servers_table)
       .where(
@@ -85,7 +84,7 @@ export default defineEventHandler(async (event) => {
 
     setResponseStatus(event, 500);
     return {
-      message: "An unknown error occurred, try again later",
+      message: generic_error_unknown_error,
       result: null,
     };
   }

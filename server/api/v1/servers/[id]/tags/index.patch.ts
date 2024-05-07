@@ -30,6 +30,7 @@ export default defineEventHandler(async (event) => {
       setResponseStatus(event, 400);
       return { message: `Tag #${i + 1} is too long (max of 16 characters)` };
     }
+    body.tags[i] = body.tags[i].toLowerCase();
   }
 
   // 2. Require being logged in

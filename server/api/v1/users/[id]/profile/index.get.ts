@@ -1,5 +1,4 @@
 import { eq } from "drizzle-orm";
-import db from "~/server/utils/database";
 
 export default defineEventHandler(async (event) => {
   // Parameters
@@ -9,12 +8,12 @@ export default defineEventHandler(async (event) => {
   // 1. Reject banned users
   if (event.context.user?.banned) {
     setResponseStatus(event, 403);
-    return { message: "You're banned from Spectrex", result: null };
+    return { message: generic_error_banned, result: null };
   }
 
   // 2. Fetch user
   try {
-    const users = await db
+    const users = await database
       .select({
         id: users_table.id,
         provider_id: users_table.provider_id,
@@ -32,14 +31,14 @@ export default defineEventHandler(async (event) => {
 
     if (!users.length) {
       setResponseStatus(event, 404);
-      return { message: "That profile doesn't seem to exist", result: null };
+      return { message: user_error_profile_does_not_exist, result: null };
     }
 
     if (!users[0].public) {
       if (event.context.user?.id !== users[0].id) {
         setResponseStatus(event, 403);
         return {
-          message: "You don't have permission to access this profile",
+          message: user_error_profile_no_permission,
           result: null,
         };
       }
@@ -47,7 +46,7 @@ export default defineEventHandler(async (event) => {
     if (users[0].banned) {
       setResponseStatus(event, 403);
       return {
-        message: "This user violated our guidelines and has been banned",
+        message: user_error_banned,
         result: null,
       };
     }
@@ -62,7 +61,7 @@ export default defineEventHandler(async (event) => {
 
     setResponseStatus(event, 500);
     return {
-      message: "An unknown error occurred, try again later",
+      message: generic_error_unknown_error,
       result: null,
     };
   }

@@ -1,4 +1,3 @@
-import db from "~/server/utils/database";
 import { eq, and, not, isNull, getTableColumns, desc } from "drizzle-orm";
 
 export default defineEventHandler(async (event) => {
@@ -47,7 +46,9 @@ export default defineEventHandler(async (event) => {
     return { message: "Missing category query", result: null };
   }
   if (
-    !["everything", ...permitted_categories].some((cat) => category === cat)
+    ![["everything"], ...permitted_categories].some(
+      ([key, _]) => category === key
+    )
   ) {
     setResponseStatus(event, 400);
     return { message: "Invalid category query", result: null };
@@ -66,7 +67,7 @@ export default defineEventHandler(async (event) => {
     setResponseStatus(event, 400);
     return { message: "Missing language query", result: null };
   }
-  if (!["all", ...permitted_languages].some((type) => language === type)) {
+  if (![["all"], ...permitted_languages].some(([key, _]) => language === key)) {
     setResponseStatus(event, 400);
     return { message: "Invalid language query", result: null };
   }
@@ -74,15 +75,15 @@ export default defineEventHandler(async (event) => {
   // 2. Reject banned users
   if (event.context.user?.banned) {
     setResponseStatus(event, 403);
-    return { message: "You're banned from Spectrex", result: null };
+    return { message: generic_error_banned, result: null };
   }
 
   // 3. Fetch servers
   try {
+    console.log(category);
     const max_per_page = Number(limit);
-    const category: string | null = query.category?.toString() || null;
 
-    const amount = await db
+    const amount = await database
       .select({ id: servers_table.id })
       .from(servers_table)
       .where(
@@ -92,14 +93,14 @@ export default defineEventHandler(async (event) => {
           not(isNull(servers_table.approved_at)),
           language !== "all" ? eq(servers_table.language, language) : undefined,
           category !== "everything"
-            ? eq(servers_table.category, category!)
+            ? eq(servers_table.category, category)
             : undefined
         )
       );
 
     const { invite_link, invite_uses, ...rest } =
       getTableColumns(servers_table); // exclude "invite_link" column
-    const servers = await db
+    const servers = await database
       .select({ ...rest })
       .from(servers_table)
       .where(
@@ -109,7 +110,7 @@ export default defineEventHandler(async (event) => {
           not(isNull(servers_table.approved_at)),
           language !== "all" ? eq(servers_table.language, language) : undefined,
           category !== "everything"
-            ? eq(servers_table.category, category!)
+            ? eq(servers_table.category, category)
             : undefined
         )
       )
@@ -132,7 +133,7 @@ export default defineEventHandler(async (event) => {
 
     setResponseStatus(event, 500);
     return {
-      message: "An unknown error occurred, try again later",
+      message: generic_error_unknown_error,
       result: null,
     };
   }

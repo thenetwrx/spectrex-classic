@@ -46,12 +46,12 @@ export default defineEventHandler(async (event) => {
     return { message: "An NSFW selection must be made" };
   }
 
-  if (!permitted_languages.some((code) => body.language === code)) {
+  if (!permitted_languages.some(([key, _]) => body.language === key)) {
     setResponseStatus(event, 400);
     return { message: "Invalid language selection" };
   }
 
-  if (!permitted_categories.some((cat) => body.category === cat)) {
+  if (!permitted_categories.some(([key, _]) => body.category === key)) {
     setResponseStatus(event, 400);
     return { message: "Invalid category selection" };
   }
@@ -74,9 +74,9 @@ export default defineEventHandler(async (event) => {
       message: "Description is too short (minimum of 128 characters)",
     };
   }
-  if (body.description.length >= 512) {
+  if (body.description.length >= 1024) {
     setResponseStatus(event, 400);
-    return { message: "Description is too long (max of 512 characters)" };
+    return { message: "Description is too long (max of 1024 characters)" };
   }
 
   // 2. Require being logged in

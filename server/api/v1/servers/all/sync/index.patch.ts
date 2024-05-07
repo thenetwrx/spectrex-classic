@@ -1,18 +1,16 @@
 import { and, eq, inArray, notInArray } from "drizzle-orm";
 import { generateId } from "lucia";
-import { cryptr } from "~/server/utils/auth";
-import db from "~/server/utils/database";
 import DiscordServerPartial from "~/types/DiscordServerPartial";
 
 export default defineEventHandler(async (event) => {
   // 1. Require being logged in
   if (!event.context.user) {
     setResponseStatus(event, 401);
-    return { message: "You must be logged in to do that", result: null };
+    return { message: generic_error_not_logged_in, result: null };
   }
   if (event.context.user.banned) {
     setResponseStatus(event, 403);
-    return { message: "You're banned from Spectrex", result: null };
+    return { message: generic_error_banned, result: null };
   }
 
   // 2. Sync all servers
@@ -31,19 +29,19 @@ export default defineEventHandler(async (event) => {
     if (!response.ok) {
       setResponseStatus(event, 500);
       return {
-        message: "An unknown Discord API error occurred, try again later",
+        message: generic_error_unknown_discord_error,
       };
     }
 
     const servers_from_discord: DiscordServerPartial[] = await response.json();
 
     if (!servers_from_discord.length) {
-      setResponseStatus(event, 403);
-      return { message: "No servers found from Discord" };
+      setResponseStatus(event, 204);
+      return;
     }
 
     // 3. Sync servers with Discord
-    const servers = await db
+    const servers = await database
       .select({
         id: servers_table.id,
         provider_id: servers_table.provider_id,
@@ -67,7 +65,7 @@ export default defineEventHandler(async (event) => {
 
           const now = Date.now();
 
-          await db
+          await database
             .update(servers_table)
             .set({
               updated_at: now,
@@ -84,7 +82,7 @@ export default defineEventHandler(async (event) => {
         } else {
           const now = Date.now();
 
-          await db.insert(servers_table).values({
+          await database.insert(servers_table).values({
             id: generateId(32),
             provider_id: server_from_discord.id,
             approximate_member_count:
@@ -103,7 +101,7 @@ export default defineEventHandler(async (event) => {
     }
 
     // 4. Delete servers not found in servers_from_discord
-    await db.delete(servers_table).where(
+    await database.delete(servers_table).where(
       and(
         eq(servers_table.owner_id, event.context.user.id), // Servers owned by the user
         notInArray(
@@ -113,11 +111,12 @@ export default defineEventHandler(async (event) => {
       )
     );
 
+    setResponseStatus(event, 204);
     return;
   } catch (err) {
     console.log(err);
 
     setResponseStatus(event, 500);
-    return { message: "An unknown error occurred, try again later" };
+    return { message: generic_error_unknown_error };
   }
 });

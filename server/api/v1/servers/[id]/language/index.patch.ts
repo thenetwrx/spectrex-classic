@@ -11,7 +11,7 @@ export default defineEventHandler(async (event) => {
     setResponseStatus(event, 400);
     return { message: "Language must be selected" };
   }
-  if (!permitted_languages.some((code) => body.language === code)) {
+  if (!permitted_languages.some(([key, _]) => body.language === key)) {
     setResponseStatus(event, 400);
     return { message: "Invalid language selection" };
   }

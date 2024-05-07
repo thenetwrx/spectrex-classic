@@ -23,6 +23,16 @@ export const server_error_not_approved =
   "Unable to perform action, this server is not approved";
 export const server_error_not_listed =
   "Unable to perform action, this server is not listed";
-
 export const server_error_invite_link_not_configured =
   "Invite link is not configured";
+
+// users
+export const user_error_does_not_exist = "That user doesn't seem to exist";
+export const user_error_no_permission =
+  "You don't have permission to access that user";
+export const user_error_banned =
+  "This user violated our guidelines and has been banned";
+export const user_error_profile_does_not_exist =
+  "That profile doesn't seem to exist";
+export const user_error_profile_no_permission =
+  "You don't have permission to access that profile";

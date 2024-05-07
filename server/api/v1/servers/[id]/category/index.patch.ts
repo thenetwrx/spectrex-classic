@@ -11,7 +11,7 @@ export default defineEventHandler(async (event) => {
     setResponseStatus(event, 400);
     return { message: "Category must be selected" };
   }
-  if (!permitted_categories.some((cat) => body.category === cat)) {
+  if (!permitted_categories.some(([key, _]) => body.category === key)) {
     setResponseStatus(event, 400);
     return { message: "Invalid category selection" };
   }

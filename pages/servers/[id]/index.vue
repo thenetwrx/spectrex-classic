@@ -40,7 +40,12 @@
                 "
               >
                 <span class="opacity-75">
-                  {{ server.result.category }}
+                  {{
+                    server.result.category
+                      ? server.result.category[0].toUpperCase() +
+                        server.result.category?.slice(1)
+                      : "Unknown"
+                  }}
                 </span>
               </div>
               <div class="bg-error bg-opacity-50 px-1 rounded-md" v-else>

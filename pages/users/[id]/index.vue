@@ -74,7 +74,6 @@
   import useClipboard from "~/composables/useClipboard";
 
   const lucia = useLucia();
-  const discord = useDiscord();
 
   const route = useRoute();
   const user_id = route.params.id;
@@ -86,7 +85,7 @@
   } = useFetch<{
     message: string | null;
     result: User | null;
-  }>(`/api/v1/users/${user_id}`, { retry: false });
+  }>(`/api/v1/users/${user_id}/profile`, { retry: false });
 
   useHead({
     title: computed(() =>

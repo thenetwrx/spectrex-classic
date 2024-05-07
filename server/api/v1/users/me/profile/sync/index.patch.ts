@@ -1,5 +1,4 @@
 import { eq } from "drizzle-orm";
-import db from "~/server/utils/database";
 import DiscordUserPartial from "~/types/DiscordUserPartial";
 
 export default defineEventHandler(async (event) => {
@@ -26,30 +25,28 @@ export default defineEventHandler(async (event) => {
     if (!response.ok) {
       setResponseStatus(event, 500);
       return {
-        message: "An unknown Discord API error occurred, try again later",
+        message: generic_error_unknown_discord_error,
       };
     }
 
     const provider_user: DiscordUserPartial = await response.json();
 
     if (!provider_user) {
-      setResponseStatus(event, 404);
-      return {
-        message: "No user found from Discord",
-      };
+      setResponseStatus(event, 500);
+      return generic_error_unknown_discord_error;
     }
 
-    const users = await db
+    const users = await database
       .select({ id: users_table.id })
       .from(users_table)
       .where(eq(users_table.id, event.context.user.id));
 
     if (!users.length) {
       setResponseStatus(event, 404);
-      return { message: "User not found" };
+      return { message: user_error_does_not_exist };
     }
 
-    await db
+    await database
       .update(users_table)
       .set({
         provider_id: provider_user.id,
@@ -61,11 +58,12 @@ export default defineEventHandler(async (event) => {
       })
       .where(eq(users_table.id, users[0].id));
 
+    setResponseStatus(event, 204);
     return;
   } catch (err) {
     console.log(err);
 
     setResponseStatus(event, 500);
-    return { message: "An unknown error occurred, try again later" };
+    return { message: generic_error_unknown_error };
   }
 });

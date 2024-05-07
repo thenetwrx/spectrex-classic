@@ -40,8 +40,8 @@
       {{ getErrorMessage() }}
     </h1>
     <p class="opacity-75 mx-auto max-w-xl">
-      We are sorry, it seems something went wrong. We are actively investigating
-      this, but in the meantime, please go back to the homepage using the button
+      Sorry, it seems something went wrong. We're actively investigating this,
+      but in the meantime, please go back to the homepage using the button
       below.
     </p>
     <button

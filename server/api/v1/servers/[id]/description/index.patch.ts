@@ -29,7 +29,7 @@ export default defineEventHandler(async (event) => {
       message: "Description is too short (minimum of 128 characters)",
     };
   }
-  if (body.description.length >= 512) {
+  if (body.description.length >= 1024) {
     setResponseStatus(event, 400);
     return {
       message: "Description is too long (max of 512 characters)",

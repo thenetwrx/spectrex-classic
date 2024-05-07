@@ -55,8 +55,8 @@ export default defineEventHandler(async (event) => {
       servers[0].invite_link = null;
 
     if (
-      event.context.user?.premium_since === null ||
-      servers[0].owner_id !== event.context.user?.id
+      servers[0].owner_id !== event.context.user?.id ||
+      event.context.user?.premium_since === null
     )
       servers[0].invite_uses = null;
 

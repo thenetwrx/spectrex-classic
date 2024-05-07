@@ -12,7 +12,6 @@ export default defineEventHandler(async (event) => {
   const stored_state = getCookie(event, "state") ?? null;
   const stored_redirect_url = getCookie(event, "redirect_to") ?? null;
   if (!code || !state || !stored_state || state !== stored_state) {
-    setResponseStatus(event, 400);
     return sendRedirect(event, "/");
   }
 
@@ -36,7 +35,6 @@ export default defineEventHandler(async (event) => {
 
     if (existing_user.length) {
       if (existing_user[0].banned) {
-        setResponseStatus(event, 403);
         return sendRedirect(event, "/");
       }
 
@@ -82,7 +80,6 @@ export default defineEventHandler(async (event) => {
       .returning({ id: users_table.id });
 
     if (!created_user.length) {
-      setResponseStatus(event, 500);
       return sendRedirect(event, "/");
     }
 
@@ -109,10 +106,8 @@ export default defineEventHandler(async (event) => {
     // the specific error message depends on the provider
     if (err instanceof OAuth2RequestError) {
       // invalid code
-      setResponseStatus(event, 400);
       return sendRedirect(event, "/");
     }
-    setResponseStatus(event, 500);
     return sendRedirect(event, "/");
   }
 });

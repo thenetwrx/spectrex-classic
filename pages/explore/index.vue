@@ -19,18 +19,18 @@
       </button>
       <button
         v-for="_category in permitted_categories"
-        v-on:click="() => handleQuery('category', _category)"
+        v-on:click="() => handleQuery('category', _category[0])"
         class="block max-w-fit px-2 py-1 bg-accent border-none rounded-sm gap-2 hover:cursor-pointer text-white"
         :class="
-          category === _category
+          category === _category[0]
             ? 'bg-opacity-100'
             : 'bg-opacity-50 hover:bg-opacity-65 transition-colors duration-200 ease-in-out'
         "
       >
-        <span :class="category === _category ? 'text-white' : 'text-accent'">
+        <span :class="category === _category[0] ? 'text-white' : 'text-accent'">
           /
         </span>
-        {{ _category }}
+        {{ _category[1] }}
       </button>
     </div>
 
@@ -63,43 +63,13 @@
               All
             </span>
           </li>
-          <li v-on:click="handleQuery('language', 'unspecified')">
+          <li
+            v-for="_language in permitted_languages"
+            v-on:click="handleQuery('language', _language[0])"
+          >
             <span>
-              <i
-                class="fa-solid fa-check"
-                v-if="language === 'unspecified'"
-              ></i>
-              Unspecified
-            </span>
-          </li>
-          <li v-on:click="handleQuery('language', 'en')">
-            <span>
-              <i class="fa-solid fa-check" v-if="language === 'en'"></i>
-              English
-            </span>
-          </li>
-          <li v-on:click="handleQuery('language', 'es')">
-            <span>
-              <i class="fa-solid fa-check" v-if="language === 'es'"></i>
-              Español
-            </span>
-          </li>
-          <li v-on:click="handleQuery('language', 'it')">
-            <span>
-              <i class="fa-solid fa-check" v-if="language === 'it'"></i>
-              Italiano
-            </span>
-          </li>
-          <li v-on:click="handleQuery('language', 'ja')">
-            <span>
-              <i class="fa-solid fa-check" v-if="language === 'ja'"></i>
-              日本語
-            </span>
-          </li>
-          <li v-on:click="handleQuery('language', 'ru')">
-            <span>
-              <i class="fa-solid fa-check" v-if="language === 'ru'"></i>
-              русский
+              <i class="fa-solid fa-check" v-if="language === _language[0]"></i>
+              {{ _language[1] }}
             </span>
           </li>
         </ul>
@@ -155,7 +125,12 @@
               <div class="flex flex-wrap gap-1 items-center">
                 <div class="bg-accent bg-opacity-50 px-1 rounded-md">
                   <span class="opacity-75">
-                    {{ server.category }}
+                    {{
+                      server.category
+                        ? server.category[0].toUpperCase() +
+                          server.category?.slice(1)
+                        : "Unknown"
+                    }}
                   </span>
                 </div>
                 <div
@@ -283,7 +258,10 @@
 
 <script setup lang="ts">
   import { formatDistance } from "date-fns";
-  import { permitted_categories } from "@/server/utils/permit";
+  import {
+    permitted_languages,
+    permitted_categories,
+  } from "@/server/utils/permit";
 
   useHead({
     title: "Explore",

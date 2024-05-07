@@ -122,12 +122,12 @@
                       <option disabled selected value="">
                         Select language
                       </option>
-                      <option value="unspecified">Unspecified</option>
-                      <option value="en">English</option>
-                      <option value="es">Español</option>
-                      <option value="it">Italiano</option>
-                      <option value="ja">日本語</option>
-                      <option value="ru">русский</option>
+                      <option
+                        v-for="_language in permitted_languages"
+                        :value="_language[0]"
+                      >
+                        {{ _language[1] }}
+                      </option>
                     </select>
                   </DashboardCardContent>
                 </DashboardCardContainer>
@@ -144,9 +144,9 @@
                       </option>
                       <option
                         v-for="_category in permitted_categories"
-                        :value="_category"
+                        :value="_category[0]"
                       >
-                        {{ _category }}
+                        {{ _category[1] }}
                       </option>
                     </select>
                   </DashboardCardContent>
@@ -255,7 +255,10 @@
 </template>
 
 <script setup lang="ts">
-  import { permitted_categories } from "@/server/utils/permit";
+  import {
+    permitted_languages,
+    permitted_categories,
+  } from "@/server/utils/permit";
 
   definePageMeta({
     middleware: ["1-protected"],
